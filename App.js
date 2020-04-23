@@ -16,14 +16,11 @@ import {
 } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
-import { Feather } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "./navigation/RootNavigation";
-
-import { createStackNavigator } from "@react-navigation/stack";
+import RootStack from "./screens";
 import defaultState from "./constants/defaultState";
 import { setCustomText, setCustomTextInput } from "react-native-global-props";
-
 import useLinking from "./navigation/useLinking";
 
 import {
@@ -32,7 +29,7 @@ import {
   SafeAreaView,
 } from "react-native-safe-area-context";
 
-const Stack = createStackNavigator();
+import Channels from "./screens/Channels";
 
 // initialize global state
 setGlobal(defaultState);
@@ -55,8 +52,7 @@ export default function App(props) {
 
         // Load fonts
         await Font.loadAsync({
-          ...Feather.font,
-          SpaceGrotesk: require("./assets/fonts/SpaceGrotesk-SemiBold.otf"),
+          SpaceGrotesk: require("./assets/fonts/SpaceGrotesk_SemiBold.otf"),
         });
 
         // Make sure to use this font EVERYWHERE so we don't have to manually assign it
@@ -65,6 +61,9 @@ export default function App(props) {
             fontFamily: "SpaceGrotesk",
           },
         };
+        Text.defaultProps = Text.defaultProps || {};
+        Text.defaultProps.style = { fontFamily: "SpaceGrotesk" };
+
         setCustomText(customTextProps);
         setCustomTextInput(customTextProps);
       } catch (e) {
@@ -118,38 +117,7 @@ export default function App(props) {
           >
             <SafeAreaView style={styles.container}>
               {shouldRenderSideBar()}
-              <Stack.Navigator
-                headerMode={"screen"}
-                // options={{
-                //   header: ({ scene, previous, navigation }) => {
-                //     const { options } = scene.descriptor;
-                //     const title =
-                //       options.headerTitle !== undefined
-                //         ? options.headerTitle
-                //         : options.title !== undefined
-                //         ? options.title
-                //         : scene.route.name;
-
-                //     return (
-                //       <MyHeader
-                //         title={title}
-                //         leftButton={
-                //           previous ? (
-                //             <MyBackButton onPress={navigation.goBack} />
-                //           ) : undefined
-                //         }
-                //         style={options.headerStyle}
-                //       />
-                //     );
-                //   },
-                // }
-                // }
-              >
-                {/* This is where all the screens go */}
-                {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
-                <Stack.Screen name="app" component={Main} />
-                <Stack.Screen name="login" component={Login} />
-              </Stack.Navigator>
+              <RootStack />
             </SafeAreaView>
           </NavigationContainer>
         </SafeAreaProvider>
@@ -158,30 +126,30 @@ export default function App(props) {
   }
 }
 
-const RootNavigation = require("./navigation/RootNavigation");
+// import * as RootNavigation from "./navigation/RootNavigation";
 
-const Channels = () => {
-  const toLogin = () => {
-    RootNavigation.navigate("login");
+// const Channels = () => {
+//   const toLogin = () => {
+//     RootNavigation.navigate("login");
 
-    // return navigation.navigate("Login");
-  };
-  const toMain = () => {
-    RootNavigation.navigate("app");
-    // return navigation.navigate("Login");
-  };
-  return (
-    <View style={channelStyles.wrapper}>
-      <Text>Channels List</Text>
-      <TouchableOpacity onPress={toLogin}>
-        <Text>Login </Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={toMain}>
-        <Text>Login </Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+//     // return navigation.navigate("Login");
+//   };
+//   const toMain = () => {
+//     RootNavigation.navigate("app");
+//     // return navigation.navigate("Login");
+//   };
+//   return (
+//     <View style={channelStyles.wrapper}>
+//       <Text>Channels List</Text>
+//       <TouchableOpacity onPress={toLogin}>
+//         <Text>Login </Text>
+//       </TouchableOpacity>
+//       <TouchableOpacity onPress={toMain}>
+//         <Text>Login </Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
 
 const Main = ({ navigation }) => {
   const toLogin = () => {

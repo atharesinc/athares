@@ -1,0 +1,114 @@
+import React, { useGlobal } from "reactn";
+import * as RootNavigation from "../navigation/RootNavigation";
+import { Feather } from "@expo/vector-icons";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+
+const Amendment = ({ amendment, ...props }) => {
+  const [activeAmendment, setActiveAmendment] = useGlobal("activeAmendment");
+  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
+
+  const goToRevision = () => {
+    setActiveRevision(amendment.revision.id);
+    props.navigation.navigate("ViewRevision");
+  };
+
+  const editAmendment = () => {
+    if (hasOutstandingRevision) {
+      return false;
+    }
+    setActiveAmendment(amendment.id);
+    props.navigation.navigate("EditAmendment");
+  };
+
+  const hasOutstandingRevision =
+    amendment.revision !== null && amendment.revision.passed === null;
+  return (
+    <View style={styles.amendmentWrapperOuter}>
+      {hasOutstandingRevision === false && (
+        <TouchableOpacity onPress={editAmendment} style={styles.moreButton}>
+          <Feather name={"more-vertical"} size={25} color={"#FFFFFF"} />
+        </TouchableOpacity>
+      )}
+      <View style={styles.amendmentWrapperInner}>
+        <Text style={styles.header}>{amendment.title}</Text>
+        <View style={styles.timeDataWrapper}>
+          <Text style={styles.time}>
+            Created - {new Date(amendment.createdAt).toLocaleDateString()}
+          </Text>
+          <Text style={styles.time}>
+            Updated - {new Date(amendment.updatedAt).toLocaleDateString()}
+          </Text>
+        </View>
+        <Text style={styles.amendmentText}>{amendment.text}</Text>
+        {hasOutstandingRevision && (
+          <TouchableOpacity
+            style={styles.discreteButton}
+            onPress={goToRevision}
+          >
+            <Text style={styles.disclaimer}>Current Revision</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+};
+
+export default Amendment;
+
+const styles = StyleSheet.create({
+  amendmentWrapperOuter: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    width: "100%",
+    marginBottom: 20,
+  },
+  amendmentWrapperInner: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginLeft: 10,
+    width: "100%",
+  },
+  moreButton: {
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  header: {
+    color: "#FFFFFF",
+    fontSize: 20,
+  },
+  timeDataWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    borderBottomColor: "#FFFFFFb7",
+    borderBottomWidth: 1,
+    marginBottom: 15,
+  },
+  time: {
+    flex: 1,
+    color: "#FFFFFFb7",
+    fontSize: 12,
+    flex: 1,
+  },
+  amendmentText: {
+    color: "#FFFFFF",
+    marginBottom: 15,
+  },
+  disclaimer: {
+    fontSize: 15,
+    color: "#00dffc",
+  },
+  discreteButton: {
+    borderWidth: 1,
+    borderColor: "#00dffc",
+    borderRadius: 9999,
+    backgroundColor: "#282a38",
+    padding: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+});

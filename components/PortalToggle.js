@@ -1,0 +1,24 @@
+import React from "reactn";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
+
+export default function PortalToggle(props) {
+  return (
+    <TouchableOpacity style={styles.toggle} onPress={props.onPress}>
+      <Text style={styles.toggleText}>{props.text}</Text>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  toggle: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 15,
+    borderWidth: 2,
+    borderRadius: 9999,
+    borderColor: "#FFFFFF",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  toggleText: { color: "#FFF" },
+});

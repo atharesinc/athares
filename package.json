@@ -24,15 +24,21 @@
     "expo-constants": "~9.0.0",
     "expo-font": "~8.1.0",
     "expo-web-browser": "~8.1.0",
+    "hash.js": "^1.1.7",
+    "hybrid-crypto-js": "^0.2.2",
+    "moment": "^2.24.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
+    "react-native-async-image-animated": "^4.3.0",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-global-props": "^1.1.5",
+    "react-native-indicators": "^0.17.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "~2.2.0",
     "react-native-web": "~0.11.7",
-    "reactn": "^2.2.7"
+    "reactn": "^2.2.7",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
