@@ -7,6 +7,7 @@ import ChannelItem from "../../components/ChannelItem";
 import ChannelGroupHeader from "../../components/ChannelGroupHeader";
 import CircleHeader from "../../components/CircleHeader";
 import GovernanceChannelItem from "../../components/GovernanceChannelItem";
+import Header from "../../components/Header";
 
 import { Search } from "./Search";
 
@@ -15,6 +16,7 @@ function Dashboard({
   unreadDMs,
   unreadChannels,
   showSearch,
+  renderAsSidebar = false,
   ...props
 }) {
   let belongsToCircle = false;
@@ -22,20 +24,30 @@ function Dashboard({
   let circle = null;
   let channels = [];
   let dms = [];
+
   // get channel data, if any
 
   // see if the user actually belongs to this circle
 
-  return (
-    <View
-      style={{
+  const wrapperStyles = renderAsSidebar
+    ? {
+        flex: 0,
+        flexGrow: 1 / 3,
+        backgroundColor: "#fff",
+        flexDirection: "column",
+        minWidth: 300,
+      }
+    : {
         alignItems: "stretch",
         justifyContent: "space-between",
         width: "100%",
         flex: 1,
         backgroundColor: "#282a38",
-      }}
-    >
+      };
+
+  return (
+    <View style={wrapperStyles}>
+      <Header scene={{ route: { name: "" } }} />
       {showSearch ? <Search /> : null}
       <Circles loggedIn={user} />
       <ScrollView

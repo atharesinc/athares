@@ -13,18 +13,22 @@ export default function RootStack(props) {
   //     }
   //     return null;
   //   };
+  //   { scene, previous, navigation }
   return (
     <Stack.Navigator
-      headerMode={"screen"}
-      options={{
-        //   { scene, previous, navigation }
+      headerMode="screen"
+      screenOptions={{
         header: (props) => <Header {...props} />,
       }}
     >
       {/* This is where all the screens go */}
       {/* <Stack.Screen name="Root" component={BottomTabNavigator} /> */}
       {/* <Stack.Screen name="app" component={Main} /> */}
-      <Stack.Screen name="login" component={Login} />
+      <Stack.Screen
+        name="login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
       {/* {shouldRenderChannels()} */}
     </Stack.Navigator>
   );

@@ -19,6 +19,9 @@ import { validateLogin } from "../utils/validators";
 import { sha } from "../utils/crypto";
 import { UIActivityIndicator } from "react-native-indicators";
 
+// import { Input } from "galio-framework";
+// import { Feather } from "@expo/vector-icons";
+
 function Login(props) {
   const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
@@ -149,6 +152,7 @@ function Login(props) {
           style={{
             marginBottom: 25,
             color: "#FFFFFF",
+            fontFamily: "SpaceGrotesk",
           }}
         >
           Login to Athares
@@ -158,6 +162,7 @@ function Login(props) {
           placeholder="email"
           onChangeText={updateEmail}
           value={email}
+          type="email-address"
         />
         <PortalInput
           icon="lock"
@@ -165,7 +170,9 @@ function Login(props) {
           secureTextEntry
           onChangeText={updatePassword}
           value={password}
+          type="password"
         />
+
         <PortalButton title="LOGIN" onPress={tryLogin} />
       </PortalCard>
       <PortalToggle

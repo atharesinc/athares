@@ -1,30 +1,37 @@
 import React, { useRef } from "reactn";
 import { StyleSheet } from "react-native";
-import { TouchableOpacity, TextInput, View } from "react-native";
-import { Feather } from "@expo/vector-icons";
+// import { TouchableOpacity, TextInput, View } from "react-native";
+// import { Feather } from "@expo/vector-icons";
+import { Input, theme } from "galio-framework";
 
-function PortalInput({ icon, iconStyles = {}, style = {}, ...props }) {
-  const inputEl = useRef(null);
-
-  const handleClick = () => {
-    inputEl.current.focus();
-  };
-
+function PortalInput({ icon, iconStyles = {}, type = "default", ...props }) {
   return (
-    <TouchableOpacity
-      style={{ ...styles.touchWrap, ...style }}
-      onPress={handleClick}
-    >
-      <View style={[styles.wrapper]}>
-        <Feather name={icon} size={20} color={"#FFFFFF"} styles={styles.icon} />
-        <TextInput
-          {...props}
-          style={styles.input}
-          ref={inputEl}
-          placeholderTextColor={"#FFFFFFb7"}
-        />
-      </View>
-    </TouchableOpacity>
+    <Input
+      rounded
+      type={type}
+      family="feather"
+      icon={icon}
+      left
+      color={theme.COLORS.WHITE}
+      style={{ borderColor: theme.COLORS.WHITE }}
+      bgColor={theme.COLORS.TRANSPARENT}
+      placeholderTextColor={theme.COLORS.NEUTRAL}
+      {...props}
+    />
+    // <TouchableOpacity
+    //   style={{ ...styles.touchWrap, ...style }}
+    //   onPress={handleClick}
+    // >
+    //   <View style={[styles.wrapper]}>
+    //     <Feather name={icon} size={20} color={"#FFFFFF"} styles={styles.icon} />
+    //     <TextInput
+    //       {...props}
+    //       style={styles.input}
+    //       ref={inputEl}
+    //       placeholderTextColor={"#FFFFFFb7"}
+    //     />
+    //   </View>
+    // </TouchableOpacity>
   );
 }
 

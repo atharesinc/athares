@@ -1,4 +1,4 @@
-import React from 'reactn';
+import React from "reactn";
 import { StyleSheet, View } from "react-native";
 
 export default function PortalWrapper(props) {
@@ -8,10 +8,10 @@ export default function PortalWrapper(props) {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    flexDirection: "column",
     width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     backgroundColor: "#282a3899",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

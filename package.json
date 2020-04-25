@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "~10.0.6",
+    "@react-native-community/async-storage": "^1.9.0",
     "@react-native-community/masked-view": "0.1.6",
     "@react-navigation/bottom-tabs": "^5.0.0",
     "@react-navigation/compat": "^5.1.9",
@@ -24,6 +25,7 @@
     "expo-constants": "~9.0.0",
     "expo-font": "~8.1.0",
     "expo-web-browser": "~8.1.0",
+    "galio-framework": "^0.6.3",
     "hash.js": "^1.1.7",
     "hybrid-crypto-js": "^0.2.2",
     "moment": "^2.24.0",
