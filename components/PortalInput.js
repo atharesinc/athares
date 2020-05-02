@@ -1,37 +1,27 @@
 import React, { useRef } from "reactn";
 import { StyleSheet } from "react-native";
-// import { TouchableOpacity, TextInput, View } from "react-native";
-// import { Feather } from "@expo/vector-icons";
-import { Input, theme } from "galio-framework";
+import { TouchableOpacity, TextInput, View } from "react-native";
+import Icon from "@expo/vector-icons/Feather";
 
-function PortalInput({ icon, iconStyles = {}, type = "default", ...props }) {
+function PortalInput({ icon, iconStyles = {}, style = {}, ...props }) {
+  const inputEl = useRef(null);
+
+  const handleClick = () => {
+    inputEl.current.focus();
+  };
+
   return (
-    <Input
-      rounded
-      type={type}
-      family="feather"
-      icon={icon}
-      left
-      color={theme.COLORS.WHITE}
-      style={{ borderColor: theme.COLORS.WHITE }}
-      bgColor={theme.COLORS.TRANSPARENT}
-      placeholderTextColor={theme.COLORS.NEUTRAL}
-      {...props}
-    />
-    // <TouchableOpacity
-    //   style={{ ...styles.touchWrap, ...style }}
-    //   onPress={handleClick}
-    // >
-    //   <View style={[styles.wrapper]}>
-    //     <Feather name={icon} size={20} color={"#FFFFFF"} styles={styles.icon} />
-    //     <TextInput
-    //       {...props}
-    //       style={styles.input}
-    //       ref={inputEl}
-    //       placeholderTextColor={"#FFFFFFb7"}
-    //     />
-    //   </View>
-    // </TouchableOpacity>
+    <TouchableOpacity style={{ ...styles.touchWrap }} onPress={handleClick}>
+      <View style={[styles.wrapper]}>
+        <Icon name={icon} size={20} color={"#FFFFFF"} styles={styles.icon} />
+        <TextInput
+          {...props}
+          style={styles.input}
+          ref={inputEl}
+          placeholderTextColor={"#FFFFFFb7"}
+        />
+      </View>
+    </TouchableOpacity>
   );
 }
 
@@ -41,12 +31,13 @@ const styles = StyleSheet.create({
   touchWrap: {
     marginBottom: 10,
     width: "100%",
+  },
+  wrapper: {
     borderRadius: 9999,
     borderWidth: 2,
     borderColor: "#FFFFFF",
     backgroundColor: "#3a3e5290",
-  },
-  wrapper: {
+    padding: 5,
     marginVertical: 5,
     marginRight: 15,
     marginLeft: 7,
@@ -63,7 +54,7 @@ const styles = StyleSheet.create({
   },
   input: {
     color: "#FFF",
-    marginLeft: 20,
+    marginLeft: 15,
     fontSize: 15,
   },
 });

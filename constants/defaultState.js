@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import { themes } from "./themes";
 
 export default {
   user: null,
@@ -16,5 +17,5 @@ export default {
   dimensions: {
     ...Dimensions.get("window"),
   },
-  activeTheme: "light",
+  activeTheme: themes["light"],
 };

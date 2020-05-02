@@ -13,6 +13,7 @@ import {
   Dimensions,
   Platform,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
@@ -24,7 +25,6 @@ import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import useLinking from "./navigation/useLinking";
 
 // theming
-import { theme, withGalio, GalioProvider } from "galio-framework";
 import { themes } from "./constants/themes";
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -34,7 +34,18 @@ import {
   SafeAreaView,
 } from "react-native-safe-area-context";
 
+// screens that can appear outside of the stack
 import Channels from "./screens/Channels";
+
+// apollo graphql
+import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloClient } from "apollo-client";
+import { link, cache } from "./graphql";
+
+const client = new ApolloClient({
+  link,
+  cache,
+});
 
 // initialize global state
 setGlobal(defaultState);
@@ -65,7 +76,7 @@ export default function App(props) {
 
         // if we have a preferred theme in storage, set it before we load the app
         if (res !== null) {
-          setActiveTheme(res);
+          setActiveTheme(themes[res]);
         }
 
         // Make sure to use this font EVERYWHERE so we don't have to manually assign it
@@ -117,28 +128,35 @@ export default function App(props) {
     return null;
   };
 
-  const themeToUse = themes[activeTheme];
-
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {
     return (
-      <GalioProvider theme={themeToUse}>
-        <View style={styles.container} onLayout={onRotate}>
-          <StatusBar barStyle="light-content" />
-          <SafeAreaProvider initialSafeAreaInsets={initialWindowSafeAreaInsets}>
-            <NavigationContainer
-              ref={navigationRef}
-              initialState={initialNavigationState}
+      <ApolloProvider client={client}>
+        <ImageBackground
+          source={require("./assets/images/iss-master.jpg")}
+          style={styles.image}
+          progressiveRenderingEnabled
+          onLayout={onRotate}
+        >
+          <View style={styles.container} onLayout={onRotate}>
+            <StatusBar barStyle="light-content" />
+            <SafeAreaProvider
+              initialSafeAreaInsets={initialWindowSafeAreaInsets}
             >
-              <SafeAreaView style={styles.container}>
-                {shouldRenderSideBar()}
-                <RootStack />
-              </SafeAreaView>
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </View>
-      </GalioProvider>
+              <NavigationContainer
+                ref={navigationRef}
+                initialState={initialNavigationState}
+              >
+                <SafeAreaView style={styles.container}>
+                  {shouldRenderSideBar()}
+                  <RootStack />
+                </SafeAreaView>
+              </NavigationContainer>
+            </SafeAreaProvider>
+          </View>
+        </ImageBackground>
+      </ApolloProvider>
     );
   }
 }
@@ -215,9 +233,18 @@ export default function App(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "transparent",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
+  },
+  image: {
+    flex: 1,
+    height: "100%",
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

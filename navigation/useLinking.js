@@ -8,8 +8,11 @@ export default function (containerRef) {
       Root: {
         path: "root",
         screens: {
-          Channels: "",
-          Login: "login",
+          // Channels: "",
+          // Login: "login",
+          // Register: "register",
+          // News: "news",
+          Channels: "app",
         },
       },
     },

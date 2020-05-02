@@ -6,10 +6,10 @@ import { Feather } from "@expo/vector-icons";
 
 const Footer = ({ loggedIn = false, belongsToCircle = false, ...props }) => {
   const goToAddUser = () => {
-    RootNavigation.navigate("AddUser");
+    RootNavigation.navigate("addUser");
   };
   const goToLogin = () => {
-    RootNavigation.navigate("Login");
+    RootNavigation.navigate("login");
   };
   if (!loggedIn) {
     return (

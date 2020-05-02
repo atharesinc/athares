@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useGlobal } from "reactn";
-import PortalInput from "../../components/PortalInput";
-import PortalButton from "../../components/PortalButton";
-import PortalCard from "../../components/PortalCard";
-import PortalWrapper from "../../components/PortalWrapper";
-import PortalToggle from "../../components/PortalToggle";
+import React, {
+  Fragment,
+  useEffect,
+  useState,
+  useGlobal,
+  useRef,
+} from "reactn";
 
 import {
   TouchableOpacity,
@@ -13,16 +14,18 @@ import {
   View,
   AsyncStorage,
   Alert,
+  TextInput,
 } from "react-native";
 
-import { sha, pair } from "../utils/crypto";
 import { validateRegister } from "../utils/validators";
 import { UIActivityIndicator } from "react-native-indicators";
 
-import SimpleCrypto from "simple-crypto-js";
 import getEnvVars from "../env";
 
-const { DEFAULT_IMG } = getEnvVars();
+import { SIGN_UP, LOGIN, CREATE_USER_PREF } from "../graphql/mutations";
+import { useMutation } from "@apollo/react-hooks";
+
+const { DEFAULT_IMG, AUTH_PROFILE_ID } = getEnvVars();
 
 function Register({ createUser, signinUser, createUserPref, ...props }) {
   const [firstName, setFirstName] = useState("");
@@ -36,10 +39,22 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
   const [user, setUser] = useGlobal("user");
   const [pub, setPub] = useGlobal("pub");
 
+  const [error, setError] = useState("");
+
+  const [signup] = useMutation(SIGN_UP);
+  const [login] = useMutation(LOGIN);
+  const [createPrefs] = useMutation(CREATE_USER_PREF);
+  let _isMounted = useRef(false);
+
   useEffect(() => {
     setActiveChannel(null);
     setActiveCircle(null);
     setActiveRevision(null);
+    _isMounted.current = true;
+
+    return () => {
+      _isMounted.current = false;
+    };
   }, []);
 
   const updateEmail = (text) => {
@@ -50,8 +65,9 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
     Linking.openURL("https://www.athares.us/policy");
   };
 
+  const toLogin = () => props.navigation.navigate("login");
+
   const tryRegister = async (e) => {
-    e.preventDefault();
     setLoading(true);
 
     const isValid = validateRegister({
@@ -67,53 +83,78 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
       return false;
     }
 
-    let hashedToken = sha(password);
+    // Auth0's arbitrary stupid auth requirements
+    if (/(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])/.test(password) === false) {
+      Alert.alert(
+        "Error",
+        "Password must contain a capital letter, a lowercase letter, and a number."
+      );
+      setLoading(false);
+      return false;
+    }
+
     try {
-      // Encrypt the user's private key in the database with the hashed password
-      let simpleCrypto = new SimpleCrypto(hashedToken);
-      let keys = await pair();
-      await createUser({
+      // // Encrypt the user's private key in the database with the password
+      // let simpleCrypto = new SimpleCrypto(password);
+      // let keys = await pair();
+
+      const newUser = {
+        firstName,
+        lastName,
+        email,
+        icon: DEFAULT_IMG,
+        prefs: { create: { maySendMarketingEmail: true, userDisabled: false } },
+      };
+
+      // first try to register
+      let res1 = await signup({
         variables: {
-          firstName,
-          lastName,
-          email,
-          icon: DEFAULT_IMG,
-          password: hashedToken,
-          pub: keys.pub,
-          priv: simpleCrypto.encrypt(keys.priv),
+          user: newUser,
+          authProfileId: AUTH_PROFILE_ID,
+          password,
         },
       });
 
-      const res = await signinUser({
+      // login so we can get the token for future logins
+      const res2 = await login({
         variables: {
+          authProfileId: AUTH_PROFILE_ID,
           email,
-          password: hashedToken,
+          password,
         },
       });
 
       const {
         data: {
-          signinUser: { token, userId },
+          userLogin: {
+            auth: { idToken },
+            success,
+          },
         },
-      } = res;
+      } = res2;
 
-      await createUserPref({
-        variables: {
-          id: userId,
+      const {
+        data: {
+          userSignUpWithPassword: { id },
         },
-      });
+      } = res1;
+
       //store locally
-      await AsyncStorage.setItem("ATHARES_ALIAS", email);
-      await AsyncStorage.setItem("ATHARES_HASH", hashedToken);
-      await AsyncStorage.setItem("ATHARES_TOKEN", token);
-      setUser(userId);
-      setPub(hashedToken);
+      await AsyncStorage.multiSet([
+        ["ATHARES_ALIAS", email],
+        ["ATHARES_TOKEN", idToken],
+      ]);
 
-      props.navigation.navigate("Dashboard");
+      setUser(id);
+
+      _isMounted.current && setLoading(false);
+
+      props.navigation.navigate("app");
     } catch (err) {
+      // console.log(err.message, err.details);
       setLoading(false);
-      console.error(err);
-      if (err.message.indexOf("Field name = email") !== -1) {
+      console.error(new Error(err));
+      if (err.message.indexOf("The user already exists") !== -1) {
         Alert.alert("Error", "A user already exists with this email address.");
       } else {
         Alert.alert("Error", err.message);
@@ -143,63 +184,37 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
     );
   }
   return (
-    <PortalWrapper>
-      <PortalCard>
-        <Image
-          style={{
-            height: 60,
-            width: 60,
-            marginBottom: 10,
-          }}
-          source={require("../assets/images/Athares-owl-logo-large-white-thin.png")}
-        />
-        <Image
-          style={{
-            height: 20,
-            width: 120,
-            marginBottom: 25,
-          }}
-          source={require("../assets/images/Athares-type-small-white.png")}
-        />
-        <Text
-          style={{
-            marginBottom: 25,
-            color: "#FFFFFF",
-          }}
-        >
-          Register with Athares
-        </Text>
-        <PortalInput
-          icon="user"
-          placeholder="First Name"
-          onChangeText={setFirstName}
-          value={firstName}
-        />
-        <PortalInput
-          icon="user"
-          placeholder="Last Name"
-          onChangeText={setLastName}
-          value={lastName}
-        />
-        <PortalInput
-          icon="at-sign"
-          placeholder="Email Address"
-          onChangeText={updateEmail}
-          value={email}
-        />
-        <PortalInput
-          icon="lock"
-          placeholder="Password"
-          secureTextEntry
-          onChangeText={setPassword}
-          value={password}
-        />
-        <PortalButton title="REGISTER" onPress={tryRegister} />
-      </PortalCard>
-      <PortalToggle
-        onPress={() => props.navigation.navigate("Login")}
-        text={"I already have an account"}
+    <>
+      <TextInput
+        placeholder="First Name"
+        onChangeText={setFirstName}
+        value={firstName}
       />
+      <TextInput
+        placeholder="Last Name"
+        onChangeText={setLastName}
+        value={lastName}
+      />
+      <TextInput
+        placeholder="Email Address"
+        onChangeText={updateEmail}
+        value={email}
+      />
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        onChangeText={setPassword}
+        value={password}
+      />
+      {error !== "" && <Text style={{ color: "#FF0000" }}>{error}</Text>}
+
+      <TouchableOpacity onPress={tryRegister}>
+        <Text>Register</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={toLogin}>
+        <Text>"I already have an account"</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={{
@@ -219,7 +234,7 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
           Privacy Policy.
         </Text>
       </TouchableOpacity>
-    </PortalWrapper>
+    </>
   );
 }
 

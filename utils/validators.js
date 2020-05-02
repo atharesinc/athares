@@ -8,13 +8,13 @@ export const validateLogin = ({ email, password }) => {
         presence: { allowEmpty: false },
         length: {
           minimum: 6,
-          tooShort: "must be at least 6 characters."
-        }
+          tooShort: "must be at least 6 characters.",
+        },
       },
       email: {
         presence: { allowEmpty: false },
-        email: true
-      }
+        email: true,
+      },
     }
   );
 };
@@ -24,26 +24,26 @@ export const validateRegister = ({ email, password, firstName, lastName }) => {
       password,
       email,
       firstName,
-      lastName
+      lastName,
     },
     {
       password: {
         presence: { allowEmpty: false },
         length: {
           minimum: 6,
-          tooShort: "must be at least 6 characters."
-        }
+          tooShort: "must be at least 8 characters.",
+        },
       },
       email: {
         presence: { allowEmpty: false },
-        email: true
+        email: true,
       },
       firstName: {
-        presence: { allowEmpty: false }
+        presence: { allowEmpty: false },
       },
       lastName: {
-        presence: { allowEmpty: false }
-      }
+        presence: { allowEmpty: false },
+      },
     }
   );
 };
