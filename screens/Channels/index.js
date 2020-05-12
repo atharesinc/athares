@@ -1,34 +1,73 @@
-import React, { withGlobal, Fragment } from "reactn";
+import React, { useGlobal, Fragment } from "reactn";
 
 import { ScrollView, View, Text } from "react-native";
-import Footer from "../../components/Footer";
+import Footer from "./Footer";
 import Circles from "../../components/Circles";
 import ChannelItem from "../../components/ChannelItem";
 import ChannelGroupHeader from "../../components/ChannelGroupHeader";
 import CircleHeader from "../../components/CircleHeader";
 import GovernanceChannelItem from "../../components/GovernanceChannelItem";
+import Title from "../../components/Title";
+
 import Header from "../../components/Header";
-
 import { Search } from "./Search";
+import {
+  IS_USER_IN_CIRCLE,
+  GET_CHANNELS_BY_CIRCLE_ID,
+} from "../../graphql/queries";
+import { useQuery } from "@apollo/react-hooks";
 
-function Dashboard({
-  activeCircle,
-  unreadDMs,
-  unreadChannels,
-  showSearch,
-  renderAsSidebar = false,
-  ...props
-}) {
-  let belongsToCircle = false;
-  let user = null;
+function Dashboard({ renderAsSidebar = false, ...props }) {
+  const [activeCircle] = useGlobal("activeCircle");
+  const [user] = useGlobal("user");
+  const [unreadDMs] = useGlobal("unreadDMs");
+  const [unreadChannels] = useGlobal("unreadChannels");
+  const [showSearch] = useGlobal("showSearch");
+
   let circle = null;
   let channels = [];
-  let dms = [];
+  let belongsToCircle = false;
 
   // get channel data, if any
+  const { loading: loading1, error: e1, data: channelsData } = useQuery(
+    GET_CHANNELS_BY_CIRCLE_ID,
+    {
+      variables: {
+        id: activeCircle || "",
+      },
+    }
+  );
+  if (channelsData) {
+    // _subToMore(subscribeToMore);
+    circle = channelsData.circle;
+    channels = circle.channels.items;
+    channels = channels.map((ch) => ({
+      unread: unreadChannels.includes(ch.id),
+      ...ch,
+    }));
+  }
 
   // see if the user actually belongs to this circle
+  const { loading: loading2, error: e2, data: belongsToCircleData } = useQuery(
+    IS_USER_IN_CIRCLE,
+    {
+      variables: {
+        circle: activeCircle || "",
+        user: user || "",
+      },
+    }
+  );
 
+  if (
+    belongsToCircleData &&
+    belongsToCircleData.circlesList &&
+    belongsToCircleData.circlesList.items.length !== 0 &&
+    belongsToCircleData.circlesList.items[0].id === activeCircle
+  ) {
+    belongsToCircle = true;
+  }
+
+  // responsive styles for channels component, which can either render on the side or as a full-screen mobile component
   const wrapperStyles = renderAsSidebar
     ? {
         flex: 0,
@@ -56,7 +95,7 @@ function Dashboard({
           flexGrow: 1,
         }}
       >
-        {circle && (
+        {circle ? (
           <Fragment>
             <ChannelGroupHeader title={"GOVERNANCE"} />
             <GovernanceChannelItem
@@ -64,6 +103,8 @@ function Dashboard({
               link={"Constitution"}
             />
             <GovernanceChannelItem title={"Polls"} link={"Revisions"} />
+            <GovernanceChannelItem title={"News"} link={"News"} />
+
             {user && belongsToCircle && (
               <GovernanceChannelItem
                 title={"Settings"}
@@ -79,23 +120,17 @@ function Dashboard({
               <ChannelItem key={ch.id} showUnread={ch.unread} channel={ch} />
             ))}
           </Fragment>
+        ) : (
+          <Title text={"Welcome to Athares"} underline />
         )}
-        <ChannelGroupHeader title={"DIRECT MESSAGES"} displayPlus={true} />
+        {/* <ChannelGroupHeader title={"DIRECT MESSAGES"} displayPlus={true} />
         {dms.map((ch) => (
           <ChannelItem key={ch.id} showUnread={ch.unread} channel={ch} />
-        ))}
+        ))} */}
       </ScrollView>
       <Footer loggedIn={user} belongsToCircle={belongsToCircle} />
     </View>
   );
 }
 
-export default withGlobal(
-  ({ activeCircle, user, unreadDMs, unreadChannels, showSearch }) => ({
-    activeCircle,
-    user,
-    unreadDMs,
-    unreadChannels,
-    showSearch,
-  })
-)(Dashboard);
+export default Dashboard;

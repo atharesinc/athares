@@ -12,10 +12,10 @@ import {
   Image,
   Text,
   View,
-  AsyncStorage,
   Alert,
   TextInput,
 } from "react-native";
+import MeshStore from "../utils/meshStore";
 
 import { validateRegister } from "../utils/validators";
 import { UIActivityIndicator } from "react-native-indicators";
@@ -25,7 +25,7 @@ import getEnvVars from "../env";
 import { SIGN_UP, LOGIN, CREATE_USER_PREF } from "../graphql/mutations";
 import { useMutation } from "@apollo/react-hooks";
 
-const { DEFAULT_IMG, AUTH_PROFILE_ID } = getEnvVars();
+const { DEFAULT_USER_IMG, AUTH_PROFILE_ID } = getEnvVars();
 
 function Register({ createUser, signinUser, createUserPref, ...props }) {
   const [firstName, setFirstName] = useState("");
@@ -102,7 +102,7 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
         firstName,
         lastName,
         email,
-        icon: DEFAULT_IMG,
+        icon: DEFAULT_USER_IMG,
         prefs: { create: { maySendMarketingEmail: true, userDisabled: false } },
       };
 
@@ -140,10 +140,13 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
       } = res1;
 
       //store locally
-      await AsyncStorage.multiSet([
-        ["ATHARES_ALIAS", email],
-        ["ATHARES_TOKEN", idToken],
-      ]);
+      const prom1 = MeshStore.setItem("ATHARES_ALIAS", email);
+      const prom2 = MeshStore.setItem("ATHARES_TOKEN", idToken);
+
+      // store password because 8base doesn't have a way to login via token
+      const prom3 = MeshStore.setItem("ATHARES_PASSWORD", password);
+
+      await Promise.all([prom1, prom2, prom3]);
 
       setUser(id);
 

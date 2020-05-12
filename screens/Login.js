@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
-  AsyncStorage,
   TextInput,
 } from "react-native";
+import MeshStore from "../utils/meshStore";
 
 import { validateLogin } from "../utils/validators";
 
@@ -69,7 +69,7 @@ function Login(props) {
       return false;
     }
     try {
-      // login so we can get the token for future logins
+      // login so we can get the token for authorization
       const prom1 = getUser({
         email,
       });
@@ -100,13 +100,16 @@ function Login(props) {
         },
       } = res2;
 
-      // //store locally
-      // await AsyncStorage.multiSet([
-      //   ["ATHARES_ALIAS", email],
-      //   ["ATHARES_TOKEN", idToken],
-      // ]);
+      //store locally
+      const prom3 = MeshStore.setItem("ATHARES_ALIAS", email);
+      const prom4 = MeshStore.setItem("ATHARES_TOKEN", idToken);
 
-      // setUser(id);
+      // store password because 8base doesn't have a way to login via token
+      const prom5 = MeshStore.setItem("ATHARES_PASSWORD", password);
+
+      await Promise.all([prom3, prom4, prom5]);
+
+      setUser(id);
 
       _isMounted.current && setLoading(false);
 

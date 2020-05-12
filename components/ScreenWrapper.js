@@ -1,6 +1,6 @@
-import React from 'reactn';
+import React, { useGlobal } from "reactn";
 
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from "react-native";
 
 const ScreenWrapper = ({
   dark = true,
@@ -8,32 +8,30 @@ const ScreenWrapper = ({
   theme = false,
   styles = {},
   ...props
-}) => (
-  <View
-    style={[
-      baseStyles.base,
-      theme ? baseStyles.theme : {},
-      light ? baseStyles.light : {},
-      styles,
-    ]}
-  >
-    {props.children}
-  </View>
-);
+}) => {
+  const [activeTheme] = useGlobal("activeTheme");
+  return (
+    <View
+      style={[
+        baseStyles.base,
+        theme ? activeTheme.COLORS.MED : {},
+        light ? activeTheme.COLORS.LIGHT : {},
+        styles,
+      ]}
+    >
+      {props.children}
+    </View>
+  );
+};
 
 export default ScreenWrapper;
 
 const baseStyles = StyleSheet.create({
   base: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#282a38',
-  },
-  theme: {
-    backgroundColor: '#2f3242',
-  },
-  light: {
-    backgroundColor: '#3a3e52',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#282a38",
+    padding: 15,
   },
 });

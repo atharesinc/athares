@@ -18,17 +18,22 @@ function Header({
   const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [viewUser, setViewUser] = useGlobal("viewUser");
-
+  const [, setIsMenuOpen] = useGlobal("isMenuOpen");
   // replace this with a query hook
   const data = null;
 
   const toggleDrawer = () => {
-    props.navigation.toggleDrawer();
+    setIsMenuOpen(true);
   };
   const toggleSearch = () => {
     setShowSearch(!showSearch);
   };
   const back = () => {
+    console.log("navigation props", props);
+    if (!props.previous) {
+      console.log("go home");
+      RootNavigation.navigate("app");
+    }
     props.navigation.goBack(null);
   };
   const more = () => {
@@ -152,10 +157,10 @@ function Header({
   // if (data.User) {
   let img = require("../assets/images/user-default.png");
 
-  if (data && data.User) {
-    img = { uri: data.User.icon };
+  if (data && data.user) {
+    img = { uri: data.user.icon };
   }
-
+  console.log();
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>

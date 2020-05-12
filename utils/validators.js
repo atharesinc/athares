@@ -47,3 +47,16 @@ export const validateRegister = ({ email, password, firstName, lastName }) => {
     }
   );
 };
+export const validateCircle = ({ name, preamble }) => {
+  return validate(
+    { name, preamble },
+    {
+      name: {
+        presence: { allowEmpty: false },
+      },
+      preamble: {
+        presence: { allowEmpty: false },
+      },
+    }
+  );
+};

@@ -1,53 +1,54 @@
-import React, { useRef } from 'reactn';
-import { TouchableOpacity, TextInput, Text, StyleSheet } from 'react-native';
+import React, { useRef } from "reactn";
+import { TouchableOpacity, TextInput, Text, StyleSheet } from "react-native";
+import Title from "./Title";
+import HelperText from "./HelperText";
 
-function Input({ style = {}, label = null, description = null, ...props }) {
+export default function Input({
+  style = {},
+  label = null,
+  description = null,
+  ...props
+}) {
   const inputEl = useRef(null);
 
-  const handleClick = () => {
+  const handlePress = () => {
     inputEl.current.focus();
   };
 
   return (
     <TouchableOpacity
-      style={{ ...styles.wrapper, ...style }}
-      onPress={handleClick}
+      style={{ ...inputStyles.wrapper, ...style }}
+      onPress={handlePress}
     >
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Title text={label} />}
       <TextInput
         {...props}
-        style={styles.input}
+        style={inputStyles.input}
         ref={inputEl}
         numberOfLines={props.multiline ? 2 : 1}
-        placeholderColor={'#FFFFFFb7'}
+        placeholdercolor={"#FFFFFFb7"}
       />
-      {description && <Text style={styles.description}>{description}</Text>}
+      {description && <HelperText text={description} />}
     </TouchableOpacity>
   );
 }
 
-export default Input;
-
-const styles = StyleSheet.create({
+const inputStyles = StyleSheet.create({
   wrapper: {
-    borderRadius: 0,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    borderColor: "transparent",
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     marginBottom: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   input: {
-    color: '#FFF',
-    fontSize: 18,
-    width: '100%',
-    backgroundColor: '#3a3e52',
-    shadowColor: '#000',
+    color: "#FFF",
+    fontSize: 15,
+    width: "100%",
+    backgroundColor: "#2F3242",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 3,
@@ -57,16 +58,9 @@ const styles = StyleSheet.create({
     elevation: 7,
     padding: 10,
     marginBottom: 10,
-    justifyContent: 'flex-start',
-    textAlignVertical: 'top',
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: '#FFF',
-  },
-  description: {
-    fontSize: 16,
-    color: '#FFFFFFb7',
+    justifyContent: "flex-start",
+    textAlignVertical: "top",
+    borderRadius: 3,
+    fontFamily: "SpaceGrotesk",
   },
 });

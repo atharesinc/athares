@@ -14,6 +14,8 @@ const baseTheme = {
     DARK: "#282a38",
     MID: "#2f3242",
     LIGHT: "#3a3e52",
+    RED: "#FF725C",
+    GREEN: "#9EEBCF",
   },
   FONT: {
     FAMILY: "SpaceGrotesk",

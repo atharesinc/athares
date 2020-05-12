@@ -17,16 +17,18 @@ import {
 } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
+
 import { NavigationContainer } from "@react-navigation/native";
+
 import { navigationRef } from "./navigation/RootNavigation";
 import RootStack from "./screens";
 import defaultState from "./constants/defaultState";
 import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import useLinking from "./navigation/useLinking";
-
+import AutoLoginHandler from "./components/AutoLoginHandler";
+import MeshStore from "./utils/meshStore";
 // theming
 import { themes } from "./constants/themes";
-import AsyncStorage from "@react-native-community/async-storage";
 
 import {
   SafeAreaProvider,
@@ -36,11 +38,15 @@ import {
 
 // screens that can appear outside of the stack
 import Channels from "./screens/Channels";
+import Drawer from "./components/Drawer";
 
 // apollo graphql
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ApolloClient } from "apollo-client";
 import { link, cache } from "./graphql";
+
+// initialize storage
+MeshStore.init();
 
 const client = new ApolloClient({
   link,
@@ -55,6 +61,9 @@ export default function App(props) {
   const [initialNavigationState, setInitialNavigationState] = useState();
   const [dimensions, setDimensions] = useGlobal("dimensions");
   const [activeTheme, setActiveTheme] = useGlobal("activeTheme");
+  const [isMobile, setIsMobile] = useGlobal("isMobile");
+  const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
+
   const { getInitialState } = useLinking(navigationRef);
 
   // Load any resources or data that we need prior to rendering the app
@@ -72,7 +81,7 @@ export default function App(props) {
         });
 
         // get preferred theme from storage
-        let res = await AsyncStorage.getItem("theme");
+        let res = await MeshStore.getItem("theme");
 
         // if we have a preferred theme in storage, set it before we load the app
         if (res !== null) {
@@ -85,6 +94,7 @@ export default function App(props) {
             fontFamily: "SpaceGrotesk",
           },
         };
+        // I don't think this does anything...at least in web
         Text.defaultProps = Text.defaultProps || {};
         Text.defaultProps.style = { fontFamily: "SpaceGrotesk" };
 
@@ -107,6 +117,7 @@ export default function App(props) {
     };
   }, []);
 
+  // on browser resize, or in the bizarre case of the app resizing on a tablet or some nonsense
   const resize = ({ window }) => {
     setDimensions({
       width: window.width,
@@ -114,6 +125,7 @@ export default function App(props) {
     });
   };
 
+  // if the device's orientation is flipped
   const onRotate = () => {
     setDimensions({
       width: Dimensions.get("window").width,
@@ -121,21 +133,22 @@ export default function App(props) {
     });
   };
 
-  const shouldRenderSideBar = () => {
-    if (Platform.OS == "web" && dimensions.width > 576) {
-      return <Channels renderAsSidebar />;
-    }
-    return null;
-  };
+  // effect to display mobile features or not based on resize or orientation
+  useEffect(() => {
+    setIsMobile(Platform.OS !== "web" || dimensions.width <= 576);
+  }, [dimensions]);
 
+  const shouldRenderSideBar = isMobile ? null : <Channels renderAsSidebar />;
+  // isMenuOpen ? { overflow: "hidden" } : {};
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {
     return (
       <ApolloProvider client={client}>
+        <AutoLoginHandler />
         <ImageBackground
           source={require("./assets/images/iss-master.jpg")}
-          style={styles.image}
+          style={[styles.image]}
           progressiveRenderingEnabled
           onLayout={onRotate}
         >
@@ -148,10 +161,12 @@ export default function App(props) {
                 ref={navigationRef}
                 initialState={initialNavigationState}
               >
-                <SafeAreaView style={styles.container}>
-                  {shouldRenderSideBar()}
-                  <RootStack />
-                </SafeAreaView>
+                <Drawer>
+                  <SafeAreaView style={styles.container}>
+                    {shouldRenderSideBar}
+                    <RootStack />
+                  </SafeAreaView>
+                </Drawer>
               </NavigationContainer>
             </SafeAreaProvider>
           </View>

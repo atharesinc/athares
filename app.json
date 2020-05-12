@@ -18,13 +18,6 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
-    },
-    "web": {
-      "build": {
-        "babel": {
-          "include": ["galio-framework"]
-        }
-      }
     }
   }
 }

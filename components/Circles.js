@@ -20,7 +20,7 @@ const Circles = ({ loggedIn = false, ...props }) => {
   };
   const goToCreateCircle = () => {
     if (loggedIn) {
-      RootNavigation.navigate("CreateCircle");
+      RootNavigation.navigate("createCircle");
     }
   };
   let circles = [];

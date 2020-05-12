@@ -1,20 +1,30 @@
-import sha256 from 'hash.js/lib/hash/sha/256';
-import { Crypt } from 'hybrid-crypto-js';
+import sha256 from "hash.js/lib/hash/sha/256";
+import { Crypt } from "hybrid-crypto-js";
 
-import getEnvVars from '../env';
-const { AUTH_URL } = getEnvVars();
+import getEnvVars from "../env";
+
+import getEnvVars from "../env";
+import MeshStore from "./meshStore";
+
+const { AUTH_URL, APP_VERSION } = getEnvVars();
 
 const crypt = new Crypt();
 
 export function sha(text) {
-  return sha256()
-    .update(text)
-    .digest('hex');
+  return sha256().update(text).digest("hex");
 }
 
 /** Generate and store keypair */
-export function pair() {
-  return fetch(`${AUTH_URL}/pair`).then(res => {
+export async function pair() {
+  const token = await MeshStore.getItem("ATHARES_TOKEN");
+
+  return fetch(`${AUTH_URL}/pair`, {
+    mode: "cors",
+    headers: {
+      Authorization: "Bearer " + token,
+      AppVersion: APP_VERSION,
+    },
+  }).then((res) => {
     return res.json();
   });
 }

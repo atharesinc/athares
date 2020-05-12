@@ -1,16 +1,20 @@
-import React, { Component } from "reactn";
+import React, { useGlobal } from "reactn";
 
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
-import * as RootNavigation from "../navigation/RootNavigation";
+import * as RootNavigation from "../../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 
 const Footer = ({ loggedIn = false, belongsToCircle = false, ...props }) => {
+  const [activeCircle] = useGlobal("activeCircle");
+
   const goToAddUser = () => {
     RootNavigation.navigate("addUser");
   };
   const goToLogin = () => {
     RootNavigation.navigate("login");
   };
+
+  // user is not logged in
   if (!loggedIn) {
     return (
       <TouchableOpacity style={styles.footer} onPress={goToLogin}>
@@ -19,6 +23,25 @@ const Footer = ({ loggedIn = false, belongsToCircle = false, ...props }) => {
       </TouchableOpacity>
     );
   }
+
+  // no circle is selected
+  if (!activeCircle) {
+    return (
+      <TouchableOpacity style={styles.footer}>
+        <Feather
+          name="alert-circle"
+          color="#FFFFFF80"
+          size={25}
+          style={styles.icon}
+        />
+        <Text style={[styles.footerText, { color: "#FFFFFF80" }]}>
+          No Circle Selected
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  // user is logged in but does not belong to this circle
   if (!belongsToCircle) {
     return (
       <TouchableOpacity style={styles.footer}>
@@ -29,6 +52,7 @@ const Footer = ({ loggedIn = false, belongsToCircle = false, ...props }) => {
       </TouchableOpacity>
     );
   }
+  // circle is selected, user is logged in, AND they are a member of this circle
   return (
     <TouchableOpacity style={styles.footer} onPress={goToAddUser}>
       <Feather name="user-plus" color="#FFFFFF" size={25} style={styles.icon} />
@@ -49,7 +73,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     color: "#FFF",
-    fontSize: 18,
+    fontSize: 16,
   },
   icon: {
     marginRight: 25,

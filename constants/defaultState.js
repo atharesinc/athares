@@ -1,6 +1,7 @@
-import { Dimensions } from "react-native";
+import { Dimensions, Platform } from "react-native";
 import { themes } from "./themes";
 
+const dimensions = Dimensions.get("window");
 export default {
   user: null,
   activeCircle: null,
@@ -15,7 +16,9 @@ export default {
   searchParams: "",
   isOnline: false,
   dimensions: {
-    ...Dimensions.get("window"),
+    ...dimensions,
   },
   activeTheme: themes["light"],
+  isMobile: Platform.OS !== "web" || dimensions.width <= 576,
+  isMenuOpen: false,
 };

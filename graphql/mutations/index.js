@@ -78,8 +78,20 @@ export const UPDATE_USER = gql`
 `;
 
 export const CREATE_CIRCLE = gql`
-  mutation createCircle($icon: String!, $name: String!, $preamble: String!) {
-    circleCreate(data: { icon: $icon, name: $name, preamble: $preamble }) {
+  mutation createCircle(
+    $icon: String!
+    $name: String!
+    $preamble: String!
+    $user: ID!
+  ) {
+    circleCreate(
+      data: {
+        icon: $icon
+        name: $name
+        preamble: $preamble
+        users: { connect: { id: $user } }
+      }
+    ) {
       id
       icon
       name
@@ -603,6 +615,16 @@ export const DELETE_RESET_REQUEST = gql`
   mutation($id: ID!) {
     deleteResetRequest(id: $id) {
       success
+    }
+  }
+`;
+
+// Custom function Resolvers
+
+export const CREATE_SIGNED_UPLOAD_LINK = gql`
+  mutation($name: String!, $type: String!) {
+    getSignedUrl(name: $name, type: $type) {
+      url
     }
   }
 `;

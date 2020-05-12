@@ -1,74 +1,92 @@
-import React, { Component } from "reactn";
-import ScreenWrapper from "../../components/ScreenWrapper";
+import React, { Component, useGlobal } from "reactn";
 import Amendment from "../../components/Amendment";
+import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
 
-import { Text, ScrollView, StyleSheet } from "react-native";
-
+import { Text, ScrollView, StyleSheet, View } from "react-native";
+import { useQuery } from "@apollo/react-hooks";
 import { UIActivityIndicator } from "react-native-indicators";
 
-function Constitution({ user, activeCircle, ...props }) {
-  _subToMore = (subscribeToMore) => {
-    subscribeToMore({
-      document: SUB_TO_CIRCLES_AMENDMENTS,
-      variables: { id: activeCircle || "" },
-      updateQuery: (prev, { subscriptionData }) => {
-        let {
-          previousValues,
-          mutation,
-          node: amendment,
-        } = subscriptionData.data.Amendment;
-        switch (mutation) {
-          case "CREATED":
-            let ind = prev.Circle.amendments.findIndex(
-              (a) => a.id === amendment.id
-            );
-            // if the new node isn't in the data set
-            if (ind === -1) {
-              prev.Circle.amendments = [...prev.Circle.amendments, amendment];
-            }
-            break;
-          case "UPDATED":
-            let index = prev.Circle.amendments.findIndex(
-              (a) => a.id === amendment.id
-            );
-            prev.Circle.amendments[index] = amendment;
-            break;
-          case "DELETED":
-            let i = prev.Circle.amendments.findIndex(
-              (a) => a.id === previousValues.id
-            );
-            prev.Circle.amendments.splice(i, 1);
-            break;
-          default:
-            break;
-        }
-        return prev;
-      },
-    });
-  };
+function Constitution({ ...props }) {
+  const [activeTheme] = useGlobal("activeTheme");
+  const [activeCircle] = useGlobal("activeCircle");
+
+  const { loading, error, data } = useQuery(GET_AMENDMENTS_FROM_CIRCLE_ID, {
+    variables: {
+      id: activeCircle || "",
+    },
+  });
+
+  // _subToMore = (subscribeToMore) => {
+  //   subscribeToMore({
+  //     document: SUB_TO_CIRCLES_AMENDMENTS,
+  //     variables: { id: activeCircle || "" },
+  //     updateQuery: (prev, { subscriptionData }) => {
+  //       let {
+  //         previousValues,
+  //         mutation,
+  //         node: amendment,
+  //       } = subscriptionData.data.Amendment;
+  //       switch (mutation) {
+  //         case "CREATED":
+  //           let ind = prev.Circle.amendments.findIndex(
+  //             (a) => a.id === amendment.id
+  //           );
+  //           // if the new node isn't in the data set
+  //           if (ind === -1) {
+  //             prev.Circle.amendments = [...prev.Circle.amendments, amendment];
+  //           }
+  //           break;
+  //         case "UPDATED":
+  //           let index = prev.Circle.amendments.findIndex(
+  //             (a) => a.id === amendment.id
+  //           );
+  //           prev.Circle.amendments[index] = amendment;
+  //           break;
+  //         case "DELETED":
+  //           let i = prev.Circle.amendments.findIndex(
+  //             (a) => a.id === previousValues.id
+  //           );
+  //           prev.Circle.amendments.splice(i, 1);
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //       return prev;
+  //     },
+  //   });
+  // };
 
   let circle = null;
   let amendments = [];
 
-  if (circle) {
+  if (data && data.circle) {
+    circle = data.circle;
+    amendments = circle.amendments.items;
+
     return (
-      <ScreenWrapper styles={[styles.wrapper]}>
+      <View
+        styles={[styles.wrapper, { backgroundColor: activeTheme.COLORS.DARK }]}
+      >
         <Text style={styles.preamble}>{circle.preamble}</Text>
         <ScrollView styles={[styles.wrapper]}>
           {amendments.map((amendment, i) => (
-            <Amendment key={i} user={user} amendment={amendment} />
+            <Amendment key={amendment.id} amendment={amendment} />
           ))}
         </ScrollView>
-      </ScreenWrapper>
+      </View>
     );
   } else {
     return (
-      <ScreenWrapper
-        styles={{ justifyContent: "center", alignItems: "center" }}
+      <View
+        styles={{
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: activeTheme.COLORS.DARK,
+        }}
       >
         <UIActivityIndicator color={"#FFFFFF"} style={{ flex: 0 }} />
         <Text style={styles.loadingText}>Loading Constitution</Text>
-      </ScreenWrapper>
+      </View>
     );
   }
 }
