@@ -1,8 +1,8 @@
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 
-export default function HelperText({ text }) {
-  return <Text style={styles.text}>{text}</Text>;
+export default function HelperText({ text, style = {} }) {
+  return <Text style={[styles.text, style]}>{text}</Text>;
 }
 
 const styles = StyleSheet.create({

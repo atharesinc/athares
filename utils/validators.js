@@ -47,6 +47,7 @@ export const validateRegister = ({ email, password, firstName, lastName }) => {
     }
   );
 };
+
 export const validateCircle = ({ name, preamble }) => {
   return validate(
     { name, preamble },
@@ -55,6 +56,31 @@ export const validateCircle = ({ name, preamble }) => {
         presence: { allowEmpty: false },
       },
       preamble: {
+        presence: { allowEmpty: false },
+      },
+    }
+  );
+};
+
+export const validateChannel = ({ name }) => {
+  return validate(
+    { name },
+    {
+      name: {
+        presence: { allowEmpty: false },
+      },
+    }
+  );
+};
+
+export const validateNewRevision = ({ title, text }) => {
+  return validate(
+    { title, text },
+    {
+      title: {
+        presence: { allowEmpty: false },
+      },
+      text: {
         presence: { allowEmpty: false },
       },
     }

@@ -46,7 +46,6 @@ export default function RootStack(props) {
       // style={{ backgroundColor: activeTheme.COLORS.DARK }}
     >
       {/* This is where all the screens go */}
-      <Stack.Screen name="createCircle" component={CreateCircle} />
       <Stack.Screen
         name="app"
         component={shouldDisplayNewsAsApp}
@@ -62,6 +61,7 @@ export default function RootStack(props) {
         component={Login}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="createCircle" component={CreateCircle} />
       <Stack.Screen name="constitution" component={Constitution} />
 
       <Stack.Screen name="news" component={News} options={newsOptions} />

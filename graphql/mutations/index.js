@@ -207,6 +207,7 @@ export const CREATE_MESSAGE = gql`
   }
 `;
 
+// creates a new revision and casts the first vote
 export const CREATE_REVISION = gql`
   mutation createRevision(
     $newText: String!
@@ -232,6 +233,7 @@ export const CREATE_REVISION = gql`
         voterThreshold: $voterThreshold
         hash: $hash
         repeal: $repeal
+        votes: { create: { user: { connect: { id: $user } }, support: true } }
       }
     ) {
       id

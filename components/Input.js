@@ -17,7 +17,7 @@ export default function Input({
 
   return (
     <TouchableOpacity
-      style={{ ...inputStyles.wrapper, ...style }}
+      style={[inputStyles.wrapper, style]}
       onPress={handlePress}
     >
       {label && <Title text={label} />}
@@ -28,7 +28,9 @@ export default function Input({
         numberOfLines={props.multiline ? 2 : 1}
         placeholdercolor={"#FFFFFFb7"}
       />
-      {description && <HelperText text={description} />}
+      {description && (
+        <HelperText text={description} style={{ marginBottom: 0 }} />
+      )}
     </TouchableOpacity>
   );
 }

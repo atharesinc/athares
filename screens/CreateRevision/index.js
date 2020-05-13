@@ -1,26 +1,41 @@
-import React, { useState, useGlobal } from "reactn";
-import ScreenWrapper from "../../components/ScreenWrapper";
-import Input from "../../components/Input";
-
+import React, { useState, useGlobal, useEffect } from "reactn";
 import {
   Text,
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
+  View,
 } from "react-native";
-import PortalButton from "../../components/PortalButton";
+
+import DisclaimerText from "../../components/DisclaimerText";
+import Input from "../../components/Input";
+import GlowButton from "../../components/GlowButton";
 
 import { sha } from "../../utils/crypto";
+import { validateNewRevision } from "../../utils/validators";
+
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
+
+import { CREATE_REVISION } from "../../graphql/mutations";
 
 import { UIActivityIndicator } from "react-native-indicators";
 
-function CreateRevision({ activeCircle, data, ...props }) {
+function CreateRevision(props) {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
 
-  // the longest a revision must persist before votes are counted is 7 days ( many users), the shortest is about 30 seconds (1 user)
+  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
+  const [activeCircle] = useGlobal("activeCircle");
+  const [user] = useGlobal("user");
+
+  const [createRevision] = useMutation(CREATE_REVISION);
+  const { data, loading: loadingQuery } = useQuery(
+    GET_AMENDMENTS_FROM_CIRCLE_ID
+  );
+
+  // the longest a revision must persist before votes are counted is 7 days ( many users), the shortest is about 60 seconds (1 user)
   // add this number of seconds to the createdAt time to determine when a revision should expire, where x is the number of users
   const customSigm = (x) => {
     return 604800 / (1 + Math.pow(Math.E, -1 * (x - 10))) / 2;
@@ -31,22 +46,39 @@ function CreateRevision({ activeCircle, data, ...props }) {
     return 0.4 / (1 + Math.pow(Math.E, -1 * n * 0.2));
   };
 
+  // navigate to new revision after we've created it
+  useEffect(() => {
+    if (activeRevision) {
+      props.navigation.navigate("viewRevision");
+    }
+  }, [activeRevision]);
+
   const submit = async (e) => {
     // validate & trim fields
-    // ???
-    await setLoading(true);
 
-    let {
-      data: { Circle: circle },
-    } = props;
-
-    let numUsers = circle.users.length;
     try {
+      const finalTitle = title.trim();
+      const finalText = text.trim();
+
+      const isValid = validateNewRevision({
+        title: finalTitle,
+        text: finalText,
+      });
+
+      if (isValid !== undefined) {
+        console.error("Error", isValid[Object.keys(isValid)[0]][0]);
+        throw "Sorry, Circles must have a name and preamble.";
+      }
+
+      setLoading(true);
+
+      let numUsers = data.circle.users.items.length;
+
       let newRevision = {
         circle: activeCircle,
-        user: props.user,
-        title: state.name,
-        newText: state.amendment.trim(),
+        user: user,
+        title: finalTitle,
+        newText: finalText,
         expires: new Date(
           new Date().getTime() + Math.max(customSigm(numUsers), 61) * 1000
         ).toJSON(),
@@ -62,118 +94,82 @@ function CreateRevision({ activeCircle, data, ...props }) {
           voterThreshold: newRevision.voterThreshold,
         })
       );
-      let newRevisionRes = await props.createRevision({
+
+      let newRevisionRes = await createRevision({
         variables: {
           ...newRevision,
           hash,
         },
       });
 
-      newRevision.id = newRevisionRes.data.createRevision.id;
-
-      const newVote = {
-        revision: newRevision.id,
-        user: props.user,
-        support: true,
-      };
-
-      await props.createVote({
-        variables: {
-          ...newVote,
-        },
-      });
+      newRevision.id = newRevisionRes.data.revisionCreate.id;
 
       setActiveRevision(newRevision.id);
-
-      props.navigation.navigate("ViewRevision");
     } catch (err) {
       if (
         !err.message.includes("unique constraint would be violated") ||
         !err.message.includes("hash")
       ) {
-        await setLoading(false);
-
         console.error(err);
         Alert.alert(
           "Error",
           "There was an error connecting to the Athares network. Please try again later."
         );
       }
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading !== true && activeCircle && data.Circle) {
+  if (loading || loadingQuery || !activeCircle || !data.circle) {
     return (
-      <ScreenWrapper styles={[styles.wrapper]}>
-        <ScrollView styles={[styles.wrapper]}>
-          <KeyboardAvoidingView behavior="padding">
-            <Text style={styles.header}>
-              DRAFT A NEW PIECE OF LEGISLATION FOR {data.Circle.name}
-            </Text>
-            <Input
-              placeholder={"Amendment Name"}
-              label={"Amendment Name"}
-              description={"Provide a name for your new amendment."}
-              onChangeText={setTitle}
-              value={title}
-              placeholderColor={"#FFFFFFb7"}
-            />
-            <Input
-              value={text}
-              onChangeText={setText}
-              label={"Amendment Text"}
-              description={
-                "Draft your amendment. What do you want to add to this organization?"
-              }
-              placeholderColor={"#FFFFFFb7"}
-              multiline={true}
-            />
-            <Text style={styles.disclaimer}>
-              Pressing "Draft Amendment" will create a new revision for this
-              amendment. Drafts must first be ratified by a minimum electorate
-              of Circle members, and then must be approved with a majority of
-              votes. Amendment drafts are publicly accessible.
-            </Text>
-            <PortalButton title="Create Amendment" onPress={submit} />
-          </KeyboardAvoidingView>
-        </ScrollView>
-      </ScreenWrapper>
-    );
-  } else {
-    return (
-      <ScreenWrapper
-        styles={{ justifyContent: "center", alignItems: "center" }}
+      <View
+        styles={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
         <UIActivityIndicator color={"#FFFFFF"} />
-      </ScreenWrapper>
+      </View>
     );
   }
+  return (
+    <ScrollView contentContainerStyles={styles.wrapper}>
+      <KeyboardAvoidingView behavior="padding">
+        <DisclaimerText
+          upper
+          text={`DRAFT A NEW PIECE OF LEGISLATION FOR ${data.circle.name}`}
+        />
+        <Input
+          label={"Amendment Title"}
+          description={"Provide a name for your new amendment."}
+          onChangeText={setTitle}
+          value={title}
+        />
+        <Input
+          value={text}
+          onChangeText={setText}
+          label={"Amendment Body"}
+          description={
+            "Draft your amendment. What do you want to add to this organization?"
+          }
+          multiline={true}
+        />
+        <DisclaimerText
+          text={
+            'Pressing "Draft Amendment" will create a new revision for this amendment. Drafts must first be ratified by a minimum electorate of Circle members, and then must be approved with a majority of votes. Amendment drafts are publicly accessible.'
+          }
+        />
+        <GlowButton text="Draft Amendment" onPress={submit} />
+      </KeyboardAvoidingView>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    textTransform: "uppercase",
-    letterSpacing: 2,
-    fontSize: 13,
-    color: "#FFFFFFb7",
-    marginBottom: 25,
-  },
   wrapper: {
     alignItems: "stretch",
     justifyContent: "flex-start",
     width: "100%",
     flex: 1,
     padding: 13,
-  },
-  disclaimer: {
-    fontSize: 15,
-    color: "#FFFFFFb7",
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: "#FFF",
   },
 });
 

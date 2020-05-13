@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState, useGlobal } from "reactn";
 import {
   View,
-  Text,
   Image,
   TouchableOpacity,
   Linking,
   Alert,
   TextInput,
+  StyleSheet,
+  ScrollView,
 } from "react-native";
 import MeshStore from "../utils/meshStore";
 
@@ -18,6 +19,11 @@ import { UIActivityIndicator } from "react-native-indicators";
 import { useMutation } from "@apollo/react-hooks";
 import useImperativeQuery from "../utils/useImperativeQuery";
 
+import Input from "../components/Input";
+import GlowButton from "../components/GlowButton";
+import DisclaimerText from "../components/DisclaimerText";
+import TitleTabs from "../components/TitleTabs";
+
 import getEnvVars from "../env";
 const { AUTH_PROFILE_ID } = getEnvVars();
 
@@ -27,6 +33,7 @@ function Login(props) {
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [user, setUser] = useGlobal("user");
   const [pub, setPub] = useGlobal("pub");
+  const [isMobile] = useGlobal("isMobile");
 
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -124,6 +131,9 @@ function Login(props) {
       setLoading(false);
     }
   };
+  const onUpdateTab = (tab) => {
+    props.navigation.navigate(tab);
+  };
 
   if (loading) {
     return (
@@ -142,58 +152,56 @@ function Login(props) {
       </View>
     );
   }
-  // <Image
-  //   style={{ height: 60, width: 60, marginBottom: 10 }}
-  //   source={require("../assets/images/Athares-owl-logo-large-white-thin.png")}
-  // />
-  // <Image
-  //   style={{ height: 20, width: 120, marginBottom: 25 }}
-  //   source={require("../assets/images/Athares-type-small-white.png")}
-  // />
+
+  //  <Image
+  //    style={{ height: 60, width: 60, marginBottom: 20 }}
+  //    source={require("../assets/images/Athares-owl-logo-large-white-thin.png")}
+  //  />
   return (
-    <View>
-      <Text
-        style={{
-          marginBottom: 25,
-          color: "#FFFFFF",
-          fontFamily: "SpaceGrotesk",
-        }}
-      >
-        Login to Athares
-      </Text>
-      <TextInput
-        icon="at-sign"
-        placeholder="email"
-        onChangeText={updateEmail}
-        value={email}
+    <ScrollView
+      contentContainerStyle={[
+        styles.wrapper,
+        !isMobile ? { paddingHorizontal: "20%" } : {},
+      ]}
+    >
+      <Image
+        style={{ height: 30, width: 180, marginTop: 60, marginBottom: 25 }}
+        source={require("../assets/images/Athares-type-small-white.png")}
       />
-      <TextInput
-        icon="lock"
-        placeholder="password"
+      <TitleTabs
+        activeTab="login"
+        tabs={["login", "register"]}
+        onUpdateTab={onUpdateTab}
+      />
+      <Input onChangeText={updateEmail} value={email} label={"Email"} />
+      <Input
         secureTextEntry
         onChangeText={updatePassword}
         value={password}
+        label={"Password"}
       />
 
-      <TouchableOpacity onPress={tryLogin}>
-        <Text>Login</Text>
-      </TouchableOpacity>
+      <GlowButton text={"Login"} onPress={tryLogin} />
 
-      <TouchableOpacity onPress={goToRegister}>
-        <Text>I need to register</Text>
+      <TouchableOpacity onPress={goToPolicy}>
+        <DisclaimerText
+          text={
+            "By logging in you acknowledge that you agree to the Terms of Use and Privacy Policy."
+          }
+        />
       </TouchableOpacity>
-
-      <TouchableOpacity
-        style={{ width: "100%", paddingHorizontal: 15, alignItems: "center" }}
-        onPress={goToPolicy}
-      >
-        <Text style={{ color: "#FFF", alignItems: "center" }}>
-          By logging in you acknowledge that you agree to the Terms of Use and
-          Privacy Policy.
-        </Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 export default Login;
+
+const styles = StyleSheet.create({
+  wrapper: {
+    alignItems: "stretch",
+    justifyContent: "flex-start",
+    width: "100%",
+    flex: 1,
+    padding: 13,
+  },
+});

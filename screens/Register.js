@@ -10,15 +10,21 @@ import {
   TouchableOpacity,
   Linking,
   Image,
-  Text,
   View,
   Alert,
-  TextInput,
+  StyleSheet,
+  Text,
+  ScrollView,
 } from "react-native";
 import MeshStore from "../utils/meshStore";
 
 import { validateRegister } from "../utils/validators";
 import { UIActivityIndicator } from "react-native-indicators";
+
+import Input from "../components/Input";
+import GlowButton from "../components/GlowButton";
+import TitleTabs from "../components/TitleTabs";
+import DisclaimerText from "../components/DisclaimerText";
 
 import getEnvVars from "../env";
 
@@ -27,7 +33,7 @@ import { useMutation } from "@apollo/react-hooks";
 
 const { DEFAULT_USER_IMG, AUTH_PROFILE_ID } = getEnvVars();
 
-function Register({ createUser, signinUser, createUserPref, ...props }) {
+function Register(props) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +44,7 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [user, setUser] = useGlobal("user");
   const [pub, setPub] = useGlobal("pub");
+  const [isMobile] = useGlobal("isMobile");
 
   const [error, setError] = useState("");
 
@@ -165,6 +172,10 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
     }
   };
 
+  const onUpdateTab = (tab) => {
+    props.navigation.navigate(tab);
+  };
+
   if (loading) {
     return (
       <View
@@ -186,59 +197,55 @@ function Register({ createUser, signinUser, createUserPref, ...props }) {
       </View>
     );
   }
+
   return (
-    <>
-      <TextInput
-        placeholder="First Name"
-        onChangeText={setFirstName}
-        value={firstName}
+    <ScrollView
+      contentContainerStyle={[
+        styles.wrapper,
+        !isMobile ? { paddingHorizontal: "20%" } : {},
+      ]}
+    >
+      <Image
+        style={{ height: 30, width: 180, marginTop: 60, marginBottom: 25 }}
+        source={require("../assets/images/Athares-type-small-white.png")}
       />
-      <TextInput
-        placeholder="Last Name"
-        onChangeText={setLastName}
-        value={lastName}
+      <TitleTabs
+        activeTab="register"
+        tabs={["login", "register"]}
+        onUpdateTab={onUpdateTab}
       />
-      <TextInput
-        placeholder="Email Address"
-        onChangeText={updateEmail}
-        value={email}
-      />
-      <TextInput
-        placeholder="Password"
+      <Input label="First Name" onChangeText={setFirstName} value={firstName} />
+      <Input label="Last Name" onChangeText={setLastName} value={lastName} />
+      <Input label="Email" onChangeText={updateEmail} value={email} />
+      <Input
+        label="Password"
         secureTextEntry
         onChangeText={setPassword}
         value={password}
       />
       {error !== "" && <Text style={{ color: "#FF0000" }}>{error}</Text>}
 
-      <TouchableOpacity onPress={tryRegister}>
-        <Text>Register</Text>
-      </TouchableOpacity>
+      <GlowButton text={"Register"} onPress={tryRegister} />
 
-      <TouchableOpacity onPress={toLogin}>
-        <Text>"I already have an account"</Text>
+      <TouchableOpacity onPress={goToPolicy}>
+        <DisclaimerText
+          text={
+            "By registering you acknowledge that you agree to the Terms of Use and Privacy Policy."
+          }
+        />
       </TouchableOpacity>
-
-      <TouchableOpacity
-        style={{
-          width: "100%",
-          paddingHorizontal: 15,
-          alignItems: "center",
-        }}
-        onPress={goToPolicy}
-      >
-        <Text
-          style={{
-            color: "#FFF",
-            alignItems: "center",
-          }}
-        >
-          By registering you acknowledge that you agree to the Terms of Use and
-          Privacy Policy.
-        </Text>
-      </TouchableOpacity>
-    </>
+    </ScrollView>
   );
 }
 
 export default Register;
+
+const styles = StyleSheet.create({
+  wrapper: {
+    alignItems: "stretch",
+    justifyContent: "flex-start",
+    width: "100%",
+    flex: 1,
+    padding: 13,
+  },
+});
