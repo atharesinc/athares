@@ -86,3 +86,14 @@ export const validateNewRevision = ({ title, text }) => {
     }
   );
 };
+
+export const validateUpdatedRevision = ({ text }) => {
+  return validate(
+    { text },
+    {
+      text: {
+        presence: { allowEmpty: false },
+      },
+    }
+  );
+};

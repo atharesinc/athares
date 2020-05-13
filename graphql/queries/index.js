@@ -623,6 +623,20 @@ export const DOES_AMENDMENT_EXIST = gql`
   }
 `;
 
+export const GET_AMENDMENT_BY_ID = gql`
+  query($id: ID!) {
+    amendment(id: $id) {
+      id
+      title
+      circle {
+        id
+        name
+      }
+      text
+    }
+  }
+`;
+
 /*
   8base queries
 */

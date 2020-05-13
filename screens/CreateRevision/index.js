@@ -32,7 +32,12 @@ function CreateRevision(props) {
 
   const [createRevision] = useMutation(CREATE_REVISION);
   const { data, loading: loadingQuery } = useQuery(
-    GET_AMENDMENTS_FROM_CIRCLE_ID
+    GET_AMENDMENTS_FROM_CIRCLE_ID,
+    {
+      variables: {
+        id: activeCircle,
+      },
+    }
   );
 
   // the longest a revision must persist before votes are counted is 7 days ( many users), the shortest is about 60 seconds (1 user)
