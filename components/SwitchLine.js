@@ -1,4 +1,4 @@
-import React from 'reactn';
+import React, { useGlobal } from "reactn";
 import { View, StyleSheet, Text } from "react-native";
 import Switch from "react-native-switch-pro";
 
@@ -8,13 +8,15 @@ const SwitchLine = ({
   onPress = console.log,
   ...props
 }) => {
+  const [activeTheme] = useGlobal("activeTheme");
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <Switch
         onSyncPress={onPress}
-        backgroundActive={"#00DFFC"}
-        backgroundInactive={"#3a3e52"}
+        backgroundActive={activeTheme.COLORS["BLUE0"]}
+        backgroundInactive={activeTheme.COLORS.DARK}
         value={value}
       />
     </View>
@@ -27,10 +29,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20
+    marginBottom: 20,
   },
   label: {
     color: "#FFFFFF",
-    fontSize: 16
-  }
+    fontSize: 16,
+  },
 });

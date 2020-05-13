@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
   headerText: {
     color: "#FFFFFF",
     fontSize: 15,
+    textTransform: "uppercase",
   },
   userIcon: {
     height: 35,

@@ -545,17 +545,17 @@ export const GET_ALL_USERS_CIRCLES_CHANNELS = gql`
 
 export const GET_CIRCLE_PREFS_FOR_USER = gql`
   query($user: ID!, $circle: ID!) {
-    user(id: $user) {
-      id
-      circlePermissions(filter: { circle: { id: { equals: $circle } } }) {
-        items {
-          id
-          amendments
-          revisions
-          useSMS
-          usePush
-          useEmail
-        }
+    circlePermissionsList(
+      filter: {
+        user: { id: { equals: $user } }
+        circle: { id: { equals: $circle } }
+      }
+    ) {
+      items {
+        id
+        amendments
+        revisions
+        useEmail
       }
     }
   }
@@ -631,6 +631,11 @@ export const GET_AMENDMENT_BY_ID = gql`
       circle {
         id
         name
+        users {
+          items {
+            id
+          }
+        }
       }
       text
     }

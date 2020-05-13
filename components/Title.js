@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useGlobal } from "reactn";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function Title({ text, underline = false, spaced = false }) {
+export default function Title({
+  text,
+  underline = false,
+  spaced = false,
+  red = false,
+}) {
+  const [activeTheme] = useGlobal(activeTheme);
+
+  const textStyles = [
+    styles.title,
+    spaced ? styles.spaced : {},
+    red ? { color: activeTheme.COLORS.RED } : {},
+  ];
+
   return (
-    <View
-      style={[
-        styles.row,
-        underline ? styles.underline : {},
-        spaced ? styles.spaced : {},
-      ]}
-    >
-      <Text style={styles.channelTitle}>{text}</Text>
+    <View style={[styles.row, underline ? styles.underline : {}]}>
+      <Text style={textStyles}>{text}</Text>
     </View>
   );
 }
@@ -22,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  channelTitle: {
+  title: {
     fontSize: 18,
     marginBottom: 10,
     color: "#FFFFFF",
