@@ -26,6 +26,7 @@ import defaultState from "./constants/defaultState";
 import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import useLinking from "./navigation/useLinking";
 import AutoLoginHandler from "./components/AutoLoginHandler";
+
 import MeshStore from "./utils/meshStore";
 // theming
 import { themes } from "./constants/themes";
@@ -140,6 +141,7 @@ export default function App(props) {
 
   const shouldRenderSideBar = isMobile ? null : <Channels renderAsSidebar />;
   // isMenuOpen ? { overflow: "hidden" } : {};
+
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {

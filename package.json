@@ -62,9 +62,10 @@
     "react-native-switch-pro": "^1.0.4",
     "react-native-web": "~0.11.7",
     "reactn": "^2.2.7",
-    "simple-crypto-js": "^2.2.0",
+    "simple-crypto-js": "^2.5.0",
     "subscriptions-transport-ws": "^0.9.16",
-    "validate.js": "^0.13.1"
+    "validate.js": "^0.13.1",
+    "react-native-svg": "11.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
