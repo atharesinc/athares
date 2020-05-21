@@ -22,6 +22,7 @@ function SideMenu(props) {
   const [, setDMs] = useGlobal("setDMs");
   const [, setUnreadDMs] = useGlobal("setUnreadDMs");
   const [isMobile] = useGlobal("isMobile");
+  const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
 
   const navigateToScreen = (route) => () => {
     RootNavigation.navigate(route);
@@ -72,6 +73,10 @@ function SideMenu(props) {
   const responsiveWidth = {
     width: isMobile ? "100%" : 300,
   };
+
+  if (!isMenuOpen) {
+    return null;
+  }
   return (
     <View style={[styles.wrapper, responsiveWidth]}>
       {/* User */}

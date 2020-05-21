@@ -1,5 +1,4 @@
 import React, { useGlobal } from "reactn";
-import { Platform } from "react-native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -11,7 +10,7 @@ import CreateCircle from "./CreateCircle";
 import Constitution from "./Constitution";
 
 import Header from "../components/Header";
-
+import { pushTransition } from "../navigation/transitionConfigs";
 const Stack = createStackNavigator();
 
 export default function RootStack(props) {
@@ -27,23 +26,8 @@ export default function RootStack(props) {
       // props =  { scene, previous, navigation }
       screenOptions={{
         header: (props) => <Header {...props} />,
-        cardStyle: { backgroundColor: activeTheme.COLORS.DARK, flex: 1 },
-        //   cardStyleInterpolator: ({ layouts, index, current }) => {
-        //     const {
-        //       screen: { width },
-        //     } = layouts;
-
-        //     const translateX = current.progress.interpolate({
-        //       inputRange: [index - 1, index, index + 1],
-        //       outputRange: [width, 0, -width],
-        //     });
-
-        //     return {
-        //       transform: [{ translateX }],
-        //     };
-        //   },
+        ...pushTransition(activeTheme),
       }}
-      // style={{ backgroundColor: activeTheme.COLORS.DARK }}
     >
       {/* This is where all the screens go */}
       <Stack.Screen
