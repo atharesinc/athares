@@ -25,7 +25,11 @@ function SideMenu(props) {
   const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
 
   const navigateToScreen = (route) => () => {
-    RootNavigation.navigate(route);
+    if (route === "login") {
+      RootNavigation.navigate("portal", { screen: route });
+    } else {
+      RootNavigation.navigate(route);
+    }
     setMenuOpen(false);
   };
 

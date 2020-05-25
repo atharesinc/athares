@@ -1,34 +1,25 @@
 import React, {
   Fragment,
-  useEffect,
   useState,
   useGlobal,
   useRef,
+  useEffect,
 } from "reactn";
 
-import {
-  TouchableOpacity,
-  Linking,
-  Image,
-  View,
-  Alert,
-  StyleSheet,
-  Text,
-  ScrollView,
-} from "react-native";
-import MeshStore from "../utils/meshStore";
+import { TouchableOpacity, Linking, View, Alert, Text } from "react-native";
+import MeshStore from "../../utils/meshStore";
+import * as RootNavigation from "../../navigation/RootNavigation";
 
-import { validateRegister } from "../utils/validators";
+import { validateRegister } from "../../utils/validators";
 import { UIActivityIndicator } from "react-native-indicators";
 
-import Input from "../components/Input";
-import GlowButton from "../components/GlowButton";
-import TitleTabs from "../components/TitleTabs";
-import DisclaimerText from "../components/DisclaimerText";
+import Input from "../../components/Input";
+import GlowButton from "../../components/GlowButton";
+import DisclaimerText from "../../components/DisclaimerText";
 
-import getEnvVars from "../env";
+import getEnvVars from "../../env";
 
-import { SIGN_UP, LOGIN, CREATE_USER_PREF } from "../graphql/mutations";
+import { SIGN_UP, LOGIN } from "../../graphql/mutations";
 import { useMutation } from "@apollo/react-hooks";
 
 const { DEFAULT_USER_IMG, AUTH_PROFILE_ID } = getEnvVars();
@@ -39,24 +30,15 @@ function Register(props) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
-  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
-  const [user, setUser] = useGlobal("user");
-  const [pub, setPub] = useGlobal("pub");
-  const [isMobile] = useGlobal("isMobile");
+  const [, setUser] = useGlobal("user");
 
   const [error, setError] = useState("");
 
   const [signup] = useMutation(SIGN_UP);
   const [login] = useMutation(LOGIN);
-  const [createPrefs] = useMutation(CREATE_USER_PREF);
   let _isMounted = useRef(false);
 
   useEffect(() => {
-    setActiveChannel(null);
-    setActiveCircle(null);
-    setActiveRevision(null);
     _isMounted.current = true;
 
     return () => {
@@ -159,7 +141,7 @@ function Register(props) {
 
       _isMounted.current && setLoading(false);
 
-      props.navigation.navigate("app");
+      RootNavigation.navigate("app");
     } catch (err) {
       // console.log(err.message, err.details);
       setLoading(false);
@@ -170,10 +152,6 @@ function Register(props) {
         Alert.alert("Error", err.message);
       }
     }
-  };
-
-  const onUpdateTab = (tab) => {
-    props.navigation.navigate(tab);
   };
 
   if (loading) {
@@ -199,21 +177,7 @@ function Register(props) {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.wrapper,
-        !isMobile ? { paddingHorizontal: "20%" } : {},
-      ]}
-    >
-      <Image
-        style={{ height: 30, width: 180, marginTop: 60, marginBottom: 25 }}
-        source={require("../assets/images/Athares-type-small-white.png")}
-      />
-      <TitleTabs
-        activeTab="register"
-        tabs={["login", "register"]}
-        onUpdateTab={onUpdateTab}
-      />
+    <Fragment>
       <Input label="First Name" onChangeText={setFirstName} value={firstName} />
       <Input label="Last Name" onChangeText={setLastName} value={lastName} />
       <Input label="Email" onChangeText={updateEmail} value={email} />
@@ -234,18 +198,8 @@ function Register(props) {
           }
         />
       </TouchableOpacity>
-    </ScrollView>
+    </Fragment>
   );
 }
 
 export default Register;
-
-const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-    width: "100%",
-    flex: 1,
-    padding: 13,
-  },
-});

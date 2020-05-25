@@ -3,14 +3,14 @@ import React, { useGlobal } from "reactn";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Channels from "./Channels";
-import Login from "./Login";
-import Register from "./Register";
 import News from "./News";
 import CreateCircle from "./CreateCircle";
 import Constitution from "./Constitution";
+import Portal from "./Portal";
 
 import Header from "../components/Header";
 import { pushTransition } from "../navigation/transitionConfigs";
+
 const Stack = createStackNavigator();
 
 export default function RootStack(props) {
@@ -36,13 +36,8 @@ export default function RootStack(props) {
         options={appOptions}
       />
       <Stack.Screen
-        name="register"
-        component={Register}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="login"
-        component={Login}
+        name="portal"
+        component={Portal}
         options={{ headerShown: false }}
       />
       <Stack.Screen name="createCircle" component={CreateCircle} />

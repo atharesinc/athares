@@ -10,8 +10,9 @@ const Footer = ({ loggedIn = false, belongsToCircle = false, ...props }) => {
   const goToAddUser = () => {
     RootNavigation.navigate("addUser");
   };
+
   const goToLogin = () => {
-    RootNavigation.navigate("login");
+    RootNavigation.navigate("portal", { screen: "login" });
   };
 
   // user is not logged in

@@ -1,39 +1,31 @@
-import React, { useRef, useEffect, useState, useGlobal } from "reactn";
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  Linking,
-  Alert,
-  TextInput,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
-import MeshStore from "../utils/meshStore";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useGlobal,
+  Fragment,
+} from "reactn";
+import { View, TouchableOpacity, Linking, Alert } from "react-native";
+import MeshStore from "../../utils/meshStore";
+import * as RootNavigation from "../../navigation/RootNavigation";
 
-import { validateLogin } from "../utils/validators";
+import { validateLogin } from "../../utils/validators";
 
-import { LOGIN } from "../graphql/mutations";
-import { GET_USER_BY_EMAIL } from "../graphql/queries";
+import { LOGIN } from "../../graphql/mutations";
+import { GET_USER_BY_EMAIL } from "../../graphql/queries";
 import { UIActivityIndicator } from "react-native-indicators";
 import { useMutation } from "@apollo/react-hooks";
-import useImperativeQuery from "../utils/useImperativeQuery";
+import useImperativeQuery from "../../utils/useImperativeQuery";
 
-import Input from "../components/Input";
-import GlowButton from "../components/GlowButton";
-import DisclaimerText from "../components/DisclaimerText";
-import TitleTabs from "../components/TitleTabs";
+import Input from "../../components/Input";
+import GlowButton from "../../components/GlowButton";
+import DisclaimerText from "../../components/DisclaimerText";
 
-import getEnvVars from "../env";
+import getEnvVars from "../../env";
 const { AUTH_PROFILE_ID } = getEnvVars();
 
 function Login(props) {
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
-  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
-  const [user, setUser] = useGlobal("user");
-  const [pub, setPub] = useGlobal("pub");
-  const [isMobile] = useGlobal("isMobile");
+  const [, setUser] = useGlobal("user");
 
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -45,9 +37,6 @@ function Login(props) {
   let _isMounted = useRef(false);
 
   useEffect(() => {
-    setActiveChannel(null);
-    setActiveCircle(null);
-    setActiveRevision(null);
     _isMounted.current = true;
 
     return () => {
@@ -120,7 +109,7 @@ function Login(props) {
 
       _isMounted.current && setLoading(false);
 
-      props.navigation.navigate("app");
+      RootNavigation.navigate("app");
     } catch (err) {
       console.error(new Error(err));
       if (err.message.indexOf("Invalid Credentials") !== -1) {
@@ -130,9 +119,6 @@ function Login(props) {
       }
       setLoading(false);
     }
-  };
-  const onUpdateTab = (tab) => {
-    props.navigation.navigate(tab);
   };
 
   if (loading) {
@@ -153,26 +139,8 @@ function Login(props) {
     );
   }
 
-  //  <Image
-  //    style={{ height: 60, width: 60, marginBottom: 20 }}
-  //    source={require("../assets/images/Athares-owl-logo-large-white-thin.png")}
-  //  />
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.wrapper,
-        !isMobile ? { paddingHorizontal: "20%" } : {},
-      ]}
-    >
-      <Image
-        style={{ height: 30, width: 180, marginTop: 60, marginBottom: 25 }}
-        source={require("../assets/images/Athares-type-small-white.png")}
-      />
-      <TitleTabs
-        activeTab="login"
-        tabs={["login", "register"]}
-        onUpdateTab={onUpdateTab}
-      />
+    <Fragment>
       <Input onChangeText={updateEmail} value={email} label={"Email"} />
       <Input
         secureTextEntry
@@ -190,18 +158,8 @@ function Login(props) {
           }
         />
       </TouchableOpacity>
-    </ScrollView>
+    </Fragment>
   );
 }
 
 export default Login;
-
-const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-    width: "100%",
-    flex: 1,
-    padding: 13,
-  },
-});
