@@ -4,10 +4,10 @@ import { ScrollView, View, Text } from "react-native";
 import Footer from "./Footer";
 import Circles from "../../components/Circles";
 import ChannelItem from "../../components/ChannelItem";
-import ChannelGroupHeader from "../../components/ChannelGroupHeader";
-import CircleHeader from "../../components/CircleHeader";
-import GovernanceChannelItem from "../../components/GovernanceChannelItem";
+import ChannelGroupHeader from "./ChannelGroupHeader";
+import GovernanceChannelItem from "./GovernanceChannelItem";
 import Title from "../../components/Title";
+import CircleTitle from "./CircleTitle";
 
 import Header from "../../components/Header";
 import { Search } from "./Search";
@@ -98,6 +98,10 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
       >
         {circle ? (
           <Fragment>
+            <CircleTitle
+              belongsToCircle={belongsToCircle}
+              title={circle.name}
+            />
             <ChannelGroupHeader title={"GOVERNANCE"} />
             <GovernanceChannelItem
               title={"Constitution"}
@@ -106,12 +110,6 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
             <GovernanceChannelItem title={"Polls"} link={"Revisions"} />
             <GovernanceChannelItem title={"News"} link={"News"} />
 
-            {user && belongsToCircle && (
-              <GovernanceChannelItem
-                title={"Settings"}
-                link={"CircleSettings"}
-              />
-            )}
             <ChannelGroupHeader
               title={"CHANNELS"}
               displayPlus={user && belongsToCircle}
@@ -122,7 +120,9 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
             ))}
           </Fragment>
         ) : (
-          <Title indent text={"Welcome to Athares"} underline />
+          <View style={{ marginTop: 20 }}>
+            <CircleTitle title={"Welcome to Athares"} />
+          </View>
         )}
         {/* <ChannelGroupHeader title={"DIRECT MESSAGES"} displayPlus={true} />
         {dms.map((ch) => (

@@ -1,9 +1,9 @@
-import React, { Component } from 'reactn';
-import { FlatList } from 'react-native';
-import Message from './Message';
+import React from "reactn";
+import { FlatList } from "react-native";
+import Message from "./Message";
 
 export default function Chat({ messages, ...props }) {
-  _renderItem = ({ item, index }) => (
+  const _renderItem = ({ item, index }) => (
     <Message
       multiMsg={
         index < messages.length - 1 &&
@@ -15,12 +15,12 @@ export default function Chat({ messages, ...props }) {
       message={item}
     />
   );
-  _getItemLayout = (data, index) => ({
+  const _getItemLayout = (data, index) => ({
     length: 50,
     offset: 50 * index,
     index,
   });
-  _keyExtractor = item => item.id;
+  const _keyExtractor = (item) => item.id;
 
   return (
     <FlatList

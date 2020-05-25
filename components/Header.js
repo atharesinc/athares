@@ -3,6 +3,8 @@ import React, { useGlobal } from "reactn";
 import { Text, TouchableOpacity, StyleSheet, View, Image } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
+import { GET_CHANNEL_NAME_BY_ID } from "../graphql/queries";
+import { useQuery } from "@apollo/react-hooks";
 
 import AsyncImageAnimated from "react-native-async-image-animated";
 
@@ -43,11 +45,10 @@ function Header({
     }
   };
   const createRevision = () => {
-    props.navigation.navigate("CreateRevision");
+    props.navigation.navigate("createRevision");
   };
 
   const { name } = scene.route;
-  const routeTitleIndex = /[A-Z]/.exec("createChannel").index;
 
   const simpleChannelsArr = [
     "createCircle",
@@ -99,15 +100,21 @@ function Header({
     );
   }
   // render channelName and back
-  if (["Channel", "DMChannel"].indexOf(name) !== -1) {
+  if (["channel", "DMChannel"].indexOf(name) !== -1) {
+    const { loading, data } = useQuery(GET_CHANNEL_NAME_BY_ID, {
+      variables: {
+        id: activeChannel || "",
+      },
+    });
+
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
           <Feather name="chevron-left" size={25} color={"#FFFFFF"} />
         </TouchableOpacity>
-        {data.Channel && (
+        {data && data.channel && (
           <Text style={styles.headerText} numberOfLines={1}>
-            {data.Channel.name}
+            {loading ? "" : data.channel.name}
           </Text>
         )}
         {name === "DMChannel" ? (

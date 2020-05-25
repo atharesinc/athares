@@ -6,6 +6,7 @@ import Channels from "./Channels";
 import News from "./News";
 import CreateCircle from "./CreateCircle";
 import CreateChannel from "./CreateChannel";
+import ViewChannel from "./ViewChannel";
 
 import Constitution from "./Constitution";
 import Portal from "./Portal";
@@ -43,8 +44,9 @@ export default function RootStack(props) {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="createCircle" component={CreateCircle} />
-      <Stack.Screen name="createChannel" component={CreateChannel} />
       <Stack.Screen name="constitution" component={Constitution} />
+      <Stack.Screen name="createChannel" component={CreateChannel} />
+      <Stack.Screen name="channel" component={ViewChannel} />
       <Stack.Screen name="news" component={News} options={newsOptions} />
     </Stack.Navigator>
   );

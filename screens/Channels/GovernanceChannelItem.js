@@ -1,6 +1,6 @@
 import React from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import * as RootNavigation from "../navigation/RootNavigation";
+import * as RootNavigation from "../../navigation/RootNavigation";
 
 const GovernanceChannelItem = ({ link, title, ...props }) => {
   const nav = () => {
@@ -28,15 +28,15 @@ const styles = StyleSheet.create({
   },
   channelTitle: {
     color: "#FFFFFF80",
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "SpaceGrotesk",
   },
-  channelText: {
-    color: "#FFFFFF80",
-    fontSize: 15,
-    maxWidth: "90%",
-    fontFamily: "SpaceGrotesk",
-  },
+  // channelText: {
+  //   color: "#FFFFFF80",
+  //   fontSize: 15,
+  //   maxWidth: "90%",
+  //   fontFamily: "SpaceGrotesk",
+  // },
   unread: {
     color: "#FFF",
   },

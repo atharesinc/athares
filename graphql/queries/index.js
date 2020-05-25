@@ -112,9 +112,18 @@ export const GET_CHANNELS_BY_CIRCLE_ID = gql`
     }
   }
 `;
+
 export const GET_CIRCLE_NAME_BY_ID = gql`
   query getCircleNameById($id: ID!) {
     circle(id: $id) {
+      name
+    }
+  }
+`;
+
+export const GET_CHANNEL_NAME_BY_ID = gql`
+  query getChannelNameById($id: ID!) {
+    channel(id: $id) {
       name
     }
   }

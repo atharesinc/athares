@@ -27,7 +27,7 @@ import useImperativeQuery from "../../utils/useImperativeQuery";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
-import Loader from "../../components/Loader";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import Title from "../../components/Title";
 
 import getEnvVars from "../../env";
@@ -130,22 +130,7 @@ function Login(props) {
   };
 
   if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "transparent",
-          alignItems: "center",
-          backgroundColor: "transparent",
-        }}
-      >
-        <Loader size={150} />
-        <Title center text={"Authorizing..."} />
-      </View>
-    );
+    return <CenteredLoaderWithText text={"Authorizing..."} />;
   }
 
   return (

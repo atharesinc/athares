@@ -24,7 +24,7 @@ import Title from "../../components/Title";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
-import Loader from "../../components/Loader";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 import getEnvVars from "../../env";
 
@@ -164,22 +164,7 @@ function Register(props) {
   };
 
   if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "transparent",
-          alignItems: "center",
-          backgroundColor: "transparent",
-        }}
-      >
-        <Loader size={150} />
-        <Title center text={"Building Profile..."} />
-      </View>
-    );
+    return <CenteredLoaderWithText text={"Building Profile..."} />;
   }
 
   return (

@@ -14,10 +14,11 @@ const ChannelItem = ({
   const nav = () => {
     setActiveChannel(channel.id);
 
-    if (channel.channelType === "dm") {
-      RootNavigation.navigate("DMChannel");
-    } else if (channel.channelType === "group") {
-      RootNavigation.navigate("Channel");
+    // if (channel.channelType === "dm") {
+    //   RootNavigation.navigate("DMChannel");
+    // } else
+    if (channel.channelType === "group") {
+      RootNavigation.navigate("channel");
     }
   };
   return (
@@ -56,16 +57,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     width: "100%",
-    paddingVertical: 15,
+    paddingVertical: 10,
   },
   channelTitle: {
     color: "#FFFFFF80",
-    fontSize: 20,
+    fontSize: 16,
+    fontFamily: "SpaceGrotesk",
   },
   channelText: {
     color: "#FFFFFF80",
-    fontSize: 15,
+    fontSize: 12,
     maxWidth: "90%",
+    fontFamily: "SpaceGrotesk",
   },
   unread: {
     color: "#FFF",

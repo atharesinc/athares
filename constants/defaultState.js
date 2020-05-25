@@ -21,4 +21,5 @@ export default {
   activeTheme: themes["light"],
   isMobile: Platform.OS !== "web" || dimensions.width <= 576,
   isMenuOpen: false,
+  unreadChannels: [],
 };

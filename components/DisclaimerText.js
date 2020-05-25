@@ -1,13 +1,23 @@
 import React, { useGlobal } from "reactn";
 import { Text, StyleSheet } from "react-native";
 
-export default function DisclaimerText({ red = false, ...props }) {
+export default function DisclaimerText({
+  red = false,
+  green = false,
+  upper = false,
+  grey = false,
+  spaced = false,
+  ...props
+}) {
   const [activeTheme] = useGlobal(activeTheme);
 
   const computedStyles = [
     styles.disclaimer,
-    props.upper ? styles.upperCase : {},
+    upper ? styles.upperCase : {},
+    spaced ? styles.spaced : {},
+    grey ? styles.grey : {},
     red ? { color: activeTheme.COLORS.RED } : {},
+    green ? { color: activeTheme.COLORS.GREEN } : {},
   ];
   return <Text style={computedStyles}>{props.text}</Text>;
 }
@@ -21,6 +31,11 @@ const styles = StyleSheet.create({
   },
   upperCase: {
     textTransform: "uppercase",
+  },
+  grey: {
+    color: "#FFFFFFb7",
+  },
+  spaced: {
     letterSpacing: 2,
   },
 });

@@ -65,7 +65,7 @@ export default function App(props) {
   const [isMobile, setIsMobile] = useGlobal("isMobile");
   const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
 
-  const { getInitialState } = useLinking(navigationRef);
+  // const { getInitialState } = useLinking(navigationRef);
 
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {

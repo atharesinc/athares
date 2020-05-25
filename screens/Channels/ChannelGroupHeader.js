@@ -2,7 +2,7 @@ import React from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import * as RootNavigation from "../navigation/RootNavigation";
+import * as RootNavigation from "../../navigation/RootNavigation";
 
 const ChannelGroupHeader = ({ displayPlus = false, title, ...props }) => {
   const nav = () => {
@@ -18,9 +18,11 @@ const ChannelGroupHeader = ({ displayPlus = false, title, ...props }) => {
       <Text style={styles.channelTitle}>{title}</Text>
       {displayPlus ? (
         <TouchableOpacity onPress={nav}>
-          <Feather name="plus" size={25} color={"#FFFFFF"} />
+          <Feather name="plus" size={20} color={"#FFFFFF"} />
         </TouchableOpacity>
-      ) : null}
+      ) : (
+        <Feather name="circle" size={20} color={"transparent"} />
+      )}
     </View>
   );
 };
@@ -33,14 +35,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 5,
     width: "100%",
     borderBottomWidth: 1,
     borderColor: "#FFFFFF",
+    backgroundColor: "#3a3e52",
   },
   channelTitle: {
     color: "#FFFFFF",
-    fontSize: 15,
+    fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: 2,
     fontFamily: "SpaceGrotesk",
