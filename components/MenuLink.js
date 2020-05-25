@@ -34,9 +34,11 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 18,
     color: "#FFFFFF",
+    fontFamily: "SpaceGrotesk",
   },
   disclaimer: {
     fontSize: 14,
     color: "#FFFFFFb7",
+    fontFamily: "SpaceGrotesk",
   },
 });

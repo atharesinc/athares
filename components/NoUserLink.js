@@ -2,12 +2,11 @@ import React from "reactn";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import AsyncImageAnimated from "react-native-async-image-animated";
 
-const UserLink = ({ user, ...props }) => {
-  const userImage = user.icon
-    ? { uri: user.icon }
-    : require("../assets/images/user-default.png");
+export default function NoUserLink(props) {
+  const userImage = require("../assets/images/user-default.png");
+
   return (
-    <TouchableOpacity style={styles.userLink} {...props}>
+    <TouchableOpacity style={styles.userLink} onPress={props.onPress}>
       <View style={styles.imageWrapper}>
         <AsyncImageAnimated
           source={userImage}
@@ -16,18 +15,12 @@ const UserLink = ({ user, ...props }) => {
         />
       </View>
       <View>
-        <Text style={styles.header}>
-          {user.firstName
-            ? user.firstName + " " + (user.lastName || "")
-            : "Hi there"}
-        </Text>
-        <Text style={styles.disclaimer}>View Profile</Text>
+        <Text style={styles.header}>Hello There</Text>
+        <Text style={styles.disclaimer}>Login or Register Here</Text>
       </View>
     </TouchableOpacity>
   );
-};
-
-export default UserLink;
+}
 
 const styles = StyleSheet.create({
   userLink: {

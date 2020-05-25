@@ -4,8 +4,8 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Linking } from "expo";
 import { useQuery } from "@apollo/react-hooks";
 import UserLink from "./UserLink";
+import NoUserLink from "./NoUserLink";
 import MenuLink from "./MenuLink";
-// import ScreenWrapper from "../../../components/ScreenWrapper";
 import MeshStore from "../utils/meshStore";
 
 import { GET_USER_BY_ID } from "../graphql/queries";
@@ -24,13 +24,13 @@ function SideMenu(props) {
   const [isMobile] = useGlobal("isMobile");
   const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
 
-  const navigateToScreen = (route) => () => {
+  const navigateToScreen = (route) => {
     if (route === "login") {
-      RootNavigation.navigate("portal", { screen: route });
+      RootNavigation.navigate("portal", { screen: "login" });
     } else {
       RootNavigation.navigate(route);
     }
-    setMenuOpen(false);
+    setIsMenuOpen(false);
   };
 
   const logout = async () => {
@@ -46,7 +46,7 @@ function SideMenu(props) {
     setUnreadDMs([]);
     await MeshStore.clear();
 
-    navigateToScreen("login");
+    navigateToScreen("app");
   };
 
   const goToLogin = () => {
@@ -87,7 +87,7 @@ function SideMenu(props) {
       {userObj ? (
         <UserLink onPress={goToProfile} user={userObj} />
       ) : (
-        <MenuLink icon="log-in" label="Login" onPress={goToLogin} />
+        <NoUserLink onPress={goToLogin} />
       )}
       <ScrollView>
         {/* Links */}
