@@ -5,7 +5,14 @@ import React, {
   useGlobal,
   Fragment,
 } from "reactn";
-import { View, TouchableOpacity, Linking, Alert } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Linking,
+  Alert,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
@@ -140,7 +147,7 @@ function Login(props) {
   }
 
   return (
-    <Fragment>
+    <ScrollView contentContainerStyle={styles.wrapper}>
       <Input onChangeText={updateEmail} value={email} label={"Email"} />
       <Input
         secureTextEntry
@@ -148,9 +155,7 @@ function Login(props) {
         value={password}
         label={"Password"}
       />
-
       <GlowButton text={"Login"} onPress={tryLogin} />
-
       <TouchableOpacity onPress={goToPolicy}>
         <DisclaimerText
           text={
@@ -158,8 +163,15 @@ function Login(props) {
           }
         />
       </TouchableOpacity>
-    </Fragment>
+    </ScrollView>
   );
 }
 
 export default Login;
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flexGrow: 1,
+    padding: 13,
+  },
+});

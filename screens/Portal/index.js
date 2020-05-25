@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useGlobal } from "reactn";
-import { ScrollView, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 import TitleTabs from "../../components/TitleTabs";
-import { fadeTransition } from "../../navigation/transitionConfigs";
+import { noTransition } from "../../navigation/transitionConfigs";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Login from "./Login";
@@ -32,11 +32,8 @@ export default function Portal(props) {
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.wrapper,
-        !isMobile ? { paddingHorizontal: "20%" } : {},
-      ]}
+    <View
+      style={[styles.wrapper, !isMobile ? { paddingHorizontal: "20%" } : {}]}
     >
       <Image
         style={{ height: 30, width: 180, marginTop: 60, marginBottom: 25 }}
@@ -51,7 +48,7 @@ export default function Portal(props) {
         headerMode="screen"
         screenOptions={{
           header: "none",
-          ...fadeTransition(),
+          ...noTransition(),
         }}
       >
         <Stack.Screen
@@ -65,7 +62,7 @@ export default function Portal(props) {
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
-    </ScrollView>
+    </View>
   );
 }
 

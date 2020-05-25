@@ -67,12 +67,12 @@ export const pushTransition = (theme) => ({
   },
 });
 
-export const fadeTransition = () => ({
+export const noTransition = () => ({
   // set background color of all cards
   cardStyle: { backgroundColor: "transparent" },
-
-  gestureDirection: "horizontal",
-
+  // animated: false,
+  // gestureDirection: "horizontal",
+  animationEnabled: false,
   cardStyleInterpolator: ({ current, next, inverted, layouts: { screen } }) => {
     const opacity = Animated.add(
       current.progress,
@@ -81,12 +81,17 @@ export const fadeTransition = () => ({
       inputRange: [0, 1, 2],
       outputRange: [0, 1, 0],
     });
-
     return {
       cardStyle: {
         opacity,
       },
     };
+
+    //   return {
+    //     cardStyle: {
+    //       opacity,
+    //     },
+    //   };
     //   const { multiply } = Animated;
 
     //   const translateFocused = multiply(

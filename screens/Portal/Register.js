@@ -6,7 +6,15 @@ import React, {
   useEffect,
 } from "reactn";
 
-import { TouchableOpacity, Linking, View, Alert, Text } from "react-native";
+import {
+  TouchableOpacity,
+  Linking,
+  View,
+  Alert,
+  Text,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
@@ -177,7 +185,7 @@ function Register(props) {
   }
 
   return (
-    <Fragment>
+    <ScrollView contentContainerStyle={styles.wrapper}>
       <Input label="First Name" onChangeText={setFirstName} value={firstName} />
       <Input label="Last Name" onChangeText={setLastName} value={lastName} />
       <Input label="Email" onChangeText={updateEmail} value={email} />
@@ -198,8 +206,15 @@ function Register(props) {
           }
         />
       </TouchableOpacity>
-    </Fragment>
+    </ScrollView>
   );
 }
 
 export default Register;
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flexGrow: 1,
+    padding: 13,
+  },
+});
