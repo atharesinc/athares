@@ -126,7 +126,7 @@ export default function ViewChannel(props) {
     channel = data.channel;
     messages = data.channel.messages.items;
     return (
-      <View styles={[styles.wrapper]}>
+      <View style={[styles.wrapper]}>
         <Chat user={user} messages={messages} />
         <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
         <KeyboardAvoidingView behavior="padding" />
@@ -143,9 +143,8 @@ export default function ViewChannel(props) {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "stretch",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     width: "100%",
     flex: 1,
-    padding: 13,
   },
 });

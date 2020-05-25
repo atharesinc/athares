@@ -7,8 +7,10 @@ import UserLink from "./UserLink";
 import NoUserLink from "./NoUserLink";
 import MenuLink from "./MenuLink";
 import MeshStore from "../utils/meshStore";
-
+import Title from "./Title";
+import DisclaimerText from "./DisclaimerText";
 import { GET_USER_BY_ID } from "../graphql/queries";
+import packageJSON from "../package.json";
 
 function SideMenu(props) {
   const [, setActiveChannel] = useGlobal("activeChannel");
@@ -83,30 +85,37 @@ function SideMenu(props) {
   }
   return (
     <View style={[styles.wrapper, responsiveWidth]}>
-      {/* User */}
-      {userObj ? (
-        <UserLink onPress={goToProfile} user={userObj} />
-      ) : (
-        <NoUserLink onPress={goToLogin} />
-      )}
-      <ScrollView>
-        {/* Links */}
-        <MenuLink
-          icon="help-circle"
-          label="About"
-          details="FAQs and Us"
-          onPress={goToAbout}
-        />
-        <MenuLink
-          icon="info"
-          label="Privacy"
-          details="Privacy Policy and Terms of Use"
-          onPress={goToPolicy}
-        />
-        {userObj && (
-          <MenuLink icon="log-out" label="Log out" onPress={logout} />
+      <View>
+        {/* User */}
+        {userObj ? (
+          <UserLink onPress={goToProfile} user={userObj} />
+        ) : (
+          <NoUserLink onPress={goToLogin} />
         )}
-      </ScrollView>
+        <Title text={"Settings"} indent underline />
+        <ScrollView>
+          {/* Links */}
+          <MenuLink
+            icon="help-circle"
+            label="About"
+            details="FAQs and Us"
+            onPress={goToAbout}
+          />
+          <MenuLink
+            icon="info"
+            label="Privacy"
+            details="Privacy Policy and Terms of Use"
+            onPress={goToPolicy}
+          />
+          {userObj && (
+            <MenuLink icon="log-out" label="Log out" onPress={logout} />
+          )}
+        </ScrollView>
+      </View>
+
+      <View style={{ marginLeft: 10 }}>
+        <DisclaimerText grey text={"App Version: " + packageJSON.version} />
+      </View>
     </View>
   );
 }
@@ -114,7 +123,7 @@ function SideMenu(props) {
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "stretch",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     flex: 1,
     paddingTop: 15,
     backgroundColor: "#2f3242",

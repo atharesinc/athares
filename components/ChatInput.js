@@ -154,10 +154,12 @@ const styles = StyleSheet.create({
   sendingText: {
     fontSize: 12,
     color: "#FFFFFFb7",
+    fontFamily: "SpaceGrotesk",
   },
   composerInput: {
     paddingTop: 10,
     color: "#FFFFFF",
+    fontFamily: "SpaceGrotesk",
     flex: 1,
   },
   composerContainer: {

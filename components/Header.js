@@ -101,12 +101,13 @@ function Header({
   }
   // render channelName and back
   if (["channel", "DMChannel"].indexOf(name) !== -1) {
-    const { loading, data } = useQuery(GET_CHANNEL_NAME_BY_ID, {
+    const { loading, data, ...rest } = useQuery(GET_CHANNEL_NAME_BY_ID, {
       variables: {
         id: activeChannel || "",
       },
     });
 
+    console.table({ data, loading, rest, activeChannel });
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
