@@ -20,10 +20,11 @@ import * as RootNavigation from "../../navigation/RootNavigation";
 
 import { validateRegister } from "../../utils/validators";
 import { UIActivityIndicator } from "react-native-indicators";
-
+import Title from "../../components/Title";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
+import Loader from "../../components/Loader";
 
 import getEnvVars from "../../env";
 
@@ -175,30 +176,32 @@ function Register(props) {
           backgroundColor: "transparent",
         }}
       >
-        <UIActivityIndicator
-          color="#FFFFFF"
-          style={{ flex: 1, marginBottom: 15 }}
-        />
-        <Text>Building Profile...</Text>
+        <Loader size={150} />
+        <Title center text={"Building Profile..."} />
       </View>
     );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.wrapper}>
-      <Input label="First Name" onChangeText={setFirstName} value={firstName} />
-      <Input label="Last Name" onChangeText={setLastName} value={lastName} />
-      <Input label="Email" onChangeText={updateEmail} value={email} />
-      <Input
-        label="Password"
-        secureTextEntry
-        onChangeText={setPassword}
-        value={password}
-      />
-      {error !== "" && <Text style={{ color: "#FF0000" }}>{error}</Text>}
+      <View>
+        <Input
+          label="First Name"
+          onChangeText={setFirstName}
+          value={firstName}
+        />
+        <Input label="Last Name" onChangeText={setLastName} value={lastName} />
+        <Input label="Email" onChangeText={updateEmail} value={email} />
+        <Input
+          label="Password"
+          secureTextEntry
+          onChangeText={setPassword}
+          value={password}
+        />
+        {error !== "" && <Text style={{ color: "#FF0000" }}>{error}</Text>}
 
-      <GlowButton text={"Register"} onPress={tryRegister} />
-
+        <GlowButton text={"Register"} onPress={tryRegister} />
+      </View>
       <TouchableOpacity onPress={goToPolicy}>
         <DisclaimerText
           text={
@@ -214,7 +217,8 @@ export default Register;
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexGrow: 1,
-    padding: 13,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
 });

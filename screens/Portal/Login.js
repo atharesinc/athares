@@ -27,6 +27,8 @@ import useImperativeQuery from "../../utils/useImperativeQuery";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
+import Loader from "../../components/Loader";
+import Title from "../../components/Title";
 
 import getEnvVars from "../../env";
 const { AUTH_PROFILE_ID } = getEnvVars();
@@ -87,7 +89,6 @@ function Login(props) {
 
       const [res1, res2] = await Promise.all([prom1, prom2]);
 
-      console.log(res1, res2);
       const {
         data: {
           user: { id },
@@ -141,21 +142,24 @@ function Login(props) {
           backgroundColor: "transparent",
         }}
       >
-        <UIActivityIndicator color="#FFFFFF" />
+        <Loader size={150} />
+        <Title center text={"Authorizing..."} />
       </View>
     );
   }
 
   return (
     <ScrollView contentContainerStyle={styles.wrapper}>
-      <Input onChangeText={updateEmail} value={email} label={"Email"} />
-      <Input
-        secureTextEntry
-        onChangeText={updatePassword}
-        value={password}
-        label={"Password"}
-      />
-      <GlowButton text={"Login"} onPress={tryLogin} />
+      <View>
+        <Input onChangeText={updateEmail} value={email} label={"Email"} />
+        <Input
+          secureTextEntry
+          onChangeText={updatePassword}
+          value={password}
+          label={"Password"}
+        />
+        <GlowButton text={"Login"} onPress={tryLogin} />
+      </View>
       <TouchableOpacity onPress={goToPolicy}>
         <DisclaimerText
           text={
@@ -171,7 +175,8 @@ export default Login;
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexGrow: 1,
-    padding: 13,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
 });

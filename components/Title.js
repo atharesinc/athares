@@ -6,6 +6,8 @@ export default function Title({
   underline = false,
   spaced = false,
   red = false,
+  indent = false,
+  center = false,
 }) {
   const [activeTheme] = useGlobal(activeTheme);
 
@@ -13,10 +15,17 @@ export default function Title({
     styles.title,
     spaced ? styles.spaced : {},
     red ? { color: activeTheme.COLORS.RED } : {},
+    indent ? styles.indent : {},
   ];
 
   return (
-    <View style={[styles.row, underline ? styles.underline : {}]}>
+    <View
+      style={[
+        styles.row,
+        underline ? styles.underline : {},
+        center ? styles.center : {},
+      ]}
+    >
       <Text style={textStyles}>{text}</Text>
     </View>
   );
@@ -41,5 +50,11 @@ const styles = StyleSheet.create({
   },
   spaced: {
     letterSpacing: 2,
+  },
+  indent: {
+    paddingLeft: 15,
+  },
+  center: {
+    justifyContent: "center",
   },
 });
