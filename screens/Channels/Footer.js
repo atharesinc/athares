@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
   footerText: {
     color: "#FFF",
     fontSize: 16,
+    fontFamily: "SpaceGrotesk",
   },
   icon: {
     marginRight: 25,

@@ -11,19 +11,34 @@ import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 import CircleIcon from "./CircleIcon";
 
+import { GET_CIRCLES_BY_USER_ID } from "../graphql/queries";
+import { useQuery } from "@apollo/react-hooks";
+
 const Circles = ({ loggedIn = false, ...props }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
-  const [user, setUser] = useGlobal("user");
+  const [user] = useGlobal("user");
 
   const selectCircle = (id = null) => {
     setActiveCircle(id);
   };
+
   const goToCreateCircle = () => {
     if (loggedIn) {
       RootNavigation.navigate("createCircle");
     }
   };
+
   let circles = [];
+
+  const { loading, error, data } = useQuery(GET_CIRCLES_BY_USER_ID, {
+    variables: {
+      id: user || "",
+    },
+  });
+
+  if (data) {
+    circles = data.user.circles.items;
+  }
 
   return (
     <View style={styles.wrapper}>
@@ -90,6 +105,7 @@ const styles = StyleSheet.create({
   circleLabel: {
     fontSize: 13,
     color: "#ffffffb7",
+    fontFamily: "SpaceGrotesk",
   },
 });
 

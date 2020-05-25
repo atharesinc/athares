@@ -37,6 +37,7 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
       },
     }
   );
+
   if (channelsData) {
     // _subToMore(subscribeToMore);
     circle = channelsData.circle;
@@ -121,7 +122,7 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
             ))}
           </Fragment>
         ) : (
-          <Title text={"Welcome to Athares"} underline />
+          <Title indent text={"Welcome to Athares"} underline />
         )}
         {/* <ChannelGroupHeader title={"DIRECT MESSAGES"} displayPlus={true} />
         {dms.map((ch) => (

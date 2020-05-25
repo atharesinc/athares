@@ -27,9 +27,9 @@ function CreateChannel(props) {
   const [loading, setLoading] = useState(false);
 
   const [activeCircle] = useGlobal("activeCircle");
-  const [activeTheme] = useGlobal("activeTheme");
+
   const [user] = useGlobal("user");
-  const [createCircle] = useMutation(CREATE_CIRCLE);
+  const [createChannel] = useMutation(CREATE_CHANNEL);
   const { data, loading: loadingQuery } = useQuery(GET_CIRCLE_NAME_BY_ID);
 
   useEffect(() => {

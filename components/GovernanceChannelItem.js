@@ -24,16 +24,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     width: "100%",
-    paddingVertical: 15,
+    paddingVertical: 10,
   },
   channelTitle: {
     color: "#FFFFFF80",
     fontSize: 20,
+    fontFamily: "SpaceGrotesk",
   },
   channelText: {
     color: "#FFFFFF80",
     fontSize: 15,
     maxWidth: "90%",
+    fontFamily: "SpaceGrotesk",
   },
   unread: {
     color: "#FFF",

@@ -6,10 +6,11 @@ import * as RootNavigation from "../navigation/RootNavigation";
 
 const ChannelGroupHeader = ({ displayPlus = false, title, ...props }) => {
   const nav = () => {
-    if (title === "DIRECT MESSAGES") {
-      props.navigation.navigate("CreateDM");
-    } else if (title === "CHANNELS") {
-      props.navigation.navigate("CreateChannel");
+    // if (title === "DIRECT MESSAGES") {
+    //   RootNavigation.navigate("c");
+    // } else
+    if (title === "CHANNELS") {
+      RootNavigation.navigate("createChannel");
     }
   };
   return (
@@ -42,5 +43,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textTransform: "uppercase",
     letterSpacing: 2,
+    fontFamily: "SpaceGrotesk",
   },
 });
