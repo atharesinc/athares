@@ -16,7 +16,7 @@ import {
   CREATE_CIRCLE,
   CREATE_SIGNED_UPLOAD_LINK,
 } from "../../graphql/mutations";
-import { processImage, uploadToAWS } from "../../utils/upload";
+import { processFile, uploadToAWS } from "../../utils/upload";
 import { validateCircle } from "../../utils/validators";
 
 import { useMutation } from "@apollo/react-hooks";
@@ -70,7 +70,7 @@ function CreateCircle(props) {
         // finalImage = "data:image/png;base64," + finalImage.base64;
 
         // get file object
-        const preparedFile = processImage(finalImage);
+        const preparedFile = processFile(finalImage);
 
         // get presigned upload link for this image
         let signedUploadUrl = await getSignedUrl({

@@ -3,39 +3,28 @@ const Buffer = require("buffer/").Buffer;
 
 const { AUTH_URL, APP_VERSION } = getEnvVars();
 
-// for uploading images, accepts a uri filepath or base64
-export const processImage = ({ uri }) => {
+// for uploading files, accepts a uri filepath or base64
+export const processFile = ({ uri, name = null }) => {
   let ext = getImageFileExtension(uri);
+  let type = "application";
+  // see if file is image, video, or otherwise
+
+  const imgs = ["gif", "png", "jpg", "jpeg", "bmp"];
+  const videos = ["mp4", "webm", "mkv", "3gp", "mov", "m4v"];
+
+  if (imgs.indexOf(ext.toLowerCase()) !== -1) {
+    type = "image";
+  } else if (videos.indexOf(ext.toLowerCase()) !== -1) {
+    type = "video";
+  }
 
   const file = {
     uri,
-    name: generateUUID(ext),
-    type: "image/" + ext,
+    name: generateUUID(name, ext),
+    type: type + "/" + ext,
   };
 
   return file;
-};
-
-// for uploading everything except images
-export const uploadDocument = async ({ uri, name }) => {
-  try {
-    let ext = getImageFileExtension(name);
-
-    const file = {
-      uri,
-      name: generateUUID(ext),
-      type: `application/${ext}`,
-    };
-
-    let res = await uploadToAWS(file);
-
-    if (res.error) {
-      throw res.error;
-    }
-    return res;
-  } catch (err) {
-    throw err;
-  }
 };
 
 // attach auth token and some other way to make sure only this function can call this url
@@ -88,12 +77,13 @@ function getImageFileExtension(filename) {
   return extension.toLowerCase() === "jpeg" ? "jpg" : extension.toLowerCase();
 }
 
-function generateUUID(ext) {
+function generateUUID(name = null, ext) {
   return (
-    new Date().getTime() +
-    "-" +
-    Math.random().toString(16).replace(".", "") +
-    "." +
-    ext
+    (name ? name + "-" : "") +
+    (new Date().getTime() +
+      "-" +
+      Math.random().toString(16).replace(".", "") +
+      "." +
+      ext)
   );
 }

@@ -16,9 +16,8 @@ import { CREATE_MESSAGE } from "../../graphql/mutations";
 import { GET_MESSAGES_FROM_CHANNEL_ID } from "../../graphql/queries";
 // import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../../graphql/subscriptions";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-// import { uploadImage, uploadDocument } from "../../../utils/upload";
 import KeyboardSpacer from "react-native-keyboard-spacer";
-import Loader from "../../components/Loader";
+import { processFile, uploadToAWS } from "../../utils/upload";
 
 export default function ViewChannel(props) {
   const [uploadInProgress, setUploadInProgress] = useState(false);
@@ -57,52 +56,57 @@ export default function ViewChannel(props) {
   // }
 
   const submit = async (text = "", file = null) => {
-    // let response = null;
-    // try {
-    //   if (file) {
-    //     setUploadInProgress( true)
-    //     const imgs = ["gif", "png", "jpg", "jpeg", "bmp"];
-    //     let extension = file.name.match(/\.(.{1,4})$/i);
-    //     if (imgs.indexOf(extension[1].toLowerCase()) !== -1) {
-    //       response = await uploadImage(file);
-    //     } else {
-    //       response = await uploadDocument(file);
-    //     }
-    //   }
-    //   if (response) {
-    //     if (response.error) {
-    //       console.error(new Error(response.error));
-    //       return false;
-    //     }
-    //   }
-    //   if (text.trim() === "" && !response.url) {
-    //     return false;
-    //   }
-    //   let newMessage = {
-    //     text: text.trim(),
-    //     channel: this.props.activeChannel,
-    //     user: this.props.user,
-    //     file: response ? response.url : null,
-    //     fileName: response ? response.name : null,
-    //   };
-    //   await this.props.createMessage({
-    //     variables: {
-    //       ...newMessage,
-    //     },
-    //   });
-    //   this.setState({
-    //     uploadInProgress: false,
-    //   });
-    // } catch (err) {
-    //   this.setState({
-    //     uploadInProgress: false,
-    //   });
-    //   console.error(new Error(err));
-    //   Alert.alert(
-    //     "Error",
-    //     "We were unable to send your message, please try again later"
-    //   );
-    // }
+    let url = null;
+
+    try {
+      if (file) {
+        setUploadInProgress(true);
+
+        // get file object
+        const preparedFile = processFile(finalImage);
+
+        // get presigned upload link for this image
+        let signedUploadUrl = await getSignedUrl({
+          variables: {
+            name: preparedFile.name,
+            type: preparedFile.type,
+          },
+        });
+
+        // upload file using our pre-approved AWS url
+        let res = await uploadToAWS(
+          signedUploadUrl.data.getSignedUrl.url,
+          preparedFile
+        );
+
+        // finally set the url we want to save to the db with our image
+        url = res;
+      }
+
+      if (text.trim() === "" && !url) {
+        return false;
+      }
+      let newMessage = {
+        text: text.trim(),
+        channel: activeChannel,
+        user: user,
+        file: url ? url : null,
+      };
+
+      await createMessage({
+        variables: {
+          ...newMessage,
+        },
+      });
+    } catch (err) {
+      console.error(new Error(err));
+      Alert.alert(
+        "Error",
+        "We were unable to send your message, please try again later"
+      );
+    } finally {
+      setUploadInProgress(false);
+    }
   };
   //   _subToMore = (subscribeToMore) => {
   //     subscribeToMore({
