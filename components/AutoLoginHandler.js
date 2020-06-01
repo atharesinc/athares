@@ -64,7 +64,11 @@ export default function AutoLoginHandler(props) {
           console.log("No credentials saved, skipping auto login");
         }
       } catch (err) {
-        console.error(new Error(err));
+        if (err.message.includes("expired")) {
+          MeshStore.clear();
+          return;
+        }
+        console.error(err);
       }
     }
     tryLoginOnMount();
