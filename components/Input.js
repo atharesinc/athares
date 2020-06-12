@@ -1,5 +1,10 @@
 import React, { useRef, useState } from "reactn";
-import { TouchableOpacity, TextInput, StyleSheet } from "react-native";
+import {
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import Title from "./Title";
 import HelperText from "./HelperText";
 
@@ -53,7 +58,11 @@ const inputStyles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 20,
     overflow: "hidden",
-    outlineStyle: "none",
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
   input: {
     color: "#FFF",
@@ -74,7 +83,11 @@ const inputStyles = StyleSheet.create({
     textAlignVertical: "top",
     borderRadius: 3,
     fontFamily: "SpaceGrotesk",
-    outlineStyle: "none",
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
   focus: {
     backgroundColor: "#2F3242",

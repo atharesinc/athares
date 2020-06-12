@@ -87,7 +87,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginBottom: 15,
-    outlineStyle: "none",
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
   wrapperInner: {
     borderRadius: 9999,
