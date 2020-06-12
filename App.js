@@ -26,6 +26,7 @@ import defaultState from "./constants/defaultState";
 import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import useLinking from "./navigation/useLinking";
 import AutoLoginHandler from "./components/AutoLoginHandler";
+import OnlineMonitor from "./components/OnlineMonitor";
 
 import MeshStore from "./utils/meshStore";
 // theming
@@ -147,7 +148,6 @@ export default function App(props) {
   } else {
     return (
       <ApolloProvider client={client}>
-        <AutoLoginHandler />
         <ImageBackground
           source={require("./assets/images/iss-master.jpg")}
           style={[styles.image]}
@@ -173,6 +173,9 @@ export default function App(props) {
             </SafeAreaProvider>
           </View>
         </ImageBackground>
+        {/* Put non-rendering components here so they mount after other components*/}
+        <AutoLoginHandler />
+        <OnlineMonitor />
       </ApolloProvider>
     );
   }
@@ -259,7 +262,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    // height: "100%",
     backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",

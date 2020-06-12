@@ -14,7 +14,7 @@ export default {
   dmSettings: false,
   showAddMoreUsers: false,
   searchParams: "",
-  isOnline: false,
+  isOnline: true,
   dimensions: {
     ...dimensions,
   },
