@@ -47,12 +47,22 @@ const withToken = setContext(async (request) => {
   };
 });
 
-// const resetToken = onError(({ networkError }) => {
-//   if (networkError && networkError.statusCode === 401) {
-//     // remove cached token on 401 from the server
-//     token = null;
-//   }
-// });
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message, locations, path, ...rest }) =>
+      console.log(
+        rest,
+        new Error(
+          `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
+            locations
+          )}, Path: ${path}`
+        )
+      )
+    );
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
 
 // const authFlowLink = withToken.concat(resetToken);
 
@@ -69,6 +79,7 @@ const link = split(
     );
   },
   wsLink,
+
   withToken.concat(httpLink)
 );
 
