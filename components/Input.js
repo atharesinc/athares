@@ -1,5 +1,5 @@
-import React, { useRef } from "reactn";
-import { TouchableOpacity, TextInput, Text, StyleSheet } from "react-native";
+import React, { useRef, useState } from "reactn";
+import { TouchableOpacity, TextInput, StyleSheet } from "react-native";
 import Title from "./Title";
 import HelperText from "./HelperText";
 
@@ -9,10 +9,17 @@ export default function Input({
   description = null,
   ...props
 }) {
-  const inputEl = useRef(null);
+  const inputEl = useRef();
+  const [isFocused, setIsFocused] = useState(false);
 
   const handlePress = () => {
     inputEl.current.focus();
+  };
+  const focusUp = (e) => {
+    setIsFocused(true);
+  };
+  const focusOff = (e) => {
+    setIsFocused(false);
   };
 
   return (
@@ -23,10 +30,12 @@ export default function Input({
       {label && <Title text={label} />}
       <TextInput
         {...props}
-        style={inputStyles.input}
+        style={[inputStyles.input, isFocused ? inputStyles.focus : {}]}
         ref={inputEl}
         numberOfLines={props.multiline ? 2 : 1}
         placeholdercolor={"#FFFFFFb7"}
+        onFocus={focusUp}
+        onBlur={focusOff}
       />
       {description && (
         <HelperText text={description} style={{ marginBottom: 0 }} />
@@ -44,12 +53,13 @@ const inputStyles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 20,
     overflow: "hidden",
+    outlineStyle: "none",
   },
   input: {
     color: "#FFF",
     fontSize: 15,
     width: "100%",
-    backgroundColor: "#2F3242",
+    backgroundColor: "#282A38",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -64,5 +74,9 @@ const inputStyles = StyleSheet.create({
     textAlignVertical: "top",
     borderRadius: 3,
     fontFamily: "SpaceGrotesk",
+    outlineStyle: "none",
+  },
+  focus: {
+    backgroundColor: "#2F3242",
   },
 });

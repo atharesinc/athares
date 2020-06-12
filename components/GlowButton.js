@@ -1,4 +1,4 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, useState } from "reactn";
 import {
   TouchableOpacity,
   View,
@@ -17,6 +17,7 @@ export default function GlowButton({
 }) {
   const [activeTheme] = useGlobal("activeTheme");
   const wrapperStyle = [styles.wrapper, style];
+  const [isFocused, setIsFocused] = useState(false);
 
   const buttonStyles = [
     styles.wrapperInner,
@@ -33,6 +34,12 @@ export default function GlowButton({
           backgroundColor: "transparent",
           borderWidth: 3,
           borderColor: activeTheme.COLORS.GREEN,
+          shadowColor: activeTheme.COLORS.GREEN,
+        }
+      : {},
+    isFocused
+      ? {
+          backgroundColor: activeTheme.COLORS.GREEN,
           shadowColor: activeTheme.COLORS.GREEN,
         }
       : {},
@@ -53,8 +60,20 @@ export default function GlowButton({
     textStyle,
   ];
 
+  const focusUp = (e) => {
+    setIsFocused(true);
+  };
+  const focusOff = (e) => {
+    setIsFocused(false);
+  };
+
   return (
-    <TouchableOpacity style={wrapperStyle} {...props}>
+    <TouchableOpacity
+      style={wrapperStyle}
+      {...props}
+      onFocus={focusUp}
+      onBlur={focusOff}
+    >
       <View style={buttonStyles}>
         <Text style={finalTextStyle}>{text.toUpperCase()}</Text>
       </View>
@@ -68,6 +87,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginBottom: 15,
+    outlineStyle: "none",
   },
   wrapperInner: {
     borderRadius: 9999,
