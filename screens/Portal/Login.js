@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";
-
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { validateLogin } from "../../utils/validators";
 
 import { LOGIN } from "../../graphql/mutations";
@@ -134,7 +134,7 @@ function Login(props) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.wrapper}>
+    <KeyboardAwareScrollView>
       <View>
         <Input onChangeText={updateEmail} value={email} label={"Email"} />
         <Input
@@ -152,7 +152,7 @@ function Login(props) {
           }
         />
       </TouchableOpacity>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 

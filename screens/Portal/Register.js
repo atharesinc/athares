@@ -17,6 +17,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
@@ -170,7 +172,7 @@ function Register(props) {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.wrapper}>
+    <KeyboardAwareScrollView>
       <View>
         <Input
           label="First Name"
@@ -196,7 +198,7 @@ function Register(props) {
           }
         />
       </TouchableOpacity>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 
