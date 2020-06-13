@@ -6,7 +6,6 @@ import Circles from "../../components/Circles";
 import ChannelItem from "../../components/ChannelItem";
 import ChannelGroupHeader from "./ChannelGroupHeader";
 import GovernanceChannelItem from "./GovernanceChannelItem";
-import Title from "../../components/Title";
 import CircleTitle from "./CircleTitle";
 
 import Header from "../../components/Header";
@@ -105,10 +104,10 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
             <ChannelGroupHeader title={"GOVERNANCE"} />
             <GovernanceChannelItem
               title={"Constitution"}
-              link={"Constitution"}
+              link={"constitution"}
             />
-            <GovernanceChannelItem title={"Polls"} link={"Revisions"} />
-            <GovernanceChannelItem title={"News"} link={"News"} />
+            <GovernanceChannelItem title={"Polls"} link={"revisions"} />
+            <GovernanceChannelItem title={"News"} link={"news"} />
 
             <ChannelGroupHeader
               title={"CHANNELS"}

@@ -6,8 +6,7 @@ export default function Chat({ messages, ...props }) {
   const _renderItem = ({ item, index }) => (
     <Message
       multiMsg={
-        index < messages.length - 1 &&
-        messages[index + 1].user.id === messages[index].user.id
+        index > 0 && messages[index - 1].user.id === messages[index].user.id
       }
       isMine={item.user.id === props.user}
       key={item.id}
@@ -20,13 +19,13 @@ export default function Chat({ messages, ...props }) {
     offset: 50 * index,
     index,
   });
+
   const _keyExtractor = (item) => item.id;
 
   return (
     <FlatList
       data={messages}
       renderItem={_renderItem}
-      inverted
       keyExtractor={_keyExtractor}
       contentContainerStyle={{ paddingBottom: 40 }}
     />

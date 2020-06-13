@@ -4,7 +4,7 @@ import * as RootNavigation from "../../navigation/RootNavigation";
 
 const GovernanceChannelItem = ({ link, title, ...props }) => {
   const nav = () => {
-    props.navigation.navigate(link);
+    RootNavigation.navigate(link);
   };
   return (
     <TouchableOpacity style={styles.row} onPress={nav}>

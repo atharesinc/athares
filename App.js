@@ -14,6 +14,7 @@ import {
   Platform,
   TouchableOpacity,
   ImageBackground,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SplashScreen } from "expo";
 import * as Font from "expo-font";
@@ -148,31 +149,36 @@ export default function App(props) {
   } else {
     return (
       <ApolloProvider client={client}>
-        <ImageBackground
-          source={require("./assets/images/iss-master.jpg")}
-          style={[styles.image]}
-          progressiveRenderingEnabled
-          onLayout={onRotate}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : null}
+          style={{ flex: 1 }}
         >
-          <View style={styles.container} onLayout={onRotate}>
-            <StatusBar barStyle="light-content" />
-            <SafeAreaProvider
-              initialSafeAreaInsets={initialWindowSafeAreaInsets}
-            >
-              <NavigationContainer
-                ref={navigationRef}
-                initialState={initialNavigationState}
+          <ImageBackground
+            source={require("./assets/images/iss-master.jpg")}
+            style={[styles.image]}
+            progressiveRenderingEnabled
+            onLayout={onRotate}
+          >
+            <View style={styles.container} onLayout={onRotate}>
+              <StatusBar barStyle="light-content" />
+              <SafeAreaProvider
+                initialSafeAreaInsets={initialWindowSafeAreaInsets}
               >
-                <Drawer>
-                  <SafeAreaView style={styles.container}>
-                    {shouldRenderSideBar}
-                    <RootStack />
-                  </SafeAreaView>
-                </Drawer>
-              </NavigationContainer>
-            </SafeAreaProvider>
-          </View>
-        </ImageBackground>
+                <NavigationContainer
+                  ref={navigationRef}
+                  initialState={initialNavigationState}
+                >
+                  <Drawer>
+                    <SafeAreaView style={styles.container}>
+                      {shouldRenderSideBar}
+                      <RootStack />
+                    </SafeAreaView>
+                  </Drawer>
+                </NavigationContainer>
+              </SafeAreaProvider>
+            </View>
+          </ImageBackground>
+        </KeyboardAvoidingView>
         {/* Put non-rendering components here so they mount after other components*/}
         <AutoLoginHandler />
         <OnlineMonitor />

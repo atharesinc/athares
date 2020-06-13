@@ -191,7 +191,6 @@ export const CREATE_MESSAGE = gql`
     $user: ID!
     $channel: ID!
     $file: String
-    $fileName: String
   ) {
     messageCreate(
       data: {
@@ -199,10 +198,18 @@ export const CREATE_MESSAGE = gql`
         channel: { connect: { id: $channel } }
         user: { connect: { id: $user } }
         file: $file
-        fileName: $fileName
       }
     ) {
       id
+      text
+      user {
+        id
+        icon
+        firstName
+        lastName
+      }
+      file
+      createdAt
     }
   }
 `;

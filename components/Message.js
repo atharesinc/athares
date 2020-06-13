@@ -1,25 +1,22 @@
-import React from 'reactn';
-import { StyleSheet, View, Text } from 'react-native';
-import moment from 'moment';
-import ImageMessage from './ImageMessage';
-import FileMessage from './FileMessage';
-import AsyncImageAnimated from 'react-native-async-image-animated';
-import FadeInView from './FadeInView';
+import React, { Fragment } from "reactn";
+import { StyleSheet, View, Text } from "react-native";
+import ImageMessage from "./ImageMessage";
+import FileMessage from "./FileMessage";
+import AsyncImageAnimated from "react-native-async-image-animated";
+import FadeInView from "./FadeInView";
+import { parseDate } from "../utils/transform";
 
 const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
-  const timestamp =
-    props.timestamp.substring(0, 10) === moment().format('YYYY-MM-DD')
-      ? 'Today ' + moment(props.timestamp).format('h:mma')
-      : moment(props.timestamp).format('dddd h:mma');
+  const timestamp = parseDate(props.timestamp, "h:mm bbbb");
 
   const isImage = (file, fileName) => {
-    const imgs = ['gif', 'png', 'jpg', 'jpeg', 'bmp'];
+    const imgs = ["gif", "png", "jpg", "jpeg", "bmp"];
 
     let extension = fileName.match(/\.(.{1,4})$/i)
       ? fileName.match(/\.(.{1,4})$/i)[1]
-      : '';
+      : "";
 
-    if (imgs.findIndex(i => i === extension.toLowerCase()) !== -1) {
+    if (imgs.findIndex((i) => i === extension.toLowerCase()) !== -1) {
       return <ImageMessage file={file} fileName={fileName} />;
     } else {
       return <FileMessage file={file} fileName={fileName} />;
@@ -28,37 +25,36 @@ const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
 
   return (
     <FadeInView style={styles.messageWrapper}>
-      {multiMsg === false && (
-        <Text style={styles.messageUserText}>
-          {msg.user.firstName + ' ' + msg.user.lastName}
-        </Text>
-      )}
+      <View style={styles.userAndTimeWrapper}>
+        {multiMsg === false && (
+          <>
+            <Text style={styles.messageUserText}>
+              {msg.user.firstName + " " + msg.user.lastName}
+            </Text>
+            <Text style={styles.timestamp}>{timestamp}</Text>
+          </>
+        )}
+      </View>
       <View style={styles.messageAvatarAndContentWrapper}>
         {multiMsg === false ? (
           <View style={styles.avatarWrapper}>
             <AsyncImageAnimated
               source={{ uri: msg.user.icon }}
               style={styles.messageAvatar}
-              placeholderColor={'#3a3e52'}
+              placeholderColor={"#3a3e52"}
             />
           </View>
         ) : null}
-        <View style={styles.messageContentWrapper}>
-          {msg.text ? (
-            <Text
-              style={[
-                styles.messageText,
-                isMine ? styles.me : styles.otherUser,
-              ]}
-            >
-              {msg.text}
-            </Text>
-          ) : null}
+        <View
+          style={[
+            styles.messageContentWrapper,
+            isMine ? styles.me : styles.otherUser,
+          ]}
+        >
+          {msg.text ? <Text style={styles.messageText}>{msg.text}</Text> : null}
         </View>
       </View>
-      {msg.file && isImage(msg.file, msg.fileName)}
-
-      <Text style={styles.timestamp}>{timestamp}</Text>
+      {msg.file && isImage(msg.file)}
     </FadeInView>
   );
 };
@@ -67,25 +63,35 @@ export default Message;
 
 const styles = StyleSheet.create({
   messageAvatarAndContentWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     marginBottom: 5,
   },
   messageContentWrapper: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+    borderRadius: 3,
+  },
+  userAndTimeWrapper: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    marginBottom: 10,
   },
   me: {
-    backgroundColor: '#00DFFC30',
-    borderColor: '#00dffc',
-    borderWidth: 1,
+    backgroundColor: "#2f3242",
   },
   otherUser: {
-    backgroundColor: '#ffffff30',
-    borderColor: '#ffffff',
-    borderWidth: 1,
+    backgroundColor: "#3a3e52",
   },
   messageWrapper: {
     margin: 15,
@@ -93,33 +99,37 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   messageUserText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    marginBottom: 10,
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontFamily: "SpaceGrotesk",
   },
   avatarWrapper: {
     height: 40,
     width: 40,
     borderRadius: 9999,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
     marginRight: 15,
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: "#FFFFFF",
   },
   messageAvatar: {
     height: 40,
     width: 40,
   },
   messageText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     paddingVertical: 5,
     paddingHorizontal: 10,
-    // borderRadius: 20
+    borderRadius: 3,
+    fontFamily: "SpaceGrotesk",
+    fontSize: 15,
   },
   timestamp: {
-    color: '#FFFFFFb7',
-    fontSize: 10,
+    color: "#FFFFFFb7",
+    fontSize: 12,
+    marginLeft: 10,
+    fontFamily: "SpaceGrotesk",
   },
 });

@@ -4,9 +4,9 @@ import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
 
 import { Text, ScrollView, StyleSheet, View } from "react-native";
 import { useQuery } from "@apollo/react-hooks";
-import { UIActivityIndicator } from "react-native-indicators";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-function Constitution({ ...props }) {
+export default function Constitution({ ...props }) {
   const [activeTheme] = useGlobal("activeTheme");
   const [activeCircle] = useGlobal("activeCircle");
 
@@ -76,18 +76,7 @@ function Constitution({ ...props }) {
       </View>
     );
   } else {
-    return (
-      <View
-        styles={{
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: activeTheme.COLORS.DARK,
-        }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} style={{ flex: 0 }} />
-        <Text style={styles.loadingText}>Loading Constitution</Text>
-      </View>
-    );
+    return <CenteredLoaderWithText text={"Getting Constitution"} />;
   }
 }
 
@@ -97,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
     flex: 1,
-    padding: 13,
+    padding: 15,
   },
   preamble: {
     color: "#FFFFFF",
@@ -112,5 +101,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-
-export default Constitution;

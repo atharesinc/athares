@@ -14,6 +14,8 @@ import {
   Text,
   ScrollView,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";

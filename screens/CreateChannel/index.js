@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
     flex: 1,
-    padding: 13,
+    padding: 15,
   },
   anchorToBottom: {
     flex: 1,

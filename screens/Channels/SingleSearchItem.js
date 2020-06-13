@@ -73,7 +73,7 @@ const SingleSearchItem = ({ item, category, navigation, ...props }) => {
           </Text>
           {category !== "circles" && (
             <Text style={[styles.suggestionText, styles.smaller]}>
-              {moment(item.createdAt).fromNow()}
+              {fromNow(item.createdAt)}
             </Text>
           )}
         </View>

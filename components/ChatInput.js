@@ -6,9 +6,9 @@ import {
   Image,
   TouchableOpacity,
   Keyboard,
+  Platform,
 } from "react-native";
-import { UIActivityIndicator } from "react-native-indicators";
-
+import Loader from "./Loader";
 import { Feather } from "@expo/vector-icons";
 import CustomActions from "./CustomActions";
 import { AutoGrowTextInput } from "react-native-auto-grow-textinput";
@@ -22,6 +22,7 @@ export default function ChatInput(props) {
   const [showEmoji, setShowEmoji] = useState(false);
   const [rotate, setRotate] = useState(0);
   const [extension, setExtension] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const submit = () => {
     // send the message to parent
@@ -83,16 +84,35 @@ export default function ChatInput(props) {
     }
   };
 
+  const shouldRenderSendButton = () => {
+    if (input !== "" || file !== null) {
+      return (
+        <TouchableOpacity onPress={submit} style={styles.sendContainer}>
+          <Feather name="send" size={20} color={"#FFFFFF"} />
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <View style={styles.sendContainer}>
+          <Feather name="send" size={20} color={"transparent"} />
+        </View>
+      );
+    }
+  };
+
+  const focusUp = (e) => {
+    setIsFocused(true);
+  };
+  const focusOff = (e) => {
+    setIsFocused(false);
+  };
+
   return (
-    <View>
+    <View style={styles.wrapper}>
       {/* message is sending */}
       {props.uploadInProgress && (
         <View style={styles.uploadingWrapper}>
-          <UIActivityIndicator
-            color={"#FFFFFF"}
-            size={20}
-            style={{ flex: 0, marginRight: 15 }}
-          />
+          <Loader size={10} style={{ flex: 0, marginRight: 15 }} />
           <Text style={styles.sendingText}>Sending</Text>
         </View>
       )}
@@ -110,30 +130,41 @@ export default function ChatInput(props) {
         </View>
       )}
       <View style={styles.composerContainer}>
-        <CustomActions updateFile={updateFile} />
-        <AutoGrowTextInput
-          {...props}
-          value={input}
-          style={styles.composerInput}
-          onChangeText={setInput}
-          placeholder={"Enter Message"}
-          multiline={true}
-          onSubmitEditing={Keyboard.dismiss}
-          placeholderTextColor={"#FFFFFFb7"}
-        />
-        {(input !== "" || file !== null) && (
-          <TouchableOpacity onPress={submit} style={styles.sendContainer}>
-            <Feather name="send" size={20} color={"#FFFFFF"} />
-          </TouchableOpacity>
-        )}
+        <View style={{ alignItems: "stretch", flexGrow: 1, flex: 1 }}>
+          <AutoGrowTextInput
+            value={input}
+            style={[styles.composerInput, isFocused ? styles.focus : {}]}
+            onChangeText={setInput}
+            placeholder={"Enter Message"}
+            multiline={true}
+            onSubmitEditing={Keyboard.dismiss}
+            placeholderTextColor={"#FFFFFFb7"}
+            onFocus={focusUp}
+            onBlur={focusOff}
+            autoFocus={true}
+          />
+          <CustomActions updateFile={updateFile} />
+        </View>
+        {shouldRenderSendButton()}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+    borderRadius: 3,
+  },
   filePreviewWrapper: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#2f3242",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -145,7 +176,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   uploadingWrapper: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#2f3242",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
@@ -157,17 +188,31 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceGrotesk",
   },
   composerInput: {
-    paddingTop: 10,
+    padding: 10,
     color: "#FFFFFF",
     fontFamily: "SpaceGrotesk",
     flex: 1,
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
   composerContainer: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#2f3242",
     minHeight: 50,
     flexDirection: "row",
     alignItems: "flex-start",
-    // justifyContent: "space-between"
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+    borderRadius: 3,
   },
   sendContainer: {
     marginTop: 10,
@@ -176,6 +221,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "flex-start",
+    backgroundColor: "#2f3242",
+  },
+  focus: {
     backgroundColor: "#3a3e52",
   },
 });

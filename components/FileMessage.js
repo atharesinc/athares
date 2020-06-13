@@ -49,7 +49,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     paddingHorizontal: 10,
-    borderRadius: 9999,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
   },
   labelText: {
     color: "#FFFFFF",

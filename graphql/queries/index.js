@@ -143,7 +143,6 @@ export const GET_MESSAGES_FROM_CHANNEL_ID = gql`
           text
           createdAt
           file
-          fileName
           user {
             id
             icon

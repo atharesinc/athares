@@ -57,7 +57,6 @@ export default function ViewChannel(props) {
 
   const submit = async (text = "", file = null) => {
     let url = null;
-
     try {
       if (file) {
         setUploadInProgress(true);
@@ -92,12 +91,12 @@ export default function ViewChannel(props) {
         user: user,
         file: url ? url : null,
       };
-
-      await createMessage({
+      const res = await createMessage({
         variables: {
           ...newMessage,
         },
       });
+      console.log({ res });
     } catch (err) {
       console.error(new Error(err));
       Alert.alert(
@@ -122,13 +121,11 @@ export default function ViewChannel(props) {
   //       },
   //     });
   //   };
-  let messages = [];
-  let channel = null;
 
   // subscribe and populate
   if (data && data.channel) {
-    channel = data.channel;
-    messages = data.channel.messages.items;
+    const channel = data.channel;
+    const messages = data.channel.messages.items;
     return (
       <View style={[styles.wrapper]}>
         <Chat user={user} messages={messages} />
@@ -150,5 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     flex: 1,
+    padding: 15,
   },
 });

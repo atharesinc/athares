@@ -50,12 +50,12 @@ export default function CustomActions(props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
+    marginVertical: 10,
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    backgroundColor: "#3a3e52",
-    marginLeft: 15,
+    backgroundColor: "#2f3242",
+    marginLeft: 10,
   },
   wrapper: {
     width: 26,
