@@ -18,7 +18,7 @@ import GlowButton from "../../../components/GlowButton";
 import DisclaimerText from "../../../components/DisclaimerText";
 import Input from "../../../components/Input";
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/client";
 
 export default function EditAmendment(props) {
   const [text, setText] = useState("");

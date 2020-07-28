@@ -19,7 +19,7 @@ import {
 import { processFile, uploadToAWS } from "../../utils/upload";
 import { validateCircle } from "../../utils/validators";
 
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 
 import Title from "../../components/Title";
 import Input from "../../components/Input";

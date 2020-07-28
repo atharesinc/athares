@@ -2,7 +2,7 @@ import React, { useEffect, useGlobal } from "reactn";
 
 import { LOGIN } from "../graphql/mutations";
 import { GET_USER_BY_EMAIL } from "../graphql/queries";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 import useImperativeQuery from "../utils/useImperativeQuery";
 import MeshStore from "../utils/meshStore";
 

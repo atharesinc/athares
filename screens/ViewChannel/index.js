@@ -15,7 +15,7 @@ import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import { CREATE_MESSAGE } from "../../graphql/mutations";
 import { GET_MESSAGES_FROM_CHANNEL_ID } from "../../graphql/queries";
 // import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../../graphql/subscriptions";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/client";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { processFile, uploadToAWS } from "../../utils/upload";
 

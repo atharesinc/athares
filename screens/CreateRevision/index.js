@@ -1,10 +1,9 @@
 import React, { useState, useGlobal, useEffect } from "reactn";
 import {
-  Text,
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  View,
+  Alert,
 } from "react-native";
 
 import DisclaimerText from "../../components/DisclaimerText";
@@ -14,14 +13,13 @@ import GlowButton from "../../components/GlowButton";
 import { sha } from "../../utils/crypto";
 import { validateNewRevision } from "../../utils/validators";
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
 
 import { CREATE_REVISION } from "../../graphql/mutations";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-import { UIActivityIndicator } from "react-native-indicators";
-
-function CreateRevision(props) {
+export default function CreateRevision(props) {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -87,7 +85,9 @@ function CreateRevision(props) {
         expires: new Date(
           new Date().getTime() + Math.max(customSigm(numUsers), 61) * 1000
         ).toJSON(),
-        voterThreshold: Math.round(numUsers * ratifiedThreshold(numUsers)),
+        voterThreshold: Math.round(
+          numUsers * ratifiedThreshold(numUsers)
+        ).toString(),
         repeal: false,
       };
       let hash = await sha(
@@ -110,6 +110,7 @@ function CreateRevision(props) {
       newRevision.id = newRevisionRes.data.revisionCreate.id;
 
       setActiveRevision(newRevision.id);
+      props.navigation.navigate("viewRevision");
     } catch (err) {
       if (
         !err.message.includes("unique constraint would be violated") ||
@@ -121,22 +122,18 @@ function CreateRevision(props) {
           "There was an error connecting to the Athares network. Please try again later."
         );
       }
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
   if (loading || loadingQuery || !activeCircle || !data.circle) {
-    return (
-      <View
-        styles={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} />
-      </View>
-    );
+    return <CenteredLoaderWithText />;
   }
+
   return (
-    <ScrollView contentContainerStyles={styles.wrapper}>
+    <ScrollView contentContainerStyle={styles.wrapper}>
       <KeyboardAvoidingView behavior="padding">
         <DisclaimerText
           upper
@@ -177,5 +174,3 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 });
-
-export default CreateRevision;

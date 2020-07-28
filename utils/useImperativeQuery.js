@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 
 export default function useImperativeQuery(query) {
   const { refetch } = useQuery(query, { skip: true });

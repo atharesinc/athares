@@ -7,9 +7,11 @@ import News from "./News";
 import CreateCircle from "./CreateCircle";
 import CreateChannel from "./CreateChannel";
 import ViewChannel from "./ViewChannel";
-
+import Revisions from "./Revisions";
 import Constitution from "./Constitution";
 import Portal from "./Portal";
+import CreateRevision from "./CreateRevision";
+import ViewRevision from "./ViewRevision";
 
 import Header from "../components/Header";
 import { pushTransition } from "../navigation/transitionConfigs";
@@ -43,11 +45,15 @@ export default function RootStack(props) {
         component={Portal}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="createRevision" component={CreateRevision} />
+      <Stack.Screen name="viewRevision" component={ViewRevision} />
+
       <Stack.Screen name="createCircle" component={CreateCircle} />
       <Stack.Screen name="constitution" component={Constitution} />
       <Stack.Screen name="createChannel" component={CreateChannel} />
       <Stack.Screen name="channel" component={ViewChannel} />
       <Stack.Screen name="news" component={News} options={newsOptions} />
+      <Stack.Screen name="revisions" component={Revisions} />
     </Stack.Navigator>
   );
 }

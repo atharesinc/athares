@@ -3,7 +3,6 @@ import { Crypt } from "hybrid-crypto-js";
 
 import getEnvVars from "../env";
 
-import getEnvVars from "../env";
 import MeshStore from "./meshStore";
 
 const { AUTH_URL, APP_VERSION } = getEnvVars();

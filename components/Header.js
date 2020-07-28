@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, StyleSheet, View, Image } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 import { GET_CHANNEL_NAME_BY_ID } from "../graphql/queries";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 
 import AsyncImageAnimated from "react-native-async-image-animated";
 
@@ -21,6 +21,7 @@ function Header({
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [viewUser, setViewUser] = useGlobal("viewUser");
   const [, setIsMenuOpen] = useGlobal("isMenuOpen");
+
   // replace this with a query hook
   const data = null;
 

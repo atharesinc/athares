@@ -1,79 +1,113 @@
 import React, { useEffect, useGlobal } from "reactn";
-import ScreenWrapper from "../../components/ScreenWrapper";
+
+import { ScrollView, StyleSheet } from "react-native";
+
+import RevisionBoard from "./RevisionBoard";
 import {
-  ScrollView,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import RevisionBoard from "../../components/RevisionBoard";
+  GET_REVISIONS_FROM_CIRCLE_ID,
+  IS_USER_IN_CIRCLE,
+} from "../../graphql/queries";
+import { useQuery } from "@apollo/client";
 
-import { UIActivityIndicator } from "react-native-indicators";
-import moment from "moment";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import GhostButton from "../../components/GhostButton";
+import DisclaimerText from "../../components/DisclaimerText";
 
-function Revisions(props) {
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
+import { unixTime } from "../../utils/transform";
+
+export default function Revisions(props) {
+  const [, setActiveChannel] = useGlobal("activeChannel");
+  const [activeCircle] = useGlobal("activeCircle");
+  const [user] = useGlobal("user");
 
   useEffect(() => {
     setActiveChannel(null);
   }, []);
 
-  const goToSettings = () => {
-    props.navigation.navigate("CircleSettings");
-  };
-
-  let { activeCircle, user, isUserInCircle } = props;
-  let circle = null;
-  let allRevisions = [];
   let belongsToCircle = false;
+  // see if the user actually belongs to this circle
+  const { loading: loading, error: e2, data: belongsToCircleData } = useQuery(
+    IS_USER_IN_CIRCLE,
+    {
+      variables: {
+        circle: activeCircle || "",
+        user: user || "",
+      },
+    }
+  );
 
-  if (!circle) {
-    return (
-      <ScreenWrapper
-        styles={{ justifyContent: "center", alignItems: "center" }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} />
-      </ScreenWrapper>
-    );
-  }
+  const { data, loading: loading2 } = useQuery(GET_REVISIONS_FROM_CIRCLE_ID, {
+    variables: {
+      id: activeCircle || "",
+    },
+  });
+
   if (
-    isUserInCircle.allCircles &&
-    isUserInCircle.allCircles.length !== 0 &&
-    isUserInCircle.allCircles[0].id === activeCircle
+    belongsToCircleData &&
+    belongsToCircleData.circlesList &&
+    belongsToCircleData.circlesList.items.length !== 0 &&
+    belongsToCircleData.circlesList.items[0].id === activeCircle
   ) {
     belongsToCircle = true;
   }
+
+  const goToSettings = () => {
+    props.navigation.navigate("circleSettings");
+  };
+
+  let allRevisions = [];
+
+  if (data && data.circle) {
+  }
+
+  if (loading || loading2) {
+    return <CenteredLoaderWithText />;
+  }
+
+  // Network Error
+  if (!data) {
+    return <CenteredErrorLoader text={"Unable to connect to network"} />;
+  }
+
+  allRevisions = data.circle.revisions.items;
+
   allRevisions = allRevisions.map((r) => {
     return {
       votes: r.votes.filter((v) => v.revision === r.id),
       ...r,
     };
   });
-  let now = moment().valueOf();
+
+  let now = unixTime();
 
   // all non-expired revisions
   let newRevisions = allRevisions.filter(
-    (r) => r.passed === null && now < moment(r.expires).valueOf()
+    (r) => r.passed === null && now < unixTime(r.expires)
   );
   // passed in the last week
   let recentlyPassed = allRevisions.filter(
-    (r) => r.passed === true && now - moment(r.expires).valueOf() <= 604800000
+    (r) => r.passed === true && now - unixTime(r.expires) <= 604800000
   );
   // rejected in the last week
   let recentlyRejected = allRevisions.filter(
-    (r) => r.passed === false && now - moment(r.expires).valueOf() <= 604800000
+    (r) => r.passed === false && now - unixTime(r.expires) <= 604800000
   );
+
   return (
-    <ScreenWrapper styles={[styles.wrapper]} theme>
-      <View style={{ margin: 15, alignItems: "flex-start" }}>
-        <Text style={[styles.disclaimer, { marginBottom: 15 }]}>
-          Review proposed legislation and changes to existing laws.
-        </Text>
-        <TouchableOpacity style={styles.discreteButton} onPress={goToSettings}>
-          <Text style={styles.disclaimer}>Subscribe to Revisions</Text>
-        </TouchableOpacity>
-      </View>
+    <ScrollView contentContainerStyle={styles.wrapper}>
+      <DisclaimerText
+        upper
+        grey
+        text={`Review proposed legislation and changes to existing laws`}
+      />
+
+      <GhostButton
+        text={"Subscribe to Revisions"}
+        onPress={goToSettings}
+        style={styles.button}
+        textStyle={styles.buttonText}
+      />
+
       <ScrollView horizontal={true} style={styles.boardsWrapper}>
         <RevisionBoard
           boardName="New Revisions"
@@ -97,16 +131,9 @@ function Revisions(props) {
           belongsToCircle={belongsToCircle}
         />
       </ScrollView>
-    </ScreenWrapper>
+    </ScrollView>
   );
 }
-
-export default graphql(IS_USER_IN_CIRCLE, {
-  name: "isUserInCircle",
-  options: ({ activeCircle, user }) => ({
-    variables: { circle: activeCircle || "", user: user || "" },
-  }),
-})(Revisions);
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -114,27 +141,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
     flex: 1,
-    paddingTop: 15,
+    padding: 15,
+    flexDirection: "column",
   },
-  disclaimer: {
-    fontSize: 15,
-    color: "#FFFFFFb7",
-    textAlignVertical: "center",
-  },
-  discreteButton: {
-    borderWidth: 1,
-    borderColor: "#FFFFFFb7",
-    borderRadius: 9999,
-    backgroundColor: "#2f3242",
-    padding: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
+  buttonText: {
+    fontSize: 12,
   },
   boardsWrapper: {
     width: "100%",
-    marginHorizontal: 15,
+    // marginHorizontal: 15,
   },
 });

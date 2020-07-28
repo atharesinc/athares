@@ -8,6 +8,7 @@ export default function Title({
   red = false,
   indent = false,
   center = false,
+  style = {},
 }) {
   const [activeTheme] = useGlobal(activeTheme);
 
@@ -18,14 +19,15 @@ export default function Title({
     indent ? styles.indent : {},
   ];
 
+  const viewStyle = [
+    styles.row,
+    underline ? styles.underline : {},
+    center ? styles.center : {},
+    style,
+  ];
+
   return (
-    <View
-      style={[
-        styles.row,
-        underline ? styles.underline : {},
-        center ? styles.center : {},
-      ]}
-    >
+    <View style={viewStyle}>
       <Text style={textStyles}>{text}</Text>
     </View>
   );

@@ -3,7 +3,7 @@ import Amendment from "../../components/Amendment";
 import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
 
 import { Text, ScrollView, StyleSheet, View } from "react-native";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 export default function Constitution({ ...props }) {

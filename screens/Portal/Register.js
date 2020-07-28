@@ -33,7 +33,7 @@ import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import getEnvVars from "../../env";
 
 import { SIGN_UP, LOGIN } from "../../graphql/mutations";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 
 const { DEFAULT_USER_IMG, AUTH_PROFILE_ID } = getEnvVars();
 

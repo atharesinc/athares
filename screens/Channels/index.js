@@ -14,7 +14,7 @@ import {
   IS_USER_IN_CIRCLE,
   GET_CHANNELS_BY_CIRCLE_ID,
 } from "../../graphql/queries";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 
 function Dashboard({ renderAsSidebar = false, ...props }) {
   const [activeCircle] = useGlobal("activeCircle");

@@ -13,6 +13,7 @@ export default function GlowButton({
   text = "",
   red = false,
   green = false,
+  ghost = false,
   ...props
 }) {
   const [activeTheme] = useGlobal("activeTheme");
@@ -37,6 +38,14 @@ export default function GlowButton({
           shadowColor: activeTheme.COLORS.GREEN,
         }
       : {},
+    ghost
+      ? {
+          backgroundColor: "transparent",
+          borderWidth: 3,
+          borderColor: "#FFFFFF",
+          shadowColor: "transparent",
+        }
+      : {},
     isFocused
       ? {
           backgroundColor: activeTheme.COLORS.GREEN,
@@ -55,6 +64,11 @@ export default function GlowButton({
     green
       ? {
           color: activeTheme.COLORS.GREEN,
+        }
+      : {},
+    ghost
+      ? {
+          color: "#FFFFFF",
         }
       : {},
     textStyle,

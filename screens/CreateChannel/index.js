@@ -13,7 +13,7 @@ import { CREATE_CHANNEL } from "../../graphql/mutations";
 import { GET_CIRCLE_NAME_BY_ID } from "../../graphql/queries";
 import { validateChannel } from "../../utils/validators";
 
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/client";
 
 import Title from "../../components/Title";
 import Input from "../../components/Input";

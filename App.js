@@ -5,6 +5,7 @@ import React, {
   useRef,
   setGlobal,
 } from "reactn";
+
 import {
   StatusBar,
   StyleSheet,
@@ -43,8 +44,8 @@ import Channels from "./screens/Channels";
 import Drawer from "./components/Drawer";
 
 // apollo graphql
-import { ApolloProvider } from "@apollo/react-hooks";
-import { ApolloClient } from "apollo-client";
+import { ApolloProvider } from "@apollo/client";
+import { ApolloClient } from "@apollo/client";
 import { link, cache } from "./graphql";
 
 // initialize storage

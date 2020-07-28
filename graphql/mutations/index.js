@@ -222,6 +222,42 @@ export const CREATE_REVISION = gql`
     $circle: ID!
     $user: ID!
     $title: String!
+    $expires: DateTime!
+    $voterThreshold: String!
+    $hash: String!
+    $repeal: Boolean!
+  ) {
+    revisionCreate(
+      data: {
+        newText: $newText
+        oldText: $oldText
+        circle: { connect: { id: $circle } }
+        backer: { connect: { id: $user } }
+        title: $title
+        expires: $expires
+        voterThreshold: $voterThreshold
+        hash: $hash
+        repeal: $repeal
+        votes: { create: { user: { connect: { id: $user } }, support: true } }
+      }
+    ) {
+      id
+      passed
+      amendment {
+        id
+      }
+    }
+  }
+`;
+
+// creates a revision from an existing amendment
+export const CREATE_REVISION_FROM_AMENDMENT = gql`
+  mutation createRevision(
+    $newText: String!
+    $oldText: String
+    $circle: ID!
+    $user: ID!
+    $title: String!
     $amendment: ID
     $expires: DateTime!
     $voterThreshold: String!

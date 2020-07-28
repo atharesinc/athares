@@ -9,7 +9,7 @@ import {
 
 import { GET_CIRCLE_PREFS_FOR_USER } from "../../graphql/queries";
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/client";
 import { UIActivityIndicator } from "react-native-indicators";
 
 import SwitchLine from "../../components/SwitchLine";

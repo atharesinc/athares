@@ -2,7 +2,7 @@ import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Linking } from "expo";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import UserLink from "./UserLink";
 import NoUserLink from "./NoUserLink";
 import MenuLink from "./MenuLink";

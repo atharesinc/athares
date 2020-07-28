@@ -7,8 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import RevisionCard from "./RevisionCard";
+import GlowButton from "../../components/GlowButton";
+import Title from "../../components/Title";
+
 import { Feather } from "@expo/vector-icons";
-import * as RootNavigation from "../navigation/RootNavigation";
+import * as RootNavigation from "../../navigation/RootNavigation";
+
 const RevisionBoard = ({
   boardName = "",
   revisions = [],
@@ -18,19 +22,13 @@ const RevisionBoard = ({
   ...props
 }) => {
   const goToCreateRevision = () => {
-    props.navigation.navigate("CreateRevision");
+    RootNavigation.navigate("createRevision");
   };
   return (
     <View style={styles.revisionBoard}>
-      <Text style={styles.boardHeader}>{boardName}</Text>
+      <Title text={boardName} underline style={styles.boardHeader} />
       {boardName === "New Revisions" && user && belongsToCircle && (
-        <TouchableOpacity
-          style={styles.buttonWrapper}
-          onPress={goToCreateRevision}
-        >
-          <Feather name="plus" size={20} color={"#FFFFFF"} />
-          <Text style={styles.buttonText}>Create Revision</Text>
-        </TouchableOpacity>
+        <GlowButton text={"+ Create Revision"} onPress={goToCreateRevision} />
       )}
       <ScrollView style={styles.revisionScroll}>
         {revisions.map((r) => (
@@ -49,11 +47,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   boardHeader: {
-    fontSize: 20,
-    paddingBottom: 10,
-    color: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#FFFFFF",
     marginBottom: 15,
   },
   buttonWrapper: {
@@ -69,7 +62,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#FFFFFF",
-    fontSize: 15,
+    fontSize: 14,
     marginLeft: 10,
   },
   revisionScroll: {

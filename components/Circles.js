@@ -1,4 +1,4 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, useEffect } from "reactn";
 
 import {
   Text,
@@ -12,7 +12,7 @@ import { Feather } from "@expo/vector-icons";
 import CircleIcon from "./CircleIcon";
 
 import { GET_CIRCLES_BY_USER_ID } from "../graphql/queries";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 
 const Circles = ({ loggedIn = false, ...props }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
@@ -48,6 +48,13 @@ const Circles = ({ loggedIn = false, ...props }) => {
   if (data) {
     circles = data.user.circles.items;
   }
+
+  // this may come back to haunt me
+  useEffect(() => {
+    if (circles.length > 0) {
+      setActiveCircle(circles[0].id);
+    }
+  }, [circles]);
 
   return (
     <View style={styles.wrapper}>
