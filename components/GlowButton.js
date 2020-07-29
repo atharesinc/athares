@@ -52,6 +52,12 @@ export default function GlowButton({
           shadowColor: activeTheme.COLORS.GREEN,
         }
       : {},
+    isFocused && red
+      ? {
+          backgroundColor: activeTheme.COLORS.RED,
+          shadowColor: activeTheme.COLORS.RED,
+        }
+      : {},
   ];
 
   const finalTextStyle = [
@@ -69,6 +75,11 @@ export default function GlowButton({
     ghost
       ? {
           color: "#FFFFFF",
+        }
+      : {},
+    isFocused
+      ? {
+          color: activeTheme.COLORS.DARK,
         }
       : {},
     textStyle,

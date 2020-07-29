@@ -1,13 +1,15 @@
-import { HttpLink, split } from "@apollo/client";
+import { HttpLink, split, ApolloLink } from "@apollo/client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { InMemoryCache } from "@apollo/client/cache";
 // import { RetryLink } from "@apollo/client/link/retry";
-import { setContext } from "apollo-link-context";
+import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import getEnvVars from "../env";
-const { GQL_HTTP_URL, GQL_WS_URL } = getEnvVars();
+const { GQL_HTTP_URL, GQL_WS_URL, EIGHT_BASE_WORKSPACE_ID } = getEnvVars();
 import MeshStore from "../utils/meshStore";
+
+import { SubscriptionLink } from "@8base/apollo-links";
 
 // Create an http link:
 const httpLink = new HttpLink({
@@ -17,19 +19,57 @@ const httpLink = new HttpLink({
 let token;
 
 // Create a WebSocket link:
-const wsLink = setContext(async () => {
-  if (!token) {
-    token = await MeshStore.getItem("ATHARES_TOKEN");
-  }
-  return new WebSocketLink({
-    uri: GQL_WS_URL,
-    options: {
-      reconnect: true,
-      connectionParams: {
-        authToken: token ? "Bearer " + token : "",
-      },
-    },
-  });
+// const wsLink = setContext(async () => {
+//   if (!token) {
+//     token = await MeshStore.getItem("ATHARES_TOKEN");
+//   }
+
+//   // return new SubscriptionLink({
+//   //   uri: "wss://api-ws.8base.com",
+//   //   getAuthState: () => ({
+//   //     token,
+//   //     workspaceId: EIGHT_BASE_WORKSPACE_ID,
+//   //   }),
+//   //   onAuthError: (error) => {
+//   //     console.log("log", "[Subscription error]:", error);
+//   //   },
+//   // });
+//   return new WebSocketLink({
+//     uri: GQL_WS_URL,
+//     // // uri: "wss://ws.8base.com",
+//     // token,
+//     // workspaceId: EIGHT_BASE_WORKSPACE_ID,
+//     // getAuthState: () => ({
+//     //   token,
+//     //   workspaceId: EIGHT_BASE_WORKSPACE_ID,
+//     // }),
+//     // onAuthError: (error) => {
+//     //   console.log("log", "[Subscription error]:", error);
+//     // },
+//     options: {
+//       reconnect: false,
+//       connectionParams: {
+//         // Authorization: token ? `Bearer ${token}` : null,
+//         authToken: token ? "Bearer " + token : "",
+//         //   token: token ? "Bearer " + token : "",
+//         //   workspaceId: EIGHT_BASE_WORKSPACE_ID,
+//       },
+//     },
+//   });
+// });
+
+const wsLink = new SubscriptionLink({
+  uri: "wss://ws.8base.com",
+  getAuthState: async () => {
+    const token = await MeshStore.getItem("ATHARES_TOKEN");
+    return {
+      token: token ? token : "",
+      workspaceId: EIGHT_BASE_WORKSPACE_ID,
+    };
+  },
+  onAuthError: (error) => {
+    console.log("log", "[Subscription error]:", error);
+  },
 });
 
 // create cache
@@ -78,8 +118,9 @@ const link = split(
     );
   },
   wsLink,
-
   withToken.concat(httpLink)
 );
+
+// const link = ApolloLink.from([errorLink, splitLink]);
 
 export { link, cache };

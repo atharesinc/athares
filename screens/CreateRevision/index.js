@@ -49,13 +49,6 @@ export default function CreateRevision(props) {
     return 0.4 / (1 + Math.pow(Math.E, -1 * n * 0.2));
   };
 
-  // navigate to new revision after we've created it
-  useEffect(() => {
-    if (activeRevision) {
-      props.navigation.navigate("viewRevision");
-    }
-  }, [activeRevision]);
-
   const submit = async (e) => {
     // validate & trim fields
 
@@ -109,8 +102,9 @@ export default function CreateRevision(props) {
 
       newRevision.id = newRevisionRes.data.revisionCreate.id;
 
-      setActiveRevision(newRevision.id);
-      props.navigation.navigate("viewRevision");
+      setActiveRevision(newRevision.id, () => {
+        props.navigation.navigate("viewRevision");
+      });
     } catch (err) {
       if (
         !err.message.includes("unique constraint would be violated") ||

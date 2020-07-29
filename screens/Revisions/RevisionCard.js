@@ -1,5 +1,10 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, useEffect } from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import RevisionCategory from "../../components/RevisionCategory";
+import * as RootNavigation from "../../navigation/RootNavigation";
+import DisclaimerText from "../../components/DisclaimerText";
+import Card from "../../components/Card";
+import VotesCounter from "../../components/VotesCounter";
 
 const RevisionCard = ({
   revision: {
@@ -16,66 +21,49 @@ const RevisionCard = ({
 }) => {
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
 
-  const renderCategory = () => {
-    if (repeal) {
-      return (
-        <View style={[styles.cardCategory, styles.redBorder]}>
-          <Text style={[styles.cardCategoryText, styles.redText]}>REPEAL</Text>
-        </View>
-      );
-    }
-    if (amendment !== null) {
-      return (
-        <View style={styles.cardCategory}>
-          <Text style={styles.cardCategoryText}>REVISION</Text>
-        </View>
-      );
-    }
-
-    return (
-      <View style={[styles.cardCategory, styles.greenBorder]}>
-        <Text style={[styles.cardCategoryText, styles.greenText]}>NEW</Text>
-      </View>
-    );
-  };
   const goToRevision = () => {
     setActiveRevision(id);
-    props.navigation.navigate("ViewRevision");
   };
-  const support = votes.filter(({ support }) => support.length);
+
+  useEffect(() => {
+    if (activeRevision) {
+      RootNavigation.navigate("viewRevision");
+    }
+  }, [activeRevision]);
+
+  const support = votes.items.filter(({ support }) => support).length;
   const img = backer
     ? { uri: backer.icon }
     : require("../../assets/images/user-default.png");
+
   return (
     <TouchableOpacity style={styles.cardWrapper} onPress={goToRevision}>
-      <Text style={styles.cardHeader}>{title}</Text>
-      <View style={styles.cardBody}>
+      <View style={styles.cardHeader}>
+        <DisclaimerText text={title} style={styles.marginBottomZero} />
+      </View>
+      <Card>
         <View style={styles.cardStats}>
-          {renderCategory()}
-          <View style={styles.cardVotesWrapper}>
-            <Text style={styles.cardVotesSupport}>+{support}</Text>
-            <Text style={styles.slash}>/</Text>
-            <Text style={styles.cardVotesReject}>
-              -{votes.length - support}
-            </Text>
-          </View>
+          <RevisionCategory amendment={amendment} repeal={repeal} />
+          <VotesCounter
+            support={support}
+            reject={votes.items.length - support}
+          />
         </View>
-        <Text
-          style={styles.revisionText}
+        <DisclaimerText
           ellipsizeMode={"tail"}
           numberOfLines={3}
-        >
-          {newText}
-        </Text>
+          text={newText}
+        />
         <View style={styles.backerWrapper}>
           <View style={styles.backerImgWrapper}>
             <Image style={styles.backerImg} source={img} />
           </View>
-          <Text style={styles.proposedDate}>
-            {new Date(createdAt).toLocaleString()}
-          </Text>
+          <DisclaimerText
+            text={new Date(createdAt).toLocaleString()}
+            style={styles.marginBottomZero}
+          />
         </View>
-      </View>
+      </Card>
     </TouchableOpacity>
   );
 };
@@ -89,10 +77,11 @@ const styles = StyleSheet.create({
   },
   cardHeader: {
     backgroundColor: "#3a3e52",
-    // width: "100%",
     padding: 10,
-    color: "#FFFFFF",
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
   },
+  marginBottomZero: { marginBottom: 0 },
   cardBody: {
     width: "100%",
     padding: 10,
@@ -106,41 +95,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    marginBottom: 15,
-  },
-  cardCategory: {
-    borderRadius: 9999,
-    borderWidth: 2,
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#00DFFC",
-  },
-  cardCategoryText: {
-    textTransform: "uppercase",
-    color: "#00DFFC",
-  },
-  cardVotesWrapper: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  cardVotesSupport: {
-    fontSize: 12,
-    color: "#9eebcf",
-  },
-  slash: {
-    fontSize: 12,
-    color: "#FFFFFF",
-  },
-  cardVotesReject: {
-    fontSize: 12,
-    color: "#ff725c",
-  },
-  revisionText: {
-    fontSize: 15,
-    color: "#FFFFFF",
     marginBottom: 15,
   },
   backerWrapper: {
@@ -158,6 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
+    borderColor: "#FFF",
   },
   backerImg: {
     height: 40,

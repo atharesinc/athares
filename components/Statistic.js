@@ -1,26 +1,22 @@
-import React from 'reactn';
-import { View, Text, StyleSheet } from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import Title from "./Title";
+import DisclaimerText from "./DisclaimerText";
 
 export default function Statistic({ header, text, style = {}, ...props }) {
   return (
-    <View style={[styles.wrapper, style]} {...props}>
-      <Text style={styles.header}>{header}</Text>
-      <Text style={styles.text}>{text}</Text>
+    <View style={[styles.statWrapper, style]} {...props}>
+      <DisclaimerText grey text={header} style={styles.marginBottomZero} />
+      <Title text={text} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginRight: 20,
-    marginBottom: 10
+  statWrapper: {
+    marginBottom: 15,
   },
-  header: {
-    fontSize: 16,
-    color: "#FFFFFFb7"
+  marginBottomZero: {
+    marginBottom: 0,
   },
-  text: {
-    fontSize: 22,
-    color: "#FFFFFF"
-  }
 });

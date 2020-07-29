@@ -73,11 +73,10 @@ export default function Revisions(props) {
 
   allRevisions = allRevisions.map((r) => {
     return {
-      votes: r.votes.filter((v) => v.revision === r.id),
+      votes: r.votes.items.filter((v) => v.revision === r.id),
       ...r,
     };
   });
-
   let now = unixTime();
 
   // all non-expired revisions

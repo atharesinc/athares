@@ -261,7 +261,7 @@ export const GET_ACTIVE_REVISIONS_BY_USER_ID = gql`
       circles {
         items {
           id
-          revisions {
+          revisions(filter: { passed: { is_empty: true } }) {
             items {
               repeal
               expires

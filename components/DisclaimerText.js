@@ -7,9 +7,10 @@ export default function DisclaimerText({
   upper = false,
   grey = false,
   spaced = false,
+  style = {},
   ...props
 }) {
-  const [activeTheme] = useGlobal(activeTheme);
+  const [activeTheme] = useGlobal("activeTheme");
 
   const computedStyles = [
     styles.disclaimer,
@@ -18,8 +19,13 @@ export default function DisclaimerText({
     grey ? styles.grey : {},
     red ? { color: activeTheme.COLORS.RED } : {},
     green ? { color: activeTheme.COLORS.GREEN } : {},
+    style,
   ];
-  return <Text style={computedStyles}>{props.text}</Text>;
+  return (
+    <Text style={computedStyles} {...props}>
+      {props.text}
+    </Text>
+  );
 }
 
 const styles = StyleSheet.create({

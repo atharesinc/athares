@@ -8,90 +8,108 @@ import {
   Image,
   Alert,
 } from "react-native";
-import ScreenWrapper from "../../../components/ScreenWrapper";
-import Statistic from "../../../components/Statistic";
-import DiffSection from "../../../components/DiffSection";
-import moment from "moment";
+import Statistic from "../../components/Statistic";
+import DiffSection from "./DiffSection";
+import { unixTime } from "../../utils/transform";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import Title from "../../components/Title";
+import DisclaimerText from "../../components/DisclaimerText";
+import Card from "../../components/Card";
+import VotesCounter from "../../components/VotesCounter";
+import GlowButton from "../../components/GlowButton";
 
-import * as RootNavigation from "./navigation/RootNavigation";
+import { CREATE_VOTE, UPDATE_VOTE } from "../../graphql/mutations";
+import { GET_REVISION_BY_ID, IS_USER_IN_CIRCLE } from "../../graphql/queries";
 
-import { UIActivityIndicator } from "react-native-indicators";
+import { useQuery, useMutation } from "@apollo/client";
 
-function ViewRevision(props) {
+import * as RootNavigation from "../../navigation/RootNavigation";
+
+export default function ViewRevision(props) {
   const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
+  const [activeRevision] = useGlobal("activeRevision");
+  const [user] = useGlobal("user");
+  const [activeCircle] = useGlobal("activeCircle");
+  const [activeViewUser, setActiveViewUser] = useGlobal("activeViewUser");
+  let belongsToCircle = false;
+
+  const { data: isUserInCircle, loading } = useQuery(IS_USER_IN_CIRCLE, {
+    variables: { circle: activeCircle || "", user: user || "" },
+  });
+
+  const { data, loading: loading2 } = useQuery(GET_REVISION_BY_ID, {
+    variables: { id: activeRevision || "" },
+  });
+
+  const [createVote] = useMutation(CREATE_VOTE);
+  const [updateVote] = useMutation(UPDATE_VOTE);
 
   useEffect(() => {
     setActiveChannel(null);
   }, []);
 
-  // const checkIfPass = () => {
-  //   forceUpdate();
-  // };
-
-  const goToUser = (id) => {
-    setActiveViewUser(id);
-    props.navigation.navigate("ViewOtherUser");
-  };
-
-  const renderCategory = ({ repeal = false, amendment = null }) => {
-    if (repeal) {
-      return (
-        <View style={[styles.cardCategory, styles.redBorder]}>
-          <Text style={[styles.cardCategoryText, styles.redText]}>REPEAL</Text>
-        </View>
-      );
+  useEffect(() => {
+    if (activeViewUser) {
+      props.navigation.navigate("viewOtherUser");
     }
-    if (amendment !== null) {
-      return (
-        <View style={styles.cardCategory}>
-          <Text style={styles.cardCategoryText}>REVISION</Text>
-        </View>
-      );
-    }
+  }, [activeViewUser]);
 
-    return (
-      <View style={[styles.cardCategory, styles.greenBorder]}>
-        <Text style={[styles.cardCategoryText, styles.greenText]}>NEW</Text>
-      </View>
-    );
+  const goToUser = () => {
+    setActiveViewUser(data.revision.backer.id);
   };
 
   const renderHasVoted = ({ updatedAt = new Date(), support = true }) => {
     if (support) {
-      <Text style={[styles.disclaimer, styles.greenText]}>
-        You voted to support this on {new Date(updatedAt).toLocaleDateString()}
-      </Text>;
+      return (
+        <DisclaimerText
+          green
+          text={`You voted to support this on ${new Date(
+            updatedAt
+          ).toLocaleString()}`}
+        />
+      );
     }
     return (
-      <Text style={[styles.disclaimer, styles.redText]}>
-        You voted to reject this on {new Date(updatedAt).toLocaleDateString()}
-      </Text>
+      <DisclaimerText
+        red
+        text={`You voted to reject this on ${new Date(
+          updatedAt
+        ).toLocaleString()}`}
+      />
     );
   };
 
-  const vote = async (support) => {
-    let { activeRevision, data, isUserInCircle, activeCircle } = props;
+  const voteToSupport = () => vote(true);
 
+  const voteToReject = () => vote(false);
+
+  const vote = async (support) => {
     // make sure the user belongs to this circle
     if (
       !isUserInCircle ||
-      !isUserInCircle.allCircles ||
-      isUserInCircle.allCircles[0].id !== activeCircle
+      !isUserInCircle.circlesList ||
+      isUserInCircle.circlesList.items[0].id !== activeCircle
     ) {
       return false;
     }
-    if (data.Revision) {
-      const { votes, ...revision } = data.Revision;
+
+    if (data.revision) {
+      const { votes, ...revision } = data.revision;
       // If the user attempts to vote after the revision expires, stop and return;
-      if (moment().valueOf() >= moment(revision.expires).valueOf()) {
+      if (unixTime() >= unixTime(revision.expires)) {
         return false;
       }
 
-      const hasVoted = votes.find(({ user: { id } }) => id === props.user);
+      const hasVoted = votes.items.find(({ user: { id } }) => id === user);
+
       try {
         if (hasVoted) {
+          // if their vote is the same don't change it
+          if (hasVoted.support === support) {
+            return false;
+          }
           // update this user's existing vote
-          await props.updateVote({
+          updateVote({
             variables: {
               vote: hasVoted.id,
               support,
@@ -99,10 +117,10 @@ function ViewRevision(props) {
           });
         } else {
           // create a new vote, this user hasn't voted yet
-          props.createVote({
+          createVote({
             variables: {
               revision: activeRevision,
-              user: props.user,
+              user: user,
               support,
             },
           });
@@ -114,144 +132,124 @@ function ViewRevision(props) {
     }
   };
 
-  let revision = null;
-  let belongsToCircle = false;
-  const { data, isUserInCircle, activeCircle } = props;
-
-  if (data.Revision && isUserInCircle) {
-    if (
-      isUserInCircle.allCircles &&
-      isUserInCircle.allCircles.length !== 0 &&
-      isUserInCircle.allCircles[0].id === activeCircle
-    ) {
-      belongsToCircle = true;
-    }
-    revision = data.Revision;
-    const { votes } = revision;
-
-    const support = votes.filter(({ support }) => support).length;
-    const hasVoted = votes.find(({ user: { id } }) => id === props.user);
-    const hasExpired = moment().valueOf() >= moment(revision.expires).valueOf();
-    /* Represents a change to existing legislation; Show diff panels   */
-    return (
-      <ScreenWrapper styles={styles.wrapper}>
-        <ScrollView>
-          <Text style={styles.disclaimer}>Review the proposed draft</Text>
-          {myVote && renderHasVoted(hasVoted)}
-          <View style={styles.cardWrapper}>
-            <Text style={styles.cardHeader}>{revision.title}</Text>
-            <View style={styles.cardBody}>
-              <View style={styles.cardStats}>
-                {renderCategory(revision)}
-                <View style={styles.cardVotesWrapper}>
-                  <Text style={styles.cardVotesSupport}>+{support}</Text>
-                  <Text style={styles.slash}>/</Text>
-                  <Text style={styles.cardVotesReject}>
-                    -{votes.length - support}
-                  </Text>
-                </View>
-              </View>
-              {revision.amendment ? (
-                <DiffSection {...revision} />
-              ) : (
-                <View style={styles.revisionTextWrapper}>
-                  <Text style={styles.disclaimer}>Proposed text:</Text>
-
-                  <Text style={styles.revisionText}>{revision.newText}</Text>
-                </View>
-              )}
-              <View style={styles.wrapSection}>
-                <Statistic
-                  header="Date Proposed"
-                  text={new Date(revision.createdAt).toLocaleDateString()}
-                />
-                <Statistic
-                  header="Expires"
-                  text={new Date(revision.expires).toLocaleDateString()}
-                />
-                <Statistic header="Votes to Support" text={23} />
-                <Statistic header="Votes to Reject" text={15} />
-                {hasExpired && <Statistic header="Passed" text={false} />}
-              </View>
-              <Text style={styles.disclaimer}>Backer</Text>
-              <TouchableOpacity
-                style={styles.backerWrapper}
-                onPress={() => {
-                  goToUser(revision.backer.id);
-                }}
-              >
-                <Image
-                  style={styles.backerImg}
-                  source={{ uri: revision.backer.icon }}
-                />
-                <Text style={styles.proposedDate}>
-                  {revision.backer.firstName + " " + revision.backer.lastName}
-                </Text>
-              </TouchableOpacity>
-              {canVote && hasExpired === false && (
-                <View style={styles.voteSectionWrapper}>
-                  <TouchableOpacity
-                    style={[styles.voteButton, styles.greenBorder]}
-                    onPress={() => {
-                      vote(true);
-                    }}
-                  >
-                    <Text style={[styles.voteText, styles.greenText]}>
-                      SUPPORT
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.voteButton, styles.redBorder]}
-                    onPress={() => {
-                      vote(false);
-                    }}
-                  >
-                    <Text style={[styles.voteText, styles.redText]}>
-                      REJECT
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          </View>
-        </ScrollView>
-      </ScreenWrapper>
-    );
-  } else {
-    return (
-      <ScreenWrapper
-        styles={{ justifyContent: "center", alignItems: "center" }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} />
-      </ScreenWrapper>
-    );
+  if (
+    isUserInCircle.circlesList &&
+    isUserInCircle.circlesList.items.length !== 0 &&
+    isUserInCircle.circlesList.items[0].id === activeCircle
+  ) {
+    belongsToCircle = true;
   }
-}
 
-export default compose(
-  graphql(CREATE_VOTE, { name: "createVote" }),
-  graphql(UPDATE_VOTE, { name: "updateVote" }),
-  graphql(IS_USER_IN_CIRCLE, {
-    name: "isUserInCircle",
-    options: ({ activeCircle, user }) => ({
-      variables: { circle: activeCircle || "", user: user || "" },
-    }),
-  }),
-  graphql(GET_REVISION_BY_ID, {
-    options: ({ activeRevision }) => ({
-      variables: { id: activeRevision || "" },
-      pollInterval: 5000,
-    }),
-  })
-)(ViewRevision);
+  if (loading || loading2) {
+    return <CenteredLoaderWithText />;
+  }
+
+  const revision = data.revision;
+  const { votes } = revision;
+
+  const support = votes.items.filter(({ support }) => support).length;
+  const reject = votes.items.length - support;
+
+  const hasVoted = votes.items.find(({ user: { id } }) => id === user);
+  const hasExpired = unixTime() >= unixTime(revision.expires);
+  return (
+    <ScrollView contentContainerStyle={styles.wrapper}>
+      <View>
+        <Title text={revision.title} />
+        <View style={styles.cardStats}>
+          <DisclaimerText
+            upper
+            grey
+            text={`REVIEW PROPOSED AMENDMENT`}
+            style={styles.marginBottomZero}
+          />
+          <VotesCounter support={support} reject={reject} />
+        </View>
+        {hasVoted && renderHasVoted(hasVoted)}
+        {/* card */}
+        {revision.amendment ? (
+          <DiffSection {...revision} />
+        ) : (
+          <Card style={{ minHeight: "20%" }}>
+            <DisclaimerText
+              text={revision.newText}
+              style={styles.marginBottomZero}
+            />
+          </Card>
+        )}
+        <Statistic
+          header="Proposed"
+          text={new Date(revision.createdAt).toLocaleString()}
+        />
+        <Statistic
+          header="Expires"
+          text={new Date(revision.expires).toLocaleString()}
+        />
+        <View style={styles.cardStats}>
+          <Statistic
+            header="Votes to Support"
+            text={support}
+            style={styles.half}
+          />
+          <Statistic
+            header="Votes to Reject"
+            text={reject}
+            style={styles.half}
+          />
+        </View>
+        {hasExpired && (
+          <Statistic header="Passed" text={revision.passed ? "Yes" : "No"} />
+        )}
+        <TouchableOpacity onPress={goToUser}>
+          <View style={styles.backerWrapper}>
+            <View style={styles.backerImgWrapper}>
+              <Image
+                style={styles.backerImg}
+                source={{ uri: revision.backer.icon }}
+              />
+            </View>
+            <Title
+              text={revision.backer.firstName + " " + revision.backer.lastName}
+              style={[styles.marginBottomZero, styles.marginLeft]}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+      {user && !hasExpired && belongsToCircle && (
+        <View style={styles.voteSectionWrapper}>
+          <GlowButton
+            green
+            text={"SUPPORT"}
+            data-support={"true"}
+            style={styles.voteButtons}
+            onPress={voteToSupport}
+          />
+          <GlowButton
+            red
+            text={"REJECT"}
+            data-support={"false"}
+            style={styles.voteButtons}
+            onPress={voteToReject}
+          />
+        </View>
+      )}
+    </ScrollView>
+  );
+}
 
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "stretch",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     width: "100%",
     flex: 1,
     padding: 15,
+  },
+  marginBottomZero: {
+    marginBottom: 0,
+  },
+  marginLeft: {
+    marginLeft: 20,
   },
   cardWrapper: {
     width: "100%",
@@ -262,6 +260,33 @@ const styles = StyleSheet.create({
     // width: "100%",
     padding: 10,
     color: "#FFFFFF",
+  },
+  half: {
+    width: "50%",
+  },
+  voteButtons: {
+    width: "48%",
+  },
+  backerWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  backerImgWrapper: {
+    borderRadius: 9999,
+    height: 40,
+    width: 40,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    borderColor: "#FFF",
+    borderWidth: 2,
+  },
+  backerImg: {
+    height: 40,
+    width: 40,
   },
   cardBody: {
     width: "100%",
@@ -292,19 +317,9 @@ const styles = StyleSheet.create({
     color: "#00DFFC",
     marginHorizontal: 5,
   },
-  cardVotesWrapper: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
   cardVotesSupport: {
     fontSize: 12,
     color: "#9eebcf",
-  },
-  slash: {
-    fontSize: 12,
-    color: "#FFFFFF",
-    marginHorizontal: 5,
   },
   cardVotesReject: {
     fontSize: 12,
@@ -326,7 +341,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 9999,
-    marginRight: 20,
   },
   proposedDate: {
     fontSize: 15,
@@ -359,21 +373,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  voteButton: {
-    width: "48%",
-    borderWidth: 2,
-    borderRadius: 9999,
-    padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  voteText: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    textTransform: "uppercase",
-    fontSize: 18,
   },
 });

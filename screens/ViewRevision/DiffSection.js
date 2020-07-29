@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "reactn";
+import React, { useState } from "reactn";
 import {
   ScrollView,
   Text,
@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Diff from "react-native-diff-component";
 import { Feather } from "@expo/vector-icons";
+import Card from "../../components/Card";
 
 function DiffSection(props) {
   const [mode, setMode] = useState(0);
@@ -61,7 +62,7 @@ function DiffSection(props) {
   };
 
   return (
-    <Fragment>
+    <Card>
       {renderTab()}
       <View style={styles.tabWrapper}>
         <TouchableOpacity
@@ -113,7 +114,7 @@ function DiffSection(props) {
           </Text>
         </TouchableOpacity>
       </View>
-    </Fragment>
+    </Card>
   );
 }
 

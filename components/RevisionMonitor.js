@@ -1,166 +1,246 @@
-import { Component } from "reactn";
+import { useEffect, useGlobal, useRef, useState } from "reactn";
 
-import moment from "moment";
+import { unixTime } from "../utils/transform";
+import {
+  CREATE_AMENDMENT_FROM_REVISION,
+  DENY_REVISION,
+  UPDATE_AMENDMENT_FROM_REVISION,
+  UPDATE_AMENDMENT_FROM_REVISION_AND_DELETE,
+} from "../graphql/mutations";
+import { GET_ACTIVE_REVISIONS_BY_USER_ID } from "../graphql/queries";
+import { SUB_TO_USERS_REVISIONS } from "../graphql/subscriptions";
 
+import { useMutation, useSubscription } from "@apollo/client";
 import { sha } from "../utils/crypto";
+import useImperativeQuery from "../utils/useImperativeQuery";
 
-let checkItemsTimer = null;
+export default function RevisionMonitor() {
+  const [candidates, setCandidates] = useState([]);
+  const checkItemsTimer = useRef(false);
+  const [user] = useGlobal("user");
 
-class App extends Component {
-  constructor() {
-    super();
-    this.checkItemsTimer = checkItemsTimer;
-  }
-  async componentDidUpdate(prevProps) {
-    // only do the following if revisions are loaded, not before
-    if (this.props.data.User) {
-      // get a flat list of revisions for current and past props
-      let allRevisions = this.getAllRevisions();
-      let prevRevisions = prevProps.data.User
-        ? prevProps.data.User.circles
-            .map((c) => c.revisions.map((r) => ({ ...r, circle: c.id })))
-            .flat(1)
-        : [];
-      if (allRevisions.length !== prevRevisions.length) {
-        // There is probably a new revision or the last revision has been dealt with
-        // Reset Timer
-        this.getNext();
-      }
+  const queryRevisions = useImperativeQuery(GET_ACTIVE_REVISIONS_BY_USER_ID);
+
+  const [deleteAmendment] = useMutation(
+    UPDATE_AMENDMENT_FROM_REVISION_AND_DELETE
+  );
+  const [updateAmendment] = useMutation(UPDATE_AMENDMENT_FROM_REVISION);
+  const [createAmendmentFromRevision] = useMutation(
+    CREATE_AMENDMENT_FROM_REVISION
+  );
+
+  const [denyRevision] = useMutation(DENY_REVISION);
+
+  const { data: sub, error } = useSubscription(SUB_TO_USERS_REVISIONS, {
+    variables: { id: user || "" },
+    onSubscriptionData,
+  });
+
+  function onSubscriptionData({ subscriptionData }) {
+    if (
+      subscriptionData.data &&
+      candidates.findIndex(
+        (c) => c.id === subscriptionData.data.Revisions.node.id
+      ) === -1
+    ) {
+      // fire off query again  vs. just add the new value to candidates
+      queryRevisions({ id: user }).then(({ data }) => {
+        setCandidates(getFlatRevisions(data));
+      });
     }
   }
-  getAllRevisions = () => {
-    return this.props.data.User.circles
-      .map((c) => c.revisions.map((r) => ({ ...r, circle: c.id })))
+
+  // kick off this whole thing
+  useEffect(() => {
+    if (user) {
+      queryRevisions({ id: user }).then(({ data }) => {
+        setCandidates(getFlatRevisions(data));
+      });
+    }
+    return () => {
+      clearInterval(checkItemsTimer.current);
+    };
+  }, [user]);
+
+  useEffect(() => {
+    console.log("got some update?");
+    if (candidates.length > 0) {
+      getNext();
+    }
+    return () => {
+      clearInterval(checkItemsTimer.current);
+    };
+  }, [candidates]);
+
+  function getFlatRevisions(data) {
+    return data.user.circles.items
+      .map((c) => c.revisions.items.map((r) => ({ ...r, circle: c.id })))
       .flat(1);
-  };
-  getNext = () => {
-    clearTimeout(this.checkItemsTimer);
-    let now = moment().valueOf();
-    if (!this.props.data.User) {
+  }
+  // function getAllRevisions() {
+  //   return data.user.circles.items
+  //     .map((c) => c.revisions.items.map((r) => ({ ...r, circle: c.id })))
+  //     .flat(1);
+  // }
+
+  function getNext() {
+    console.log("getting the next revision");
+    clearTimeout(checkItemsTimer.current);
+    let now = unixTime();
+
+    if (!user) {
       return false;
     }
-    let revisions = this.getAllRevisions();
 
-    let items = revisions
-      .filter((i) => i.passed === null)
-      .sort(
-        (a, b) => moment(a.expires).valueOf() - moment(b.expires).valueOf()
-      );
+    let revisions = candidates;
+    console.log("we got these many to go through", revisions.length);
+
+    let items = revisions.sort(
+      (a, b) => unixTime(a.expires) - unixTime(b.expires)
+    );
+
     if (items.length === 0) {
       return;
     }
+
     // find soonest ending item, see if it has expired
     for (let i = 0, j = items.length; i < j; i++) {
-      if (moment(items[i].expires).valueOf() <= now) {
+      console.log("checking this one", items[i]);
+      if (unixTime(items[i].expires) <= now) {
         // process this item
-
-        this.checkIfPass({
-          circleId: items[i].circle,
-          revisionId: items[i].id,
-        });
+        console.log("checking if pass!");
+        checkIfPass(items[i]);
         break;
-      } else if (moment(items[i].expires).valueOf() > now) {
+      } else if (unixTime(items[i].expires) > now) {
         // there aren't any revisions that need to be processed, set a timer for the soonest occurring one
-        let time = moment(items[i].expires).valueOf() - now;
-
-        this.checkItemsTimer = setTimeout(this.getNext, time);
+        let time = unixTime(items[i].expires) - now;
+        console.log("none to check");
+        checkItemsTimer.current = setTimeout(getNext, time);
         break;
       }
     }
     return;
-  };
+  }
 
   // a revision has expired or crossed the voter threshold
   // see if it has passed and becomes an amendment or fails and lives in infamy
-  checkIfPass = async ({ circleId, revisionId }) => {
-    let revisions = this.getAllRevisions();
-    let thisRevision = revisions.find((r) => r.id === revisionId);
-    // get the votes for this revision in this circle
-    let { votes } = thisRevision;
+  async function checkIfPass(revision) {
+    try {
+      // get the votes for this revision in this circle
+      let {
+        votes: { items: votes },
+      } = revision;
 
-    let supportVotes = votes.filter((v) => v.support === true);
-    // // it passes because the majority of votes has been reached after the expiry period
-    // AND enough people have voted to be representative of the population for a fair referendum
+      let supportVotes = votes.filter((v) => v.support === true);
+      // // it passes because the majority of votes has been reached after the expiry period
+      // AND enough people have voted to be representative of the population for a fair referendum
 
-    if (
-      supportVotes.length > votes.length / 2 &&
-      moment().valueOf() >= moment(thisRevision.expires).valueOf() &&
-      votes.length >= thisRevision.voterThreshold
-    ) {
-      // if this revision is a repeal, update the revision like in updateAmendment but also delete amendment
-      if (thisRevision.repeal === true) {
-        await this.props.deleteAmendment({
+      if (
+        supportVotes.length > votes.length / 2 &&
+        unixTime() >= unixTime(revision.expires) &&
+        votes.length >= revision.voterThreshold
+      ) {
+        console.log("this one has passed!");
+        // if this revision is a repeal, update the revision like in updateAmendment but also delete amendment
+        if (revision.repeal === true) {
+          console.log("it has been repealed");
+          await deleteAmendment({
+            variables: {
+              revision: revision.id,
+              amendment: revision.amendment.id,
+            },
+          });
+          // getNext();
+        } else {
+          // create a separate unique identifier to make sure our new amendment doesn't get created twice
+
+          let hash = sha(
+            JSON.stringify({
+              id: revision.id,
+              title: revision.title,
+              text: revision.newText,
+            })
+          );
+          if (revision.amendment) {
+            console.log("updating amendment");
+
+            await updateAmendment({
+              variables: {
+                amendment: revision.amendment.id,
+                title: revision.title,
+                text: revision.newText,
+                revision: revision.id,
+                circle: revision.circle,
+                hash,
+              },
+            });
+            // getNext();
+          } else {
+            console.log("creating new amendment");
+
+            await createAmendmentFromRevision({
+              variables: {
+                title: revision.title,
+                text: revision.newText,
+                revision: revision.id,
+                circle: revision.circle,
+                hash,
+              },
+            });
+            // getNext();
+          }
+        }
+      } else {
+        console.log("it failed!");
+        // it fails and we ignore it forever
+        await denyRevision({
           variables: {
-            revision: thisRevision.id,
-            amendment: thisRevision.amendment.id,
+            id: revision.id,
           },
         });
-        this.getNext();
-      } else {
-        // create a separate unique identifier to make sure our new amendment doesn't get created twice
-
-        let hash = sha(
-          JSON.stringify({
-            id: thisRevision.id,
-            title: thisRevision.title,
-            text: thisRevision.newText,
-          })
-        );
-        if (thisRevision.amendment) {
-          await this.props.updateAmendment({
-            variables: {
-              amendment: thisRevision.amendment.id,
-              title: thisRevision.title,
-              text: thisRevision.newText,
-              revision: thisRevision.id,
-              circle: thisRevision.circle,
-              hash,
-            },
-          });
-          this.getNext();
-        } else {
-          await this.props.createAmendmentFromRevision({
-            variables: {
-              title: thisRevision.title,
-              text: thisRevision.newText,
-              revision: thisRevision.id,
-              circle: thisRevision.circle,
-              hash,
-            },
-          });
-          this.getNext();
-        }
+        // getNext();
       }
-    } else {
-      // it fails and we ignore it forever
-      await this.props.denyRevision({
-        variables: {
-          id: thisRevision.id,
-        },
-      });
-      this.getNext();
+
+      // in any case, remove this one and start over
+      setCandidates(candidates.filter((c) => c.id !== revision.id));
+    } catch (e) {
+      if (e.message.includes("'Amendment' has no item with id")) {
+        return;
+      }
+      console.error(e);
     }
-  };
-  render() {
-    return null;
   }
+  return null;
 }
 
-export default compose(
-  graphql(UPDATE_AMENDMENT_FROM_REVISION_AND_DELETE, {
-    name: "deleteAmendment",
-  }),
-  graphql(UPDATE_AMENDMENT_FROM_REVISION, { name: "updateAmendment" }),
-  graphql(CREATE_AMENDMENT_FROM_REVISION, {
-    name: "createAmendmentFromRevision",
-  }),
-  graphql(DENY_REVISION, {
-    name: "denyRevision",
-  }),
-  graphql(GET_ACTIVE_REVISIONS_BY_USER_ID, {
-    options: ({ user }) => ({
-      variables: { id: user || "" },
-      pollInterval: 10000,
-    }),
-  })
-)(App);
+const exampleResponse = {
+  data: {
+    Revisions: {
+      previousValues: null,
+      mutation: "create",
+      node: {
+        circle: {
+          id: "ckd64p7y600co07mp579r8mc3",
+        },
+        repeal: false,
+        expires: "2020-07-29T02:27:04.367Z",
+        passed: null,
+        voterThreshold: "0",
+        id: "ckd6qz8ut00ou07lbc7ckf6hk",
+        title: "asdvasdvasdv",
+        newText: "asdvasdv",
+        oldText: null,
+        amendment: null,
+        votes: {
+          items: [
+            {
+              id: "ckd6qz8wq00ow07lbd7xz9y2c",
+              support: true,
+            },
+          ],
+        },
+      },
+    },
+  },
+  error: null,
+};

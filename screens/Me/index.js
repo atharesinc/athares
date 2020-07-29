@@ -104,10 +104,10 @@ function Me({ loading, data: { User: userPref }, getUser, ...props }) {
 
   const user = getUser.User;
   const stats = {
-    voteCount: user.votes.length,
-    circleCount: user.circles.length,
-    revisionCount: user.revisions.length,
-    passedRevisionCount: user.revisions.filter((r) => r.passed).length,
+    voteCount: user.votes.items.length,
+    circleCount: user.circles.items.length,
+    revisionCount: user.revisions.items.length,
+    passedRevisionCount: user.revisions.items.filter((r) => r.passed).length,
   };
 
   return (

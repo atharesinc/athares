@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useGlobal,
-  useEffect,
-  useRef,
-  setGlobal,
-} from "reactn";
+import React, { useState, useGlobal, useEffect, setGlobal } from "reactn";
 
 import {
   StatusBar,
@@ -13,7 +7,6 @@ import {
   Text,
   Dimensions,
   Platform,
-  TouchableOpacity,
   ImageBackground,
 } from "react-native";
 import { SplashScreen } from "expo";
@@ -28,6 +21,7 @@ import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import useLinking from "./navigation/useLinking";
 import AutoLoginHandler from "./components/AutoLoginHandler";
 import OnlineMonitor from "./components/OnlineMonitor";
+import RevisionMonitor from "./components/RevisionMonitor";
 
 import MeshStore from "./utils/meshStore";
 // theming
@@ -44,8 +38,7 @@ import Channels from "./screens/Channels";
 import Drawer from "./components/Drawer";
 
 // apollo graphql
-import { ApolloProvider } from "@apollo/client";
-import { ApolloClient } from "@apollo/client";
+import { ApolloProvider, ApolloClient } from "@apollo/client";
 import { link, cache } from "./graphql";
 
 // initialize storage
@@ -177,6 +170,7 @@ export default function App(props) {
         {/* Put non-rendering components here so they mount after other components*/}
         <AutoLoginHandler />
         <OnlineMonitor />
+        <RevisionMonitor />
       </ApolloProvider>
     );
   }

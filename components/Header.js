@@ -3,8 +3,9 @@ import React, { useGlobal } from "reactn";
 import { Text, TouchableOpacity, StyleSheet, View, Image } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
-import { GET_CHANNEL_NAME_BY_ID } from "../graphql/queries";
+import { GET_CHANNEL_NAME_BY_ID, GET_REVISION_BY_ID } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
+import RevisionCategory from "./RevisionCategory";
 
 import AsyncImageAnimated from "react-native-async-image-animated";
 
@@ -130,23 +131,30 @@ function Header({
     );
   }
   // render revision name and back
-  if (name === "ViewRevision") {
+  if (name === "viewRevision") {
+    const { data: revisionData } = useQuery(GET_REVISION_BY_ID, {
+      variables: { id: activeRevision || "" },
+    });
+
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
           <Feather name="chevron-left" size={25} color={"#FFFFFF"} />
         </TouchableOpacity>
-        {data.Revision && (
-          <Text style={styles.headerText} numberOfLines={1}>
-            {data.Revision.title}
-          </Text>
+
+        {revisionData && revisionData.revision ? (
+          <RevisionCategory
+            repeal={revisionData.revision.repeal}
+            amendment={revisionData.revision.amendment}
+          />
+        ) : (
+          <Feather name="more-vertical" size={25} color={"transparent"} />
         )}
-        <Feather name="more-vertical" size={25} color={"transparent"} />
       </View>
     );
   }
   // render username and back
-  if (["ViewUser", "ViewOtherUser"].indexOf(name) !== -1) {
+  if (["viewUser", "viewOtherUser"].indexOf(name) !== -1) {
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
