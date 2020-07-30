@@ -33,9 +33,7 @@ function Header({
     setShowSearch(!showSearch);
   };
   const back = () => {
-    console.log("navigation props", props);
     if (!props.previous) {
-      console.log("go home");
       RootNavigation.navigate("app");
     }
     props.navigation.goBack(null);

@@ -60,8 +60,6 @@ export default function AutoLoginHandler(props) {
           await MeshStore.setItem("ATHARES_TOKEN", idToken);
 
           setUser(id);
-        } else {
-          console.log("No credentials saved, skipping auto login");
         }
       } catch (err) {
         if (err.message.includes("expired")) {
