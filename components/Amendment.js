@@ -2,14 +2,40 @@ import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { useEffect } from "react";
+import DisclaimerText from "./DisclaimerText";
+import GhostButton from "./GhostButton";
+import GlowButton from "./GlowButton";
+import Title from "./Title";
+import Card from "./Card";
 
-const Amendment = ({ amendment, ...props }) => {
+export default function Amendment({
+  amendment,
+  isSelected,
+  onPress,
+  ...props
+}) {
   const [activeAmendment, setActiveAmendment] = useGlobal("activeAmendment");
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
 
   const goToRevision = () => {
     setActiveRevision(amendment.revision.id);
-    props.navigation.navigate("ViewRevision");
+  };
+
+  useEffect(() => {
+    if (activeRevision) {
+      RootNavigation.navigate("viewRevision");
+    }
+  }, [activeRevision]);
+
+  useEffect(() => {
+    if (activeAmendment) {
+      RootNavigation.navigate("editRevision");
+    }
+  }, [activeAmendment]);
+
+  const selectThisAmendment = () => {
+    onPress(amendment.id);
   };
 
   const editAmendment = () => {
@@ -17,58 +43,61 @@ const Amendment = ({ amendment, ...props }) => {
       return false;
     }
     setActiveAmendment(amendment.id);
-    props.navigation.navigate("EditAmendment");
+    RootNavigation.navigate("editAmendment");
   };
 
   const hasOutstandingRevision =
     amendment.revision !== null && amendment.revision.passed === null;
-  return (
-    <View style={styles.amendmentWrapperOuter}>
-      {hasOutstandingRevision === false && (
-        <TouchableOpacity onPress={editAmendment} style={styles.moreButton}>
-          <Feather name={"more-vertical"} size={25} color={"#FFFFFF"} />
-        </TouchableOpacity>
-      )}
-      <View style={styles.amendmentWrapperInner}>
-        <Text style={styles.header}>{amendment.title}</Text>
-        <View style={styles.timeDataWrapper}>
-          <Text style={styles.time}>
-            Created - {new Date(amendment.createdAt).toLocaleDateString()}
-          </Text>
-          <Text style={styles.time}>
-            Updated - {new Date(amendment.updatedAt).toLocaleDateString()}
-          </Text>
-        </View>
-        <Text style={styles.amendmentText}>{amendment.text}</Text>
-        {hasOutstandingRevision && (
-          <TouchableOpacity
-            style={styles.discreteButton}
-            onPress={goToRevision}
-          >
-            <Text style={styles.disclaimer}>Current Revision</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
-};
 
-export default Amendment;
+  return (
+    <TouchableOpacity
+      disabled={hasOutstandingRevision}
+      onPress={selectThisAmendment}
+    >
+      <Card light>
+        <View style={styles.amendmentWrapper}>
+          <Title text={amendment.title} />
+          <View style={styles.timeDataWrapper}>
+            <DisclaimerText
+              grey
+              text={`Created - ${new Date(
+                amendment.createdAt
+              ).toLocaleDateString()}`}
+            />
+            <DisclaimerText
+              grey
+              text={`Updated - ${new Date(
+                amendment.updatedAt
+              ).toLocaleDateString()}`}
+            />
+          </View>
+          <DisclaimerText text={amendment.text} />
+          {hasOutstandingRevision && (
+            <GlowButton onPress={goToRevision} text={"Current Revision"} />
+          )}
+        </View>
+        {isSelected && (
+          <View style={styles.row}>
+            <GhostButton
+              onPress={editAmendment}
+              text={"Edit or Repeal"}
+              textStyle={styles.buttonText}
+              style={styles.row}
+            />
+          </View>
+        )}
+      </Card>
+    </TouchableOpacity>
+  );
+}
 
 const styles = StyleSheet.create({
-  amendmentWrapperOuter: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    width: "100%",
-    marginBottom: 20,
-  },
-  amendmentWrapperInner: {
+  amendmentWrapper: {
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
-    marginLeft: 10,
+    alignItems: "stretch",
     width: "100%",
+    marginBottom: 20,
   },
   moreButton: {
     width: 30,
@@ -98,17 +127,10 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginBottom: 15,
   },
-  disclaimer: {
-    fontSize: 15,
-    color: "#00dffc",
+  buttonText: {
+    fontSize: 12,
   },
-  discreteButton: {
-    borderWidth: 1,
-    borderColor: "#00dffc",
-    borderRadius: 9999,
-    backgroundColor: "#282a38",
-    padding: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15,
+  row: {
+    flexDirection: "row",
   },
 });

@@ -22,6 +22,7 @@ function Header({
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [viewUser, setViewUser] = useGlobal("viewUser");
   const [, setIsMenuOpen] = useGlobal("isMenuOpen");
+  const [showConstSearch, setShowConstSearch] = useGlobal("showConstSearch");
 
   // replace this with a query hook
   const data = null;
@@ -48,12 +49,15 @@ function Header({
     props.navigation.navigate("createRevision");
   };
 
+  const toggleSearchConst = () => {
+    setShowConstSearch(!showConstSearch);
+  };
+
   const { name } = scene.route;
 
   const simpleChannelsArr = [
     "createCircle",
     "circleSettings",
-    "constitution",
     "createChannel",
     "addUser",
     "revisions",
@@ -65,7 +69,6 @@ function Header({
   const simpleChannelsObj = {
     createCircle: "Create Circle",
     circleSettings: "Circle Settings",
-    constitution: "Constitution",
     createChannel: "Create Channel",
     addUser: "Add User",
     revisions: "Revisions",
@@ -84,21 +87,37 @@ function Header({
         ]}
       >
         <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={25} color={"#FFFFFF"} />
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
         <Text style={styles.headerText} numberOfLines={1}>
           {simpleChannelsObj[name]}
         </Text>
-        {name === "Constitution" ? (
-          <TouchableOpacity onPress={createRevision}>
-            <Feather name="plus" size={25} color={"#FFFFFF"} />
-          </TouchableOpacity>
-        ) : (
-          <Feather name="more-vertical" size={25} color={"transparent"} />
-        )}
+
+        <Feather name="search" size={30} color={"transparent"} />
       </View>
     );
   }
+
+  if (name === "constitution") {
+    return (
+      <View style={[styles.header, styles.headerThemeDark, styles.headerTheme]}>
+        <TouchableOpacity onPress={back}>
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
+        </TouchableOpacity>
+        <Text style={styles.headerText} numberOfLines={1}>
+          CONSTITUTION
+        </Text>
+        <TouchableOpacity onPress={toggleSearchConst}>
+          <Feather
+            name={showConstSearch ? "x" : "search"}
+            size={30}
+            color={"#FFFFFF"}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   // render channelName and back
   if (["channel", "DMChannel"].indexOf(name) !== -1) {
     const { loading, data, ...rest } = useQuery(GET_CHANNEL_NAME_BY_ID, {
@@ -111,7 +130,7 @@ function Header({
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={25} color={"#FFFFFF"} />
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
         {data && data.channel && (
           <Text style={styles.headerText} numberOfLines={1}>
@@ -120,10 +139,10 @@ function Header({
         )}
         {name === "DMChannel" ? (
           <TouchableOpacity onPress={more}>
-            <Feather name="more-vertical" size={25} color={"#FFFFFF"} />
+            <Feather name="more-vertical" size={30} color={"#FFFFFF"} />
           </TouchableOpacity>
         ) : (
-          <Feather name="more-vertical" size={25} color={"transparent"} />
+          <Feather name="more-vertical" size={30} color={"transparent"} />
         )}
       </View>
     );
@@ -137,7 +156,7 @@ function Header({
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={25} color={"#FFFFFF"} />
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
 
         {revisionData && revisionData.revision ? (
@@ -146,7 +165,7 @@ function Header({
             amendment={revisionData.revision.amendment}
           />
         ) : (
-          <Feather name="more-vertical" size={25} color={"transparent"} />
+          <Feather name="more-vertical" size={30} color={"transparent"} />
         )}
       </View>
     );
@@ -156,14 +175,14 @@ function Header({
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={25} color={"#FFFFFF"} />
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
         {data.User && (
           <Text style={styles.headerText} numberOfLines={1}>
             {data.User.firstName + " " + data.User.lastName}
           </Text>
         )}
-        <Feather name="more-vertical" size={25} color={"transparent"} />
+        <Feather name="more-vertical" size={30} color={"transparent"} />
       </View>
     );
   }
@@ -202,11 +221,11 @@ function Header({
       </Text>
       {!showSearch ? (
         <TouchableOpacity onPress={toggleSearch}>
-          <Feather name="search" size={25} color={"#FFFFFF"} />
+          <Feather name="search" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={toggleSearch}>
-          <Feather name="x" size={25} color={"#FFFFFF"} numberOfLines={1} />
+          <Feather name="x" size={30} color={"#FFFFFF"} numberOfLines={1} />
         </TouchableOpacity>
       )}
     </View>

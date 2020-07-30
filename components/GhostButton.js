@@ -11,7 +11,7 @@ export default function GhostButton({
   style = {},
   textStyle = {},
   text = "",
-  wide,
+  wide = false,
   ...props
 }) {
   const [activeTheme] = useGlobal("activeTheme");

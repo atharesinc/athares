@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useGlobal } from "reactn";
 import { View, StyleSheet } from "react-native";
 
-export default function Card({ style = {}, ...props }) {
-  return <View style={[styles.card, style]}>{props.children}</View>;
+export default function Card({ style = {}, light = false, ...props }) {
+  const [activeTheme] = useGlobal("activeTheme");
+
+  const computedStyle = [
+    styles.card,
+    light ? { backgroundColor: activeTheme.COLORS.MID } : {},
+    style,
+  ];
+
+  return <View style={computedStyle}>{props.children}</View>;
 }
 
 const styles = StyleSheet.create({

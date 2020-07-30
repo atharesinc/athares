@@ -24,21 +24,21 @@ const SingleSearchItem = ({ item, category, navigation, ...props }) => {
         case "channels":
           setActiveCircle(item.circle.id);
           setActiveChannel(id);
-          navigation.navigate("Channel");
+          navigation.navigate("channel");
           break;
         case "amendments":
           setActiveCircle(item.circle.id);
           setActiveAmendment(id);
-          navigation.navigate("Constitution");
+          navigation.navigate("constitution");
           break;
         case "revisions":
           setActiveCircle(item.circle.id);
           setActiveRevision(id);
-          navigation.navigate("ViewRevision");
+          navigation.navigate("viewRevision");
           break;
         case "users":
           setActiveViewUser(id);
-          navigation.navigate("ViewOtherUser");
+          navigation.navigate("viewOtherUser");
           break;
         default:
           break;

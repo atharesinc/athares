@@ -65,7 +65,7 @@ const Circles = ({ loggedIn = false, ...props }) => {
         <View style={styles.iconWrapper}>
           <Feather
             name="plus-circle"
-            color={loggedIn ? "#FFFFFF" : "#2f3242"}
+            color={loggedIn ? "#FFFFFF" : "#222222"}
             size={25}
           />
         </View>

@@ -103,7 +103,6 @@ export default function Revisions(props) {
       <GhostButton
         text={"Subscribe to Revisions"}
         onPress={goToSettings}
-        style={styles.button}
         textStyle={styles.buttonText}
       />
 
@@ -148,6 +147,5 @@ const styles = StyleSheet.create({
   },
   boardsWrapper: {
     width: "100%",
-    // marginHorizontal: 15,
   },
 });
