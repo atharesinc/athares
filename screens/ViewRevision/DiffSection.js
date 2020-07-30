@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import Diff from "react-native-diff-component";
+import Diff from "../../components/Diff";
 import { Feather } from "@expo/vector-icons";
 import Card from "../../components/Card";
 
