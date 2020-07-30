@@ -21,7 +21,7 @@ import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import useLinking from "./navigation/useLinking";
 import AutoLoginHandler from "./components/AutoLoginHandler";
 import OnlineMonitor from "./components/OnlineMonitor";
-import RevisionMonitor from "./components/RevisionMonitor";
+// import RevisionMonitor from "./components/RevisionMonitor";
 
 import MeshStore from "./utils/meshStore";
 // theming
@@ -170,7 +170,7 @@ export default function App(props) {
         {/* Put non-rendering components here so they mount after other components*/}
         <AutoLoginHandler />
         <OnlineMonitor />
-        <RevisionMonitor />
+        {/* <RevisionMonitor /> */}
       </ApolloProvider>
     );
   }

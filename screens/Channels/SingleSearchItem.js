@@ -3,7 +3,7 @@ import * as RootNavigation from "../../navigation/RootNavigation";
 
 import moment from "moment";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "../../components/AsyncImage";
 
 const SingleSearchItem = ({ item, category, navigation, ...props }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
@@ -55,7 +55,7 @@ const SingleSearchItem = ({ item, category, navigation, ...props }) => {
     >
       {category === "users" ? (
         <View style={styles.suggestionItemUser}>
-          <AsyncImageAnimated
+          <AsyncImage
             source={{ uri: item.icon }}
             style={styles.userIcon}
             placeholderColor={"#3a3e52"}

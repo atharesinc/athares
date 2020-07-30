@@ -7,7 +7,7 @@ import { GET_CHANNEL_NAME_BY_ID, GET_REVISION_BY_ID } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import RevisionCategory from "./RevisionCategory";
 
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "./AsyncImage";
 
 function Header({
   // loggedIn = false,
@@ -182,7 +182,7 @@ function Header({
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>
         <View style={styles.userIconWrapper}>
-          <AsyncImageAnimated
+          <AsyncImage
             source={img}
             style={styles.userIcon}
             placeholderColor={"#3a3e52"}

@@ -8,7 +8,7 @@ import {
   Alert,
   CameraRoll,
 } from "react-native";
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "./AsyncImage";
 import Lightbox from "react-native-lightbox";
 import { Feather } from "@expo/vector-icons";
 
@@ -62,7 +62,7 @@ const ImageMessage = ({ file, fileName }) => {
           />
         )}
       >
-        <AsyncImageAnimated
+        <AsyncImage
           source={{ uri: file }}
           style={styles.image}
           placeholderColor={"#3a3e52"}

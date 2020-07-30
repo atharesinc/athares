@@ -24,12 +24,15 @@ export default function Drawer(props) {
             outputRange: [1, 0.95],
           }),
         },
+        {
+          translateX: value,
+        },
       ],
-      left: value,
     };
   };
   const animationFunction = (prop, value) => {
     return Animated.spring(prop, {
+      useNativeDriver: true,
       toValue: value,
       friction: 8,
       tension: 50,

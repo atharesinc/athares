@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "./AsyncImage";
 
 function InviteUser({ style = {}, getUsers, tags, circle, ...props }) {
   const [input, setInput] = useState("");
@@ -26,7 +26,7 @@ function InviteUser({ style = {}, getUsers, tags, circle, ...props }) {
           handleAddition(item);
         }}
       >
-        <AsyncImageAnimated
+        <AsyncImage
           source={{ uri: item.icon }}
           style={s.miniIcon}
           placeholderColor={"#3a3e52"}

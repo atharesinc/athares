@@ -1,6 +1,6 @@
 import React from "reactn";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "./AsyncImage";
 
 const UserLink = ({ user, ...props }) => {
   const userImage = user.icon
@@ -9,7 +9,7 @@ const UserLink = ({ user, ...props }) => {
   return (
     <TouchableOpacity style={styles.userLink} {...props}>
       <View style={styles.imageWrapper}>
-        <AsyncImageAnimated
+        <AsyncImage
           source={userImage}
           style={styles.image}
           placeholderColor={"#3a3e52"}

@@ -1,6 +1,6 @@
 import React from "reactn";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "./AsyncImage";
 
 export default function NoUserLink(props) {
   const userImage = require("../assets/images/user-default.png");
@@ -8,7 +8,7 @@ export default function NoUserLink(props) {
   return (
     <TouchableOpacity style={styles.userLink} onPress={props.onPress}>
       <View style={styles.imageWrapper}>
-        <AsyncImageAnimated
+        <AsyncImage
           source={userImage}
           style={styles.image}
           placeholderColor={"#3a3e52"}

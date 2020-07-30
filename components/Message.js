@@ -2,7 +2,7 @@ import React, { Fragment } from "reactn";
 import { StyleSheet, View, Text } from "react-native";
 import ImageMessage from "./ImageMessage";
 import FileMessage from "./FileMessage";
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "./AsyncImage";
 import FadeInView from "./FadeInView";
 import { parseDate } from "../utils/transform";
 
@@ -38,7 +38,7 @@ const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
       <View style={styles.messageAvatarAndContentWrapper}>
         {multiMsg === false ? (
           <View style={styles.avatarWrapper}>
-            <AsyncImageAnimated
+            <AsyncImage
               source={{ uri: msg.user.icon }}
               style={styles.messageAvatar}
               placeholderColor={"#3a3e52"}

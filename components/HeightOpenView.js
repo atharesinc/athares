@@ -1,5 +1,5 @@
-import React from 'reactn';
-import { Animated } from 'react-native';
+import React from "reactn";
+import { Animated } from "react-native";
 
 export default class HeightOpenView extends React.Component {
   state = {
@@ -8,12 +8,14 @@ export default class HeightOpenView extends React.Component {
 
   componentDidMount() {
     Animated.timing(this.state.heightAnim, {
+      useNativeDriver: true,
       toValue: this.props.style.height,
       duration: 250,
     }).start();
   }
   componentWillUnmount() {
     Animated.timing(this.state.heightAnim, {
+      useNativeDriver: true,
       toValue: 0,
       duration: 250,
     }).start();

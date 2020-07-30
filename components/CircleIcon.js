@@ -1,7 +1,7 @@
 import React from "reactn";
 
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
-import AsyncImageAnimated from "react-native-async-image-animated";
+import AsyncImage from "./AsyncImage";
 
 const CircleIcon = ({ selected = false, circle = {}, ...props }) => {
   const selectCircle = () => {
@@ -13,7 +13,7 @@ const CircleIcon = ({ selected = false, circle = {}, ...props }) => {
       <View
         style={[styles.circleIconWrapper, { borderWidth: selected ? 4 : 0 }]}
       >
-        <AsyncImageAnimated
+        <AsyncImage
           source={{ uri: circle.icon }}
           style={styles.circle}
           placeholderColor={"#3a3e52"}
