@@ -63,7 +63,6 @@ export default function RevisionMonitor() {
   }, [user]);
 
   useEffect(() => {
-    console.log("got some update?");
     if (candidates.length > 0) {
       getNext();
     }

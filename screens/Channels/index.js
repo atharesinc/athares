@@ -7,7 +7,7 @@ import ChannelItem from "../../components/ChannelItem";
 import ChannelGroupHeader from "./ChannelGroupHeader";
 import GovernanceChannelItem from "./GovernanceChannelItem";
 import CircleTitle from "./CircleTitle";
-
+import DisclaimerText from "../../components/DisclaimerText";
 import Header from "../../components/Header";
 import { Search } from "./Search";
 import {
@@ -121,6 +121,13 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
         ) : (
           <View style={{ marginTop: 20 }}>
             <CircleTitle title={"Welcome to Athares"} />
+            <DisclaimerText
+              grey
+              text={
+                "Login or Register to access your Circles, or search for using the search icon at the top."
+              }
+              style={{ marginHorizontal: 15 }}
+            />
           </View>
         )}
         {/* <ChannelGroupHeader title={"DIRECT MESSAGES"} displayPlus={true} />

@@ -34,7 +34,9 @@ const Circles = ({ loggedIn = false, ...props }) => {
   const goToCreateCircle = () => {
     if (loggedIn) {
       RootNavigation.navigate("createCircle");
+      return;
     }
+    RootNavigation.navigate("portal", { screen: "login" });
   };
 
   let circles = [];
@@ -65,7 +67,7 @@ const Circles = ({ loggedIn = false, ...props }) => {
         <View style={styles.iconWrapper}>
           <Feather
             name="plus-circle"
-            color={loggedIn ? "#FFFFFF" : "#222222"}
+            color={loggedIn ? "#FFFFFF" : "#FFFFFFb7"}
             size={25}
           />
         </View>
