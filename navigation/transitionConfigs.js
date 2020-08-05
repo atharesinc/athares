@@ -8,8 +8,9 @@ import {
 export const pushTransition = (theme) => ({
   // set background color of all cards
   cardStyle: { backgroundColor: theme.COLORS.DARK + "BB", flex: 1 },
-
-  gestureDirection: "horizontal",
+  // for some reason enabling gestures adds a width and shadow to the stack navigator that I cannot abide
+  gestureEnabled: false,
+  // gestureDirection: "horizontal",
   transitionSpec: {
     open: TransitionSpecs.TransitionIOSSpec,
     close: TransitionSpecs.TransitionIOSSpec,
