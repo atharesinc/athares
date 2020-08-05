@@ -11,9 +11,9 @@ import {
   Alert,
 } from "react-native";
 
-import PortalButton from "../../../components/PortalButton";
+import GlowButton from "../../../components/GlowButton";
 
-import { UIActivityIndicator } from "react-native-indicators";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 function AddUser({ activeCircle, loading }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -58,62 +58,55 @@ function AddUser({ activeCircle, loading }) {
   };
 
   if (loading) {
-    return (
-      <ScreenWrapper
-        styles={{ justifyContent: "center", alignItems: "center" }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} />
-      </ScreenWrapper>
-    );
+    return <CenteredLoaderWithText />;
   }
-  return (
-    <ScreenWrapper styles={[styles.wrapper]}>
-      <ScrollView styles={[styles.wrapper]}>
-        <KeyboardAvoidingView behavior="padding">
-          <Text style={styles.header}>
-            ADD EXISTING USERS TO PARTICIPATE IN THIS CIRCLE
-          </Text>
-          <Text style={styles.label}>Invite Users</Text>
-          <View style={styles.picker}>
-            {tags.length !== 0 && (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={styles.toText}>Invite:</Text>
-                <ScrollView
-                  contentContainerStyle={styles.tagsList}
-                  horizontal={true}
-                >
-                  {renderTags(tags)}
-                </ScrollView>
-              </View>
-            )}
-            <InviteUser
-              tags={tags}
-              updateTags={setTags}
-              onFocusChange={setIsFocused}
-              circle={activeCircle}
-            />
-          </View>
 
-          <Text style={styles.disclaimer}>
-            After pressing "Invite Users", the recipient(s) will be added
-            automatically to this circle.
-          </Text>
-          <Text style={styles.disclaimer}>
-            Invitations aren't subject to democratic process.
-          </Text>
-          <PortalButton
-            title="Invite Users"
-            style={styles.marginTop}
-            onPress={submit}
+  return (
+    <ScrollView contentContainerStyle={styles.wrapper}>
+      <KeyboardAvoidingView behavior="padding">
+        <Text style={styles.header}>
+          ADD EXISTING USERS TO PARTICIPATE IN THIS CIRCLE
+        </Text>
+        <Text style={styles.label}>Invite Users</Text>
+        <View style={styles.picker}>
+          {tags.length !== 0 && (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.toText}>Invite:</Text>
+              <ScrollView
+                contentContainerStyle={styles.tagsList}
+                horizontal={true}
+              >
+                {renderTags(tags)}
+              </ScrollView>
+            </View>
+          )}
+          <InviteUser
+            tags={tags}
+            updateTags={setTags}
+            onFocusChange={setIsFocused}
+            circle={activeCircle}
           />
-        </KeyboardAvoidingView>
-      </ScrollView>
-    </ScreenWrapper>
+        </View>
+
+        <Text style={styles.disclaimer}>
+          After pressing "Invite Users", the recipient(s) will be added
+          automatically to this circle.
+        </Text>
+        <Text style={styles.disclaimer}>
+          Invitations aren't subject to democratic process.
+        </Text>
+        <GlowButton
+          text="Invite Users"
+          style={styles.marginTop}
+          onPress={submit}
+        />
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 

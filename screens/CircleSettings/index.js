@@ -10,11 +10,11 @@ import {
 import { GET_CIRCLE_PREFS_FOR_USER } from "../../graphql/queries";
 
 import { useQuery, useMutation } from "@apollo/client";
-import { UIActivityIndicator } from "react-native-indicators";
 
 import SwitchLine from "../../components/SwitchLine";
 import Title from "../../components/Title";
 import DisclaimerText from "../../components/Title";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 function CircleSettings(props) {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
@@ -69,18 +69,7 @@ function CircleSettings(props) {
   };
 
   if (loading) {
-    return (
-      <View
-        styles={{
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: activeTheme.COLORS.DARK,
-        }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} style={{ flex: 0 }} />
-        <Text style={styles.loadingText}>Loading Constitution</Text>
-      </View>
-    );
+    return <CenteredLoaderWithText text={"Getting Settings"} />;
   }
   return (
     <ScrollView contentContainerStyles={styles.wrapper}>

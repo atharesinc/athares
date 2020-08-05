@@ -11,7 +11,7 @@ import {
   ImageBackground,
   Image,
 } from "react-native";
-import { UIActivityIndicator } from "react-native-indicators";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 function ViewOtherUser(props) {
   let user,
@@ -26,13 +26,7 @@ function ViewOtherUser(props) {
     };
   }
   if (loading) {
-    return (
-      <ScreenWrapper
-        styles={{ justifyContent: "center", alignItems: "center" }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} />
-      </ScreenWrapper>
-    );
+    return <CenteredLoaderWithText />;
   }
   return (
     <ScreenWrapper styles={[styles.wrapper]}>

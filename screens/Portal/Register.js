@@ -23,8 +23,6 @@ import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
 import { validateRegister } from "../../utils/validators";
-import { UIActivityIndicator } from "react-native-indicators";
-import Title from "../../components/Title";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";

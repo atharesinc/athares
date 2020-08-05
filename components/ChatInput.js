@@ -70,13 +70,7 @@ export default function ChatInput(props) {
   const shouldRenderImage = () => {
     if (fileIsImage) {
       if (loadingImage) {
-        return (
-          <UIActivityIndicator
-            color={"#FFFFFF"}
-            size={20}
-            style={{ flex: 0 }}
-          />
-        );
+        return <Loader size={20} style={{ flex: 0 }} />;
       }
       return <Image style={styles.previewImage} source={{ uri: file.uri }} />;
     } else {

@@ -12,9 +12,9 @@ import {
   KeyboardAvoidingView,
   ImageBackground,
 } from "react-native";
-import { UIActivityIndicator } from "react-native-indicators";
 import { ImageManipulator } from "expo";
 import debounce from "lodash.debounce";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 function Me({ loading, data: { User: userPref }, getUser, ...props }) {
   const [uri, setUri] = useState(null);
@@ -93,13 +93,7 @@ function Me({ loading, data: { User: userPref }, getUser, ...props }) {
   };
 
   if (loading || !userPref || !getUser.User) {
-    return (
-      <ScreenWrapper
-        styles={{ justifyContent: "center", alignItems: "center" }}
-      >
-        <UIActivityIndicator color={"#FFFFFF"} />
-      </ScreenWrapper>
-    );
+    return <CenteredLoaderWithText />;
   }
 
   const user = getUser.User;
