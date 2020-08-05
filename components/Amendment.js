@@ -13,6 +13,7 @@ export default function Amendment({
   amendment,
   isSelected,
   onPress,
+  belongsToCircle = false,
   ...props
 }) {
   const [activeAmendment, setActiveAmendment] = useGlobal("activeAmendment");
@@ -46,7 +47,7 @@ export default function Amendment({
 
   return (
     <TouchableOpacity
-      disabled={hasOutstandingRevision}
+      disabled={hasOutstandingRevision || !belongsToCircle}
       onPress={selectThisAmendment}
     >
       <Card light>
@@ -71,7 +72,7 @@ export default function Amendment({
             <GlowButton onPress={goToRevision} text={"Current Revision"} />
           )}
         </View>
-        {isSelected && (
+        {isSelected && belongsToCircle && (
           <View style={styles.row}>
             <GhostButton
               onPress={editAmendment}

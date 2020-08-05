@@ -11,12 +11,15 @@ import { CREATE_REVISION } from "../../graphql/mutations";
 
 import { GET_AMENDMENT_BY_ID } from "../../graphql/queries";
 
-import { sha } from "../../../utils/crypto";
+import { sha } from "../../utils/crypto";
 import { validateUpdatedRevision } from "../../utils/validators";
 
-import GlowButton from "../../../components/GlowButton";
-import DisclaimerText from "../../../components/DisclaimerText";
-import Input from "../../../components/Input";
+import { parseDate } from "../../utils/transform";
+import { addSeconds } from "date-fns";
+
+import GlowButton from "../../components/GlowButton";
+import DisclaimerText from "../../components/DisclaimerText";
+import Input from "../../components/Input";
 
 import { useQuery, useMutation } from "@apollo/client";
 
@@ -25,8 +28,8 @@ export default function EditAmendment(props) {
   const [activeCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
-
-  const [createRevision] = useMutation(CREATE_REVISION);
+  const [loading, setLoading] = useState(false);
+  const [createRevisionMutation] = useMutation(CREATE_REVISION);
 
   const { data, loading: loadingQuery } = useQuery(GET_AMENDMENT_BY_ID, {
     variables,
@@ -54,6 +57,7 @@ export default function EditAmendment(props) {
   }, [activeRevision]);
 
   const repeal = () => {
+    setLoading(true);
     try {
       let numUsers = data.amendment.circle.users.items.length;
 
@@ -63,9 +67,9 @@ export default function EditAmendment(props) {
         title: data.amendment.title,
         oldText: null,
         newText: data.amendment.text,
-        expires: moment()
-          .add(Math.max(customSigm(numUsers), 61), "s")
-          .format(),
+        expires: parseDate(
+          addSeconds(new Date(), Math.max(customSigm(numUsers), 61))
+        ),
         voterThreshold: Math.round(numUsers * ratifiedThreshold(numUsers)),
         amendment: data.amendment.id,
         repeal: true,
@@ -89,6 +93,7 @@ export default function EditAmendment(props) {
   };
 
   const submit = async () => {
+    setLoading(true);
     // reject if there's been no changes
     if (data.amendment.text.trim() === text.trim()) {
       return;
@@ -102,9 +107,9 @@ export default function EditAmendment(props) {
       title: data.amendment.title,
       oldText: data.amendment.text,
       newText: text.trim(),
-      expires: moment()
-        .add(Math.max(customSigm(numUsers), 61), "s")
-        .format(),
+      expires: parseDate(
+        addSeconds(new Date(), Math.max(customSigm(numUsers), 61))
+      ),
       voterThreshold: Math.round(numUsers * ratifiedThreshold(numUsers)),
       amendment: data.amendment.id,
       repeal: false,
@@ -124,7 +129,7 @@ export default function EditAmendment(props) {
         })
       );
 
-      let newRevisionRes = await this.props.createRevision({
+      let newRevisionRes = await createRevisionMutation({
         variables: {
           ...newRevision,
           hash,

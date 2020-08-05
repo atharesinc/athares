@@ -1,6 +1,9 @@
 import React, { useGlobal, useState } from "reactn";
 import Amendment from "../../components/Amendment";
-import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
+import {
+  GET_AMENDMENTS_FROM_CIRCLE_ID,
+  IS_USER_IN_CIRCLE,
+} from "../../graphql/queries";
 
 import {
   Text,
@@ -20,6 +23,7 @@ export default function Constitution({ ...props }) {
   const [activeCircle] = useGlobal("activeCircle");
   const [showConstSearch] = useGlobal("showConstSearch");
   const [, setActiveRevision] = useGlobal("activeRevision");
+  const [user] = useGlobal("user");
 
   const [searchParams, setSearchParams] = useState("");
 
@@ -30,6 +34,28 @@ export default function Constitution({ ...props }) {
       id: activeCircle || "",
     },
   });
+
+  // see if the user actually belongs to this circle
+  const { loading: loading2, error: e2, data: belongsToCircleData } = useQuery(
+    IS_USER_IN_CIRCLE,
+    {
+      variables: {
+        circle: activeCircle || "",
+        user: user || "",
+      },
+    }
+  );
+
+  let belongsToCircle = false;
+
+  if (
+    belongsToCircleData &&
+    belongsToCircleData.circlesList &&
+    belongsToCircleData.circlesList.items.length !== 0 &&
+    belongsToCircleData.circlesList.items[0].id === activeCircle
+  ) {
+    belongsToCircle = true;
+  }
 
   useEffect(() => {
     setActiveRevision(null);
@@ -81,7 +107,7 @@ export default function Constitution({ ...props }) {
   let circle = null;
   let amendments = [];
 
-  if (loading) {
+  if (loading || loading2) {
     <CenteredLoaderWithText text={"Getting Constitution"} />;
   }
 
@@ -120,6 +146,7 @@ export default function Constitution({ ...props }) {
                   amendment={amendment}
                   onPress={selectAmendment}
                   isSelected={selectedAmendment === amendment.id}
+                  belongsToCircle={belongsToCircle}
                 />
               ))}
             </KeyboardAvoidingView>

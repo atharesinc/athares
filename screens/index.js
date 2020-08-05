@@ -12,6 +12,7 @@ import Constitution from "./Constitution";
 import Portal from "./Portal";
 import CreateRevision from "./CreateRevision";
 import ViewRevision from "./ViewRevision";
+import EditAmendment from "./EditAmendment";
 
 import Header from "../components/Header";
 import { pushTransition } from "../navigation/transitionConfigs";
@@ -54,6 +55,7 @@ export default function RootStack(props) {
       <Stack.Screen name="channel" component={ViewChannel} />
       <Stack.Screen name="news" component={News} options={newsOptions} />
       <Stack.Screen name="revisions" component={Revisions} />
+      <Stack.Screen name="editAmendment" component={EditAmendment} />
     </Stack.Navigator>
   );
 }

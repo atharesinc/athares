@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from "reactn";
+import React, { useState, Fragment, useEffect, useRef } from "reactn";
 import { View, Text, TextInput, StyleSheet, Platform } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
 import Loader from "../../components/Loader";
@@ -10,12 +10,17 @@ import SearchResults from "./SearchResults";
 
 export const Search = () => {
   const [searchParams, setSearchParams] = useState("");
+  const inputRef = useRef();
 
   const [search, { loading, data, error }] = useLazyQuery(SEARCH_ALL);
 
   const updateText = (text) => {
     setSearchParams(text);
   };
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   useEffect(() => {
     if (searchParams.trim() !== "") {
@@ -46,6 +51,7 @@ export const Search = () => {
           placeholder={"Enter Search Text"}
           numberOfLines={1}
           placeholderTextColor={"#FFFFFFb7"}
+          ref={inputRef}
         />
         {loading ? (
           <Loader size={20} style={styles.searchIcon} />
