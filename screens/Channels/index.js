@@ -14,7 +14,9 @@ import {
   IS_USER_IN_CIRCLE,
   GET_CHANNELS_BY_CIRCLE_ID,
 } from "../../graphql/queries";
-import { useQuery } from "@apollo/client";
+import { SUB_TO_CIRCLES_CHANNELS } from "../../graphql/subscriptions";
+
+import { useQuery, useSubscription } from "@apollo/client";
 
 function Dashboard({ renderAsSidebar = false, ...props }) {
   const [activeCircle] = useGlobal("activeCircle");
@@ -28,14 +30,30 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
   let belongsToCircle = false;
 
   // get channel data, if any
-  const { loading: loading1, error: e1, data: channelsData } = useQuery(
-    GET_CHANNELS_BY_CIRCLE_ID,
-    {
-      variables: {
+  const {
+    loading: loading1,
+    error: e1,
+    data: channelsData,
+    refetch,
+  } = useQuery(GET_CHANNELS_BY_CIRCLE_ID, {
+    variables: {
+      id: activeCircle || "",
+    },
+  });
+
+  const { data: sub } = useSubscription(SUB_TO_CIRCLES_CHANNELS, {
+    variables: { id: activeCircle || "" },
+    onSubscriptionData,
+  });
+
+  function onSubscriptionData({ subscriptionData }) {
+    if (subscriptionData.data) {
+      // fire off query again  vs. just add the new value to candidates
+      refetch({
         id: activeCircle || "",
-      },
+      });
     }
-  );
+  }
 
   if (channelsData) {
     // _subToMore(subscribeToMore);

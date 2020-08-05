@@ -207,6 +207,7 @@ export default function RevisionMonitor() {
       if (e.message.includes("'Amendment' has no item with id")) {
         return;
       }
+      // TODO: catch error if hash unique constraint fails, because thats okay
       console.error(e);
     }
   }

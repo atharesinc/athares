@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 export const SUB_TO_MESSAGES_BY_CHANNEL_ID = gql`
   subscription subToMessages($id: ID!) {
@@ -101,6 +101,29 @@ export const SUB_TO_CIRCLES_AMENDMENTS = gql`
   }
 `;
 
+// used to detect (more reliably) whether an amendment has an outstanding revision
+export const SUB_TO_AMENDMENTS_REVISONS = gql`
+  subscription getCircles($id: ID!) {
+    Revisions(
+      filter: {
+        mutation_in: [create, delete]
+        node: {
+          amendment: { id: { is_not_empty: true } }
+          circle: { id: { equals: $id } }
+        }
+      }
+    ) {
+      node {
+        passed
+        id
+        amendment {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const SUB_TO_USERS_REVISIONS = gql`
   subscription($id: ID!) {
     Revisions(
@@ -175,6 +198,23 @@ export const SUB_TO_DM_CHANNELS = gql`
             id
           }
         }
+      }
+    }
+  }
+`;
+
+export const SUB_TO_USERS_CIRCLES = gql`
+  subscription($id: ID!) {
+    Circles(
+      filter: {
+        mutation_in: [create, delete]
+        node: { users: { some: { id: { equals: $id } } } }
+      }
+    ) {
+      node {
+        id
+        icon
+        name
       }
     }
   }

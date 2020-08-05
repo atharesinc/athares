@@ -6,13 +6,18 @@ import {
 } from "../../graphql/queries";
 
 import {
+  SUB_TO_CIRCLES_AMENDMENTS,
+  SUB_TO_AMENDMENTS_REVISONS,
+} from "../../graphql/subscriptions";
+
+import {
   Text,
   ScrollView,
   StyleSheet,
   View,
   KeyboardAvoidingView,
 } from "react-native";
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription } from "@apollo/client";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import ConstitutionFooter from "./ConstitutionFooter";
 import Input from "../../components/Input";
@@ -29,11 +34,15 @@ export default function Constitution({ ...props }) {
 
   const [selectedAmendment, setSelectedAmendment] = useState(null);
 
-  const { loading, error, data } = useQuery(GET_AMENDMENTS_FROM_CIRCLE_ID, {
-    variables: {
-      id: activeCircle || "",
-    },
-  });
+  const { loading, error, data, refetch } = useQuery(
+    GET_AMENDMENTS_FROM_CIRCLE_ID,
+    {
+      variables: {
+        id: activeCircle || "",
+      },
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
   // see if the user actually belongs to this circle
   const { loading: loading2, error: e2, data: belongsToCircleData } = useQuery(
@@ -45,6 +54,36 @@ export default function Constitution({ ...props }) {
       },
     }
   );
+
+  // listen for changes to amendments
+  const { data: sub } = useSubscription(SUB_TO_CIRCLES_AMENDMENTS, {
+    variables: { id: activeCircle || "" },
+    onSubscriptionData,
+  });
+
+  function onSubscriptionData({ subscriptionData }) {
+    if (subscriptionData.data) {
+      console.log("got an update!", subscriptionData);
+      refetch({
+        id: activeCircle,
+      });
+    }
+  }
+
+  // listen to changes on amendments (specifically to see if amendment has outstanding revision)
+  const { data: sub2 } = useSubscription(SUB_TO_AMENDMENTS_REVISONS, {
+    variables: { id: activeCircle || "" },
+    onSubscriptionData: onSubscriptionData2,
+  });
+
+  function onSubscriptionData2({ subscriptionData }) {
+    if (subscriptionData.data) {
+      console.log("got an update in revisions!", subscriptionData);
+      refetch({
+        id: activeCircle,
+      });
+    }
+  }
 
   let belongsToCircle = false;
 

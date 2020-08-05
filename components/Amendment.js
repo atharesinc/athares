@@ -72,7 +72,7 @@ export default function Amendment({
             <GlowButton onPress={goToRevision} text={"Current Revision"} />
           )}
         </View>
-        {isSelected && belongsToCircle && (
+        {isSelected && belongsToCircle && !hasOutstandingRevision && (
           <View style={styles.row}>
             <GhostButton
               onPress={editAmendment}

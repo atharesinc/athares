@@ -12,7 +12,9 @@ import { Feather } from "@expo/vector-icons";
 import CircleIcon from "./CircleIcon";
 
 import { GET_CIRCLES_BY_USER_ID } from "../graphql/queries";
-import { useQuery } from "@apollo/client";
+import { SUB_TO_USERS_CIRCLES } from "../graphql/subscriptions";
+
+import { useQuery, useSubscription } from "@apollo/client";
 
 const Circles = ({ loggedIn = false, ...props }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
@@ -41,11 +43,25 @@ const Circles = ({ loggedIn = false, ...props }) => {
 
   let circles = [];
 
-  const { loading, error, data } = useQuery(GET_CIRCLES_BY_USER_ID, {
+  const { loading, error, data, refetch } = useQuery(GET_CIRCLES_BY_USER_ID, {
     variables: {
       id: user || "",
     },
   });
+
+  const { data: sub } = useSubscription(SUB_TO_USERS_CIRCLES, {
+    variables: { id: user || "" },
+    onSubscriptionData,
+  });
+
+  function onSubscriptionData({ subscriptionData }) {
+    if (subscriptionData.data) {
+      // fire off query again  vs. just add the new value to candidates
+      refetch({
+        id: user || "",
+      });
+    }
+  }
 
   if (data) {
     circles = data.user.circles.items;

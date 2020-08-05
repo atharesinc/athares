@@ -93,7 +93,7 @@ export default function ViewRevision(props) {
       return false;
     }
 
-    if (data.revision) {
+    if (data && data.revision) {
       const { votes, ...revision } = data.revision;
       // If the user attempts to vote after the revision expires, stop and return;
       if (unixTime() >= unixTime(revision.expires)) {
