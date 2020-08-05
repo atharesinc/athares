@@ -20,6 +20,7 @@ export default function Amendment({
 
   const goToRevision = () => {
     setActiveRevision(amendment.revision.id);
+    RootNavigation.navigate("editRevision");
   };
 
   useEffect(() => {
@@ -27,12 +28,6 @@ export default function Amendment({
       RootNavigation.navigate("viewRevision");
     }
   }, [activeRevision]);
-
-  useEffect(() => {
-    if (activeAmendment) {
-      RootNavigation.navigate("editRevision");
-    }
-  }, [activeAmendment]);
 
   const selectThisAmendment = () => {
     onPress(amendment.id);

@@ -133,6 +133,7 @@ export default function ViewRevision(props) {
   };
 
   if (
+    isUserInCircle &&
     isUserInCircle.circlesList &&
     isUserInCircle.circlesList.items.length !== 0 &&
     isUserInCircle.circlesList.items[0].id === activeCircle

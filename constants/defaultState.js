@@ -6,6 +6,7 @@ export default {
   user: null,
   activeCircle: null,
   activeRevision: null,
+  // view detail on specific amendment, or when making a revision to existing amendment
   activeAmendment: null,
   pub: null,
   circles: [],
@@ -23,4 +24,6 @@ export default {
   isMenuOpen: false,
   unreadChannels: [],
   showConstSearch: false,
+  activeViewUser: null,
+  searchedCircles: [],
 };

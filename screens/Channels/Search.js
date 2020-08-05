@@ -1,20 +1,32 @@
-import React, { Component, useState, Fragment } from "reactn";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import React, { useState, Fragment, useEffect } from "reactn";
+import { View, Text, TextInput, StyleSheet, Platform } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
-
+import Loader from "../../components/Loader";
+import { SEARCH_ALL } from "../../graphql/queries";
+import { useLazyQuery } from "@apollo/client";
 import { Feather } from "@expo/vector-icons";
 
-import { UIActivityIndicator } from "react-native-indicators";
-//
-// import { updateSearchParams } from '../../store/ui/actions';
-import { SearchResults } from "./SearchResults";
+import SearchResults from "./SearchResults";
 
 export const Search = () => {
   const [searchParams, setSearchParams] = useState("");
 
+  const [search, { loading, data, error }] = useLazyQuery(SEARCH_ALL);
+
   const updateText = (text) => {
     setSearchParams(text);
   };
+
+  useEffect(() => {
+    if (searchParams.trim() !== "") {
+      search({
+        variables: {
+          text: searchParams || "",
+          id: searchParams || "",
+        },
+      });
+    }
+  }, [searchParams]);
 
   return (
     <Fragment>
@@ -36,11 +48,7 @@ export const Search = () => {
           placeholderTextColor={"#FFFFFFb7"}
         />
         {loading ? (
-          <UIActivityIndicator
-            color={"#FFFFFF"}
-            size={20}
-            style={styles.searchIcon}
-          />
+          <Loader size={20} style={styles.searchIcon} />
         ) : (
           <Feather
             name="x"
@@ -52,7 +60,7 @@ export const Search = () => {
         )}
       </View>
       {/* results */}
-      {searchParams.length > 2 && !loading && (
+      {searchParams.length > 2 && (
         <SearchResults {...data} searchParams={searchParams} />
       )}
     </Fragment>
@@ -77,5 +85,11 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 15,
     flex: 8,
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
+    fontFamily: "SpaceGrotesk",
   },
 });

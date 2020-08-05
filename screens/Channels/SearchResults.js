@@ -1,19 +1,19 @@
-import React, { Fragment } from 'reactn';
-import SearchSection from './SearchSection';
+import React, { Fragment } from "reactn";
+import SearchSection from "./SearchSection";
 
-export const SearchResults = ({
+export default function SearchResults({
   searchParams,
-  allCircles: circles,
-  allChannels: channels,
-  allAmendments: amendments,
-  allRevisions: revisions,
-  allUsers: users,
-}) => {
-  circles = circles ? circles : [];
-  channels = channels ? channels : [];
-  amendments = amendments ? amendments : [];
-  revisions = revisions ? revisions : [];
-  users = users ? users : [];
+  circlesList: circles,
+  channelsList: channels,
+  amendmentsList: amendments,
+  revisionsList: revisions,
+  usersList: users,
+}) {
+  circles = circles ? circles.items : [];
+  channels = channels ? channels.items : [];
+  amendments = amendments ? amendments.items : [];
+  revisions = revisions ? revisions.items : [];
+  users = users ? users.items : [];
 
   return (
     <Fragment>
@@ -21,42 +21,42 @@ export const SearchResults = ({
         <SearchSection
           search={searchParams}
           data={circles}
-          searchOn={'name'}
-          title='circles'
+          searchOn={"name"}
+          title="circles"
         />
       )}
       {channels.length > 0 && (
         <SearchSection
           search={searchParams}
           data={channels}
-          searchOn={'name'}
-          title='channels'
+          searchOn={"name"}
+          title="channels"
         />
       )}
       {amendments.length > 0 && (
         <SearchSection
           search={searchParams}
           data={amendments}
-          searchOn={'title'}
-          title='amendments'
+          searchOn={"title"}
+          title="amendments"
         />
       )}
       {revisions.length > 0 && (
         <SearchSection
           search={searchParams}
           data={revisions}
-          searchOn={'title'}
-          title='revisions'
+          searchOn={"title"}
+          title="revisions"
         />
       )}
       {users.length > 0 && (
         <SearchSection
           search={searchParams}
           data={users}
-          searchOn={'firstName'}
-          title='users'
+          searchOn={"firstName"}
+          title="users"
         />
       )}
     </Fragment>
   );
-};
+}

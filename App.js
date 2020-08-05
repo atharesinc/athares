@@ -59,6 +59,7 @@ export default function App(props) {
   const [activeTheme, setActiveTheme] = useGlobal("activeTheme");
   const [isMobile, setIsMobile] = useGlobal("isMobile");
   const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
+  const [searchedCircles, setSearchedCircles] = useGlobal("searchedCircles");
 
   // const { getInitialState } = useLinking(navigationRef);
 
@@ -76,12 +77,20 @@ export default function App(props) {
           SpaceGrotesk: require("./assets/fonts/SpaceGrotesk_SemiBold.otf"),
         });
 
-        // get preferred theme from storage
-        let res = await MeshStore.getItem("theme");
+        // get preferred theme, and recent searches from storage
+        let prom1 = MeshStore.getItem("theme");
+        let prom2 = MeshStore.getItem("searched_circles");
+
+        let [res, searches] = await Promise.all([prom1, prom2]);
 
         // if we have a preferred theme in storage, set it before we load the app
         if (res !== null) {
           setActiveTheme(themes[res]);
+        }
+
+        // if we have a list of searches set it before we load the app
+        if (searches !== null) {
+          setSearchedCircles(JSON.parse(searches));
         }
 
         // Make sure to use this font EVERYWHERE so we don't have to manually assign it

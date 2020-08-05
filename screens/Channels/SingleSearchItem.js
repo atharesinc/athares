@@ -1,17 +1,59 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, useEffect } from "reactn";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
-import moment from "moment";
+import { fromNow } from "../../utils/transform";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import AsyncImage from "../../components/AsyncImage";
+import MeshStore from "../../utils/meshStore";
 
-const SingleSearchItem = ({ item, category, navigation, ...props }) => {
+const SingleSearchItem = ({ item, category, ...props }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [activeAmendment, setActiveAmendment] = useGlobal("activeAmendment");
-  const [viewUser, setViewUser] = useGlobal("viewUser");
+  const [activeViewUser, setActiveViewUser] = useGlobal("activeViewUser");
   const [showSearch, setShowSearch] = useGlobal("showSearch");
+  const [searchedCircles, setSearchedCircles] = useGlobal("searchedCircles");
+
+  // on searching for a circle,
+  // add it to list of searched circles so user has something to look at if logged out
+  // useEffect(() => {
+  // if (activeCircle) {
+  //   console.log("adding this circle", activeCircle);
+  //   // let searchedCircles = await MeshStore.getItem("searched_circles")
+  //   // if our list of searches doesnt include the one we just searched for add it
+  //   if (!searchedCircles.includes(activeCircle)) {
+  //     const newArr = [activeCircle, ...searchedCircles];
+  //     setSearchedCircles(newArr);
+  //     MeshStore.setItem("searched_circles", JSON.stringify(newArr));
+  //   }
+  // }
+  // }, [activeCircle]);
+
+  // useEffect(() => {
+  //   if (activeChannel) {
+  //     RootNavigation.navigate("channel");
+  //   }
+  // }, [activeChannel]);
+
+  // useEffect(() => {
+  //   if (activeRevision) {
+  //     console.log("update to active revision", activeRevision);
+  //     RootNavigation.navigate("viewRevision");
+  //   }
+  // }, [activeRevision]);
+
+  // useEffect(() => {
+  //   if (activeAmendment) {
+  //     RootNavigation.navigate("constitution");
+  //   }
+  // }, [activeAmendment]);
+
+  // useEffect(() => {
+  //   if (activeViewUser) {
+  //     RootNavigation.navigate("viewOtherUser");
+  //   }
+  // }, [activeViewUser]);
 
   const navigate = () => {
     const { id } = item;
@@ -23,22 +65,31 @@ const SingleSearchItem = ({ item, category, navigation, ...props }) => {
           break;
         case "channels":
           setActiveCircle(item.circle.id);
-          setActiveChannel(id);
-          navigation.navigate("channel");
+          setActiveChannel(id, () => {
+            RootNavigation.navigate("channel");
+          });
+
           break;
         case "amendments":
           setActiveCircle(item.circle.id);
-          setActiveAmendment(id);
-          navigation.navigate("constitution");
+          setActiveAmendment(id, () => {
+            RootNavigation.navigate("constitution");
+          });
+
           break;
         case "revisions":
+          console.log({ item });
           setActiveCircle(item.circle.id);
-          setActiveRevision(id);
-          navigation.navigate("viewRevision");
+          setActiveRevision(id, () => {
+            RootNavigation.navigate("viewRevision");
+          });
+
           break;
         case "users":
-          setActiveViewUser(id);
-          navigation.navigate("viewOtherUser");
+          setActiveViewUser(id, () => {
+            RootNavigation.navigate("viewOtherUser");
+          });
+
           break;
         default:
           break;
@@ -46,6 +97,7 @@ const SingleSearchItem = ({ item, category, navigation, ...props }) => {
       setShowSearch(false);
     }
   };
+
   return (
     <TouchableOpacity
       style={styles.suggestionItem}
@@ -69,7 +121,7 @@ const SingleSearchItem = ({ item, category, navigation, ...props }) => {
         <View>
           <Text style={styles.suggestionText}>
             {item[props.searchOn] +
-              (category !== "circles" ? " - " + item.circle.name : "")}
+              (category !== "circles" ? " - " + item.circle?.name : "")}
           </Text>
           {category !== "circles" && (
             <Text style={[styles.suggestionText, styles.smaller]}>
@@ -88,7 +140,6 @@ const styles = StyleSheet.create({
   suggestionItem: {
     paddingHorizontal: 15,
     paddingVertical: 10,
-    color: "#FFFFFFb7",
     borderBottomWidth: 1,
     borderColor: "#FFFFFFb7",
     flexDirection: "row",
@@ -100,6 +151,7 @@ const styles = StyleSheet.create({
   suggestionText: {
     fontSize: 16,
     color: "#FFFFFFb7",
+    fontFamily: "SpaceGrotesk",
   },
   smaller: {
     fontSize: 12,

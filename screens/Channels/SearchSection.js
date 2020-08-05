@@ -1,26 +1,25 @@
-import React from 'reactn';
-import { View, Text, StyleSheet } from 'react-native';
-import SingleSearchItem from './SingleSearchItem';
+import React from "reactn";
+import { View, Text, StyleSheet } from "react-native";
+import SingleSearchItem from "./SingleSearchItem";
 
-const SearchSection = props => {
+const SearchSection = (props) => {
   let { data, navigation, clearSearch } = props;
 
   // If the user hasn't entered any search terms, or there are no results for this section, don't display the section
-  if (props.search.trim() === '' || data.length === 0) {
+  if (props.search.trim() === "" || data.length === 0) {
     return null;
   }
 
   return (
     <View style={styles.suggestionItemsWrapper}>
       <View style={styles.suggestionBackground}>
-        <Text style={styles.suggestionHeader}>{props.title.toUpperCase()}</Text>
+        <Text style={styles.suggestionHeader}>{props.title}</Text>
       </View>
       <View style={styles.suggestionItems}>
-        {data.map(item => (
+        {data.map((item) => (
           <SingleSearchItem
             key={item.id}
             item={item}
-            navigation={navigation}
             clearSearch={clearSearch}
             category={props.title}
             searchOn={props.searchOn}
@@ -31,17 +30,24 @@ const SearchSection = props => {
   );
 };
 
+// 282a38
+// 2f3242
+// 3a3e52
 const styles = StyleSheet.create({
-  suggestionItemsWrapper: {},
+  suggestionItemsWrapper: {
+    backgroundColor: "#282a38",
+  },
   suggestionBackground: {
-    backgroundColor: '#3a3e52',
+    backgroundColor: "#3a3e52",
   },
   suggestionHeader: {
     paddingHorizontal: 15,
     paddingVertical: 5,
-    color: '#FFFFFFb7',
+    color: "#FFFFFF",
+    fontFamily: "SpaceGrotesk",
+    textTransform: "uppercase",
   },
-  suggestionItems: {},
+  suggestionItems: { backgroundColor: "#282a38" },
 });
 
 export default SearchSection;
