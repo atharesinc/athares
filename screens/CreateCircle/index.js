@@ -11,7 +11,6 @@ import {
 import * as ImageManipulator from "expo-image-manipulator";
 import AvatarPicker from "../../components/AvatarPicker";
 
-import { UIActivityIndicator } from "react-native-indicators";
 import {
   CREATE_CIRCLE,
   CREATE_SIGNED_UPLOAD_LINK,
@@ -28,6 +27,7 @@ import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
 
 import getEnvVars from "../../env";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 const { DEFAULT_CIRCLE_IMG } = getEnvVars();
 
@@ -124,11 +124,7 @@ function CreateCircle(props) {
   };
 
   if (loading) {
-    return (
-      <View styles={[styles.wrapper]}>
-        <UIActivityIndicator color={"#FFFFFF"} />
-      </View>
-    );
+    return <CenteredLoaderWithText />;
   }
 
   return (

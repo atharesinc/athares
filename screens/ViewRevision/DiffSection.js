@@ -10,13 +10,14 @@ import Diff from "../../components/Diff";
 import { Feather } from "@expo/vector-icons";
 import Card from "../../components/Card";
 
-function DiffSection(props) {
+function DiffSection({ oldText = "", newText = "", ...props }) {
   const [mode, setMode] = useState(0);
 
+  console.log(newText, oldText);
   const renderTab = () => {
-    const { oldText = "", newText = "" } = props;
     switch (mode) {
       case 1:
+        console.log("case 1", { inputA: oldText, inputB: newText });
         return (
           <ScrollView containerStyle={styles.textContainerStyle}>
             <Diff
@@ -30,6 +31,8 @@ function DiffSection(props) {
           </ScrollView>
         );
       case 2:
+        console.log("case 2", { inputA: oldText, inputB: newText });
+
         return (
           <ScrollView containerStyle={styles.textContainerStyle}>
             <View style={styles.sideBySideWrapper}>
@@ -53,6 +56,8 @@ function DiffSection(props) {
           </ScrollView>
         );
       default:
+        console.log("case default", { inputA: oldText, inputB: newText });
+
         return (
           <ScrollView containerStyle={styles.textContainerStyle}>
             <Text style={styles.unchangedText}>{newText}</Text>
@@ -152,12 +157,14 @@ const styles = StyleSheet.create({
   tabText: {
     color: "#FFFFFFb7",
     fontSize: 10,
+    fontFamily: "SpaceGrotesk",
   },
   tabIcon: {
     marginRight: 10,
   },
   unchangedText: {
     color: "#FFFFFF",
+    fontFamily: "SpaceGrotesk",
   },
   sideBySideWrapper: {
     flexDirection: "row",
@@ -167,9 +174,11 @@ const styles = StyleSheet.create({
   sideBySide: {
     alignItems: "flex-start",
     padding: 5,
+    flex: 1,
   },
   sideBySideText: {
     fontSize: 12,
+    fontFamily: "SpaceGrotesk",
   },
   textContainerStyle: {
     marginBottom: 20,

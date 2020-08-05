@@ -160,6 +160,7 @@ export default function RevisionMonitor() {
               text: revision.newText,
             })
           );
+          console.log(revision, !!revision.amendment);
           if (revision.amendment) {
             console.log("updating amendment");
 

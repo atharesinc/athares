@@ -5,9 +5,10 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Alert,
+  View,
 } from "react-native";
 
-import { CREATE_REVISION } from "../../graphql/mutations";
+import { CREATE_REVISION_FROM_AMENDMENT } from "../../graphql/mutations";
 
 import { GET_AMENDMENT_BY_ID } from "../../graphql/queries";
 
@@ -22,6 +23,7 @@ import DisclaimerText from "../../components/DisclaimerText";
 import Input from "../../components/Input";
 
 import { useQuery, useMutation } from "@apollo/client";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 export default function EditAmendment(props) {
   const [text, setText] = useState("");
@@ -29,11 +31,20 @@ export default function EditAmendment(props) {
   const [user] = useGlobal("user");
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [loading, setLoading] = useState(false);
-  const [createRevisionMutation] = useMutation(CREATE_REVISION);
+  const [createRevisionMutation] = useMutation(CREATE_REVISION_FROM_AMENDMENT);
+  const [activeAmendment] = useGlobal("activeAmendment");
 
   const { data, loading: loadingQuery } = useQuery(GET_AMENDMENT_BY_ID, {
-    variables,
+    variables: {
+      id: activeAmendment || "",
+    },
   });
+
+  useEffect(() => {
+    if (data && data.amendment) {
+      setText(data.amendment.text);
+    }
+  }, [data]);
 
   const confirmRepeal = () => {
     Alert.alert(
@@ -70,7 +81,9 @@ export default function EditAmendment(props) {
         expires: parseDate(
           addSeconds(new Date(), Math.max(customSigm(numUsers), 61))
         ),
-        voterThreshold: Math.round(numUsers * ratifiedThreshold(numUsers)),
+        voterThreshold: Math.round(
+          numUsers * ratifiedThreshold(numUsers)
+        ).toString(),
         amendment: data.amendment.id,
         repeal: true,
       };
@@ -99,7 +112,17 @@ export default function EditAmendment(props) {
       return;
     }
 
-    let numUsers = data.circle.users.items.length;
+    // validateUpdatedRevision
+    const isValid = validateUpdatedRevision({
+      text,
+    });
+
+    if (isValid !== undefined) {
+      console.error("Error", isValid[Object.keys(isValid)[0]][0]);
+      throw new Error("Sorry, Amendments must have text.");
+    }
+
+    let numUsers = data.amendment.circle.users.items.length;
 
     let newRevision = {
       circle: activeCircle,
@@ -110,7 +133,9 @@ export default function EditAmendment(props) {
       expires: parseDate(
         addSeconds(new Date(), Math.max(customSigm(numUsers), 61))
       ),
-      voterThreshold: Math.round(numUsers * ratifiedThreshold(numUsers)),
+      voterThreshold: Math.round(
+        numUsers * ratifiedThreshold(numUsers)
+      ).toString(),
       amendment: data.amendment.id,
       repeal: false,
     };
@@ -136,7 +161,9 @@ export default function EditAmendment(props) {
         },
       });
 
-      newRevision.id = newRevisionRes.data.createRevision.id;
+      console.log({ newRevision, newRevisionRes });
+
+      newRevision.id = newRevisionRes.data.revisionCreate.id;
 
       setActiveRevision(newRevision.id);
     } catch (err) {
@@ -147,8 +174,14 @@ export default function EditAmendment(props) {
     }
   };
 
+  if (loading || loadingQuery) {
+    return <CenteredLoaderWithText />;
+  }
+
+  console.log(data);
+
   return (
-    <ScrollView contentContainerStyles={styles.wrapper}>
+    <ScrollView contentContainerStyle={styles.wrapper}>
       <KeyboardAvoidingView behavior="padding">
         <DisclaimerText text={"EDIT OR REPEAL THIS AMENDMENT"} />
         <Input
@@ -165,9 +198,19 @@ export default function EditAmendment(props) {
             'Pressing "Update Amendment" will create a revision for this amendment. If the revision gains the minimum number of votes to be ratified and the majority of voters support these changes, then the existing Amendment will be replaced with these changes.'
           }
         />
-
-        <GlowButton text="Update Amendment" onPress={submit} />
-        <GlowButton text="Repeal Amendment" onPress={repeal} red />
+        <View style={styles.voteSectionWrapper}>
+          <GlowButton
+            text="Update Amendment"
+            onPress={submit}
+            style={styles.voteButtons}
+          />
+          <GlowButton
+            text="Repeal Amendment"
+            onPress={repeal}
+            red
+            style={styles.voteButtons}
+          />
+        </View>
       </KeyboardAvoidingView>
     </ScrollView>
   );
@@ -180,5 +223,14 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     padding: 15,
+  },
+  voteButtons: {
+    width: "48%",
+  },
+  voteSectionWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });

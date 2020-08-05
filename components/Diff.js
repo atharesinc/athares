@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { diffChars, diffWords, diffSentences } from "diff";
@@ -53,22 +52,10 @@ export default function Diff({
   );
 }
 
-Diff.propTypes = {
-  inputA: PropTypes.oneOfType([PropTypes.string]),
-  inputB: PropTypes.oneOfType([PropTypes.string]),
-  type: PropTypes.oneOf(["chars", "words", "sentences"]),
-  textStyle: PropTypes.object,
-  containerStyle: PropTypes.object,
-  addedText: PropTypes.object,
-  removedText: PropTypes.object,
-  unchangedText: PropTypes.object,
-  addedColor: PropTypes.string,
-  removedColor: PropTypes.string,
-  unchangedColor: PropTypes.string,
-};
-
 var styles = StyleSheet.create({
-  defaultText: {},
+  defaultText: {
+    fontFamily: "SpaceGrotesk",
+  },
   addedText: {
     color: "#000000",
   },
