@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   channelTitle: {
-    color: "#FFFFFF80",
+    color: "#FFFFFF",
     fontSize: 16,
     fontFamily: "SpaceGrotesk",
   },

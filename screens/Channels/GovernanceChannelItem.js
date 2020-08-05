@@ -27,17 +27,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   channelTitle: {
-    color: "#FFFFFF80",
+    color: "#FFFFFF",
     fontSize: 16,
     fontFamily: "SpaceGrotesk",
-  },
-  // channelText: {
-  //   color: "#FFFFFF80",
-  //   fontSize: 15,
-  //   maxWidth: "90%",
-  //   fontFamily: "SpaceGrotesk",
-  // },
-  unread: {
-    color: "#FFF",
   },
 });

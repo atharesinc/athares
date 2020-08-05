@@ -126,7 +126,7 @@ function Header({
       },
     });
 
-    console.table({ data, loading, rest, activeChannel });
+    console.log({ data, loading, rest, activeChannel });
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
