@@ -13,6 +13,7 @@ import Portal from "./Portal";
 import CreateRevision from "./CreateRevision";
 import ViewRevision from "./ViewRevision";
 import EditAmendment from "./EditAmendment";
+import CircleSettings from "./CircleSettings";
 
 import Header from "../components/Header";
 import { pushTransition } from "../navigation/transitionConfigs";
@@ -50,6 +51,8 @@ export default function RootStack(props) {
       <Stack.Screen name="viewRevision" component={ViewRevision} />
 
       <Stack.Screen name="createCircle" component={CreateCircle} />
+      <Stack.Screen name="circleSettings" component={CircleSettings} />
+
       <Stack.Screen name="constitution" component={Constitution} />
       <Stack.Screen name="createChannel" component={CreateChannel} />
       <Stack.Screen name="channel" component={ViewChannel} />

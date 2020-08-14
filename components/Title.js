@@ -10,7 +10,7 @@ export default function Title({
   center = false,
   style = {},
 }) {
-  const [activeTheme] = useGlobal(activeTheme);
+  const [activeTheme] = useGlobal("activeTheme");
 
   const textStyles = [
     styles.title,

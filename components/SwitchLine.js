@@ -15,8 +15,8 @@ const SwitchLine = ({
       <Text style={styles.label}>{label}</Text>
       <Switch
         onSyncPress={onPress}
-        backgroundActive={activeTheme.COLORS["BLUE0"]}
-        backgroundInactive={activeTheme.COLORS.DARK}
+        backgroundActive={activeTheme.COLORS["BLUE1"]}
+        backgroundInactive={activeTheme.COLORS.LIGHT}
         value={value}
       />
     </View>
@@ -34,5 +34,6 @@ const styles = StyleSheet.create({
   label: {
     color: "#FFFFFF",
     fontSize: 16,
+    fontFamily: "SpaceGrotesk",
   },
 });

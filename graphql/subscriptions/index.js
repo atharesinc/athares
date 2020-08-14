@@ -207,7 +207,7 @@ export const SUB_TO_USERS_CIRCLES = gql`
   subscription($id: ID!) {
     Circles(
       filter: {
-        mutation_in: [create, delete]
+        mutation_in: [create, update, delete]
         node: { users: { some: { id: { equals: $id } } } }
       }
     ) {
