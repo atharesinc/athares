@@ -126,7 +126,6 @@ function Header({
       },
     });
 
-    console.log({ data, loading, rest, activeChannel });
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
@@ -194,7 +193,7 @@ function Header({
   if (data && data.user) {
     img = { uri: data.user.icon };
   }
-  console.log();
+
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>

@@ -684,3 +684,14 @@ export const CREATE_SIGNED_UPLOAD_LINK = gql`
     }
   }
 `;
+
+export const GET_REFRESH_TOKEN = gql`
+  mutation($email: String!, $token: String!, $profileId: String!) {
+    userRefreshToken(
+      data: { email: $email, refreshToken: $token, authProfileId: $profileId }
+    ) {
+      idToken
+      refreshToken
+    }
+  }
+`;

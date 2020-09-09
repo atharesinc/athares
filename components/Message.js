@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 7,
     borderRadius: 3,
+    flex: 1,
   },
   userAndTimeWrapper: {
     flexDirection: "row",
@@ -120,8 +121,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: "#FFFFFF",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    padding: 15,
     borderRadius: 3,
     fontFamily: "SpaceGrotesk",
     fontSize: 15,

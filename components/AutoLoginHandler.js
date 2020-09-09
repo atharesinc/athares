@@ -58,7 +58,7 @@ export default function AutoLoginHandler(props) {
 
           //store locally
           await MeshStore.setItem("ATHARES_TOKEN", idToken);
-
+          console.log("token after auto-login", idToken);
           setUser(id);
         }
       } catch (err) {
@@ -66,7 +66,7 @@ export default function AutoLoginHandler(props) {
           MeshStore.clear();
           return;
         }
-        console.error(err);
+        console.error(new Error(err));
       }
     }
     tryLoginOnMount();

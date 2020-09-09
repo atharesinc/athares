@@ -18,7 +18,7 @@ import * as RootNavigation from "../../navigation/RootNavigation";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { validateLogin } from "../../utils/validators";
 
-import { LOGIN } from "../../graphql/mutations";
+import { LOGIN, GET_REFRESH_TOKEN } from "../../graphql/mutations";
 import { GET_USER_BY_EMAIL } from "../../graphql/queries";
 import { useMutation } from "@apollo/client";
 import useImperativeQuery from "../../utils/useImperativeQuery";
@@ -39,6 +39,7 @@ function Login(props) {
   const [loading, setLoading] = useState(false);
 
   const [login] = useMutation(LOGIN);
+  const [getRefreshedToken] = useMutation(GET_REFRESH_TOKEN);
   const getUser = useImperativeQuery(GET_USER_BY_EMAIL);
 
   let _isMounted = useRef(false);
@@ -117,14 +118,41 @@ function Login(props) {
 
       RootNavigation.navigate("app");
     } catch (err) {
-      console.error(new Error(err));
+      console.error(err);
       if (err.message.indexOf("Invalid Credentials") !== -1) {
         Alert.alert("Error", "Invalid Credentials");
+      } else if (err.message.indexOf("Token expired") !== -1) {
+        refreshToken();
+        // await MeshStore.clear();
+        // tryLogin();
       } else {
         Alert.alert("Error", err.message);
       }
       setLoading(false);
     }
+  };
+
+  const refreshToken = async () => {
+    // get refreshed token from storage
+    const token = await MeshStore.getItem("ATHARES_TOKEN");
+
+    // get new token with query
+    let res = await getRefreshedToken({
+      variables: {
+        email,
+        token,
+        profileId: AUTH_PROFILE_ID,
+      },
+    });
+
+    console.log("new token", res);
+
+    // store new token
+
+    await MeshStore.setItem("ATHARES_TOKEN", res.refreshToken);
+
+    // try to login again
+    tryLogin();
   };
 
   if (loading) {

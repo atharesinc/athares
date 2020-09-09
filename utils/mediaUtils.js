@@ -90,3 +90,30 @@ export async function pickImageURIAsync() {
     }
   }
 }
+
+export async function pickFileURIAsync() {
+  if (
+    Platform.OS === "web" ||
+    (await getPermissionAsync(Permissions.CAMERA_ROLL))
+  ) {
+    const result = await DocumentPicker.getDocumentAsync({ type: "*/*" });
+    // result looks like this:
+    console.log(result);
+    /*
+      {"type":"success",
+      "uri": <superlong base64 unless its way too long>,
+      "name":"Solved.zip",
+      "file":{},
+      "lastModified":1597707891895,
+      "size":102620,
+      "output":{"0":{}}}
+    */
+    if (result.size / 1000 / 1000 > 50) {
+      throw "Cannot upload file larger than 50MB";
+    }
+
+    if (!result.cancelled) {
+      return result.uri;
+    }
+  }
+}

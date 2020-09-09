@@ -76,9 +76,13 @@ const wsLink = new SubscriptionLink({
 const cache = new InMemoryCache();
 
 const withToken = setContext(async (request) => {
+  console.log("does token exist before setting context?", token);
+
   if (!token) {
     token = await MeshStore.getItem("ATHARES_TOKEN");
+    console.log("token about to set context", token);
   }
+
   return {
     headers: {
       authorization: token ? "Bearer " + token : "",

@@ -53,9 +53,11 @@
     "localforage": "^1.7.3",
     "moment": "^2.26.0",
     "react": "16.11.0",
+    "react-autosize-textarea": "^7.1.0",
     "react-dom": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-auto-grow-textinput": "^1.2.1",
+    "react-native-autogrow-textinput": "^5.4.0",
     "react-native-diff-component": "^1.0.7",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-global-props": "^1.1.5",
@@ -78,6 +80,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "babel-preset-expo": "^8.2.3",
+    "eslint": "^7.8.1",
     "jest-expo": "^38.0.0"
   },
   "private": true
