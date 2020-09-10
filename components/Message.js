@@ -9,17 +9,18 @@ import { parseDate } from "../utils/transform";
 const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
   const timestamp = parseDate(props.timestamp, "h:mm bbbb");
 
-  const isImage = (file, fileName) => {
+  const isImage = (file) => {
+    console.log("message", file);
     const imgs = ["gif", "png", "jpg", "jpeg", "bmp"];
 
-    let extension = fileName.match(/\.(.{1,4})$/i)
-      ? fileName.match(/\.(.{1,4})$/i)[1]
+    let extension = file.match(/\.(.{1,4})$/i)
+      ? file.match(/\.(.{1,4})$/i)[1]
       : "";
 
     if (imgs.findIndex((i) => i === extension.toLowerCase()) !== -1) {
-      return <ImageMessage file={file} fileName={fileName} />;
+      return <ImageMessage file={file} fileName={file} />;
     } else {
-      return <FileMessage file={file} fileName={fileName} />;
+      return <FileMessage file={file} fileName={file} />;
     }
   };
 

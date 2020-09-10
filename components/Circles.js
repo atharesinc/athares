@@ -50,7 +50,7 @@ const Circles = ({ loggedIn = false }) => {
     },
   });
 
-  const { loading: loadingSub } = useSubscription(SUB_TO_USERS_CIRCLES, {
+  useSubscription(SUB_TO_USERS_CIRCLES, {
     variables: { id: user || "" },
     onSubscriptionData,
   });
@@ -94,8 +94,23 @@ const Circles = ({ loggedIn = false }) => {
         </Text>
       </TouchableOpacity>
       <ScrollView horizontal={true} contentContainerStyle={styles.circlesList}>
-        {loading || loadingSub ? (
-          <AsyncImage />
+        {loading ? (
+          <>
+            <View style={[styles.placeholderCircleWrapper, { borderWidth: 4 }]}>
+              <AsyncImage
+                source={{ uri: "" }}
+                style={styles.placeholderCircle}
+                placeholderColor={"#3a3e52"}
+              />
+            </View>
+            <View style={[styles.placeholderCircleWrapper]}>
+              <AsyncImage
+                source={{ uri: "" }}
+                style={styles.placeholderCircle}
+                placeholderColor={"#3a3e52"}
+              />
+            </View>
+          </>
         ) : (
           circles.map((c) => (
             <CircleIcon
@@ -144,6 +159,22 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#ffffffb7",
     fontFamily: "SpaceGrotesk",
+  },
+  placeholderCircle: {
+    height: 60,
+    width: 60,
+  },
+  placeholderCircleWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 9999,
+    marginBottom: 5,
+    borderColor: "#00dffc",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    marginRight: 15,
   },
 });
 

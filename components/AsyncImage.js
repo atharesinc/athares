@@ -13,7 +13,7 @@ export default class AsyncImage extends Component {
       placeholderScale: new Animated.Value(1.0),
     };
   }
-  _onLoad() {
+  _onLoad = () => {
     const { placeholderScale, placeholderOpacity, imageOpacity } = this.state;
 
     Animated.sequence([
@@ -57,7 +57,7 @@ export default class AsyncImage extends Component {
     ]).start(() => {
       this.setState(() => ({ loaded: true }));
     });
-  }
+  };
 
   render() {
     const { placeholderColor, placeholderSource, style, source } = this.props;

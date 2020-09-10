@@ -36,6 +36,7 @@ export async function uploadToAWS(signedLink, file) {
 
   // promisify the xmhttprequest because fetch didn't work for me =(
   return new Promise((resolve) => {
+    console.log({ signedLink, file });
     const xhr = new XMLHttpRequest();
     xhr.open("PUT", signedLink);
     xhr.setRequestHeader("Content-Type", file.type + "; charset=utf-8");

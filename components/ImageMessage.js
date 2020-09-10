@@ -3,18 +3,18 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
+  // Image,
   TouchableOpacity,
   Alert,
   CameraRoll,
 } from "react-native";
 import AsyncImage from "./AsyncImage";
-import Lightbox from "react-native-lightbox";
-import { Feather } from "@expo/vector-icons";
+// import Lightbox from "react-native-lightbox";
+// import { Feather } from "@expo/vector-icons";
 
 import { FileSystem } from "expo";
 
-const ImageMessage = ({ file, fileName }) => {
+const ImageMessage = ({ file }) => {
   const requestDownload = () => {
     Alert.alert(
       "Save Image",
@@ -33,7 +33,7 @@ const ImageMessage = ({ file, fileName }) => {
     try {
       let local = await FileSystem.downloadAsync(
         file,
-        FileSystem.documentDirectory + "photos/" + fileName
+        FileSystem.documentDirectory + "photos/" + file
       );
       await CameraRoll.saveToCameraRoll(local.uri, "photo");
     } catch (e) {
@@ -42,7 +42,7 @@ const ImageMessage = ({ file, fileName }) => {
   };
   return (
     <View style={styles.wrapper}>
-      <Lightbox
+      {/* <Lightbox
         underlayColor="#3a3e52"
         renderHeader={(close) => (
           <TouchableOpacity onPress={close}>
@@ -61,17 +61,17 @@ const ImageMessage = ({ file, fileName }) => {
             source={{ uri: file }}
           />
         )}
-      >
-        <AsyncImage
-          source={{ uri: file }}
-          style={styles.image}
-          placeholderColor={"#3a3e52"}
-        />
-      </Lightbox>
+      > */}
+      <AsyncImage
+        source={{ uri: file }}
+        style={styles.image}
+        placeholderColor={"#3a3e52"}
+      />
+      {/* </Lightbox> */}
       <TouchableOpacity onPress={requestDownload}>
         <View style={styles.labelTextWrapper}>
           <Text style={styles.labelText} ellipsizeMode={"middle"}>
-            {fileName}
+            {file.split("uploads/")[1]}
           </Text>
         </View>
       </TouchableOpacity>
@@ -92,17 +92,18 @@ const styles = StyleSheet.create({
   image: {
     height: 120,
     width: 120,
-    resizeMode: "cover",
+    // resizeMode: "cover",
     marginBottom: 10,
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#2f3242",
   },
   labelTextWrapper: {
-    backgroundColor: "#3a3e52",
-    borderRadius: 9999,
+    backgroundColor: "#2f3242",
+    borderRadius: 4,
+    maxWidth: "50%",
   },
   labelText: {
     color: "#FFFFFF",
-    fontSize: 12,
+    fontSize: 10,
     padding: 5,
     paddingHorizontal: 10,
   },
