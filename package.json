@@ -92,7 +92,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && eslint . --fix"
+      "pre-commit": "eslint . --fix && lint-staged"
     }
   },
   "lint-staged": {
