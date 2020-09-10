@@ -1,4 +1,4 @@
-import React, { useState, useGlobal, useEffect, useRef } from "reactn";
+import React, { useState, useGlobal } from "reactn";
 
 import {
   StyleSheet,
@@ -11,15 +11,16 @@ import {
 import Chat from "../../components/Chat";
 import ChatInput from "../../components/ChatInput";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 import { CREATE_MESSAGE } from "../../graphql/mutations";
 import { GET_MESSAGES_FROM_CHANNEL_ID } from "../../graphql/queries";
 // import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../../graphql/subscriptions";
 import { useQuery, useMutation } from "@apollo/client";
 import KeyboardSpacer from "react-native-keyboard-spacer";
-import { processFile, uploadToAWS } from "../../utils/upload";
+import { processFile, uploadToAWS, getSignedUrl } from "../../utils/upload";
 
-export default function ViewChannel(props) {
+export default function ViewChannel() {
   const [uploadInProgress, setUploadInProgress] = useState(false);
   const [activeChannel] = useGlobal("activeChannel");
   const [user] = useGlobal("user");
@@ -62,7 +63,7 @@ export default function ViewChannel(props) {
         setUploadInProgress(true);
 
         // get file object
-        const preparedFile = processFile(finalImage);
+        const preparedFile = processFile(file);
 
         // get presigned upload link for this image
         let signedUploadUrl = await getSignedUrl({
@@ -122,9 +123,16 @@ export default function ViewChannel(props) {
   //     });
   //   };
 
+  if (loading) {
+    return <CenteredLoaderWithText text={"Getting Messages"} />;
+  }
+
+  if (error) {
+    return <CenteredErrorLoader />;
+  }
   // subscribe and populate
   if (data && data.channel) {
-    const channel = data.channel;
+    // const channel = data.channel;
     const messages = data.channel.messages.items;
     return (
       <View style={[styles.wrapper]}>

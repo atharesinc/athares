@@ -4,7 +4,7 @@ import { Feather } from "@expo/vector-icons";
 
 import * as RootNavigation from "../../navigation/RootNavigation";
 
-const ChannelGroupHeader = ({ displayPlus = false, title, ...props }) => {
+const ChannelGroupHeader = ({ displayPlus = false, title }) => {
   const nav = () => {
     // if (title === "DIRECT MESSAGES") {
     //   RootNavigation.navigate("c");

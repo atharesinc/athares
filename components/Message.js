@@ -1,4 +1,4 @@
-import React, { Fragment } from "reactn";
+import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import ImageMessage from "./ImageMessage";
 import FileMessage from "./FileMessage";

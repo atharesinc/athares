@@ -1,5 +1,5 @@
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
-import React from 'reactn';
+import React from "reactn";
 
 const PortalButton = ({ style = {}, textStyle = {}, title = "", ...props }) => (
   <TouchableOpacity style={[styles.wrapper, style]} {...props}>
@@ -17,16 +17,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%"
+    width: "100%",
   },
   wrapperInner: {
     justifyContent: "center",
     alignItems: "center",
-    width: "100%"
+    width: "100%",
   },
   text: {
     fontSize: 15,
     color: "#222222",
-    marginVertical: 10
-  }
+    marginVertical: 10,
+  },
 });

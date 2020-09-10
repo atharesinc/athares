@@ -2,14 +2,14 @@ import * as Permissions from "expo-permissions";
 // import { Location } from 'expo-location';
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import Constants from "expo-constants";
+// import Constants from "expo-constants";
 
 import { Alert, Linking, Platform } from "react-native";
 
 export default async function getPermissionAsync(permission) {
   const { status } = await Permissions.askAsync(permission);
   if (status !== "granted") {
-    const { name } = Constants.manifest;
+    // const { name } = Constants.manifest;
     const permissionName = permission.toLowerCase().replace("_", " ");
     Alert.alert(
       "Cannot be done 😞",

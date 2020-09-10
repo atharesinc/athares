@@ -18,54 +18,38 @@ const MeshStore = {
     }
   },
   getItem: (key) => {
-    try {
-      if (useLocalForage) {
-        return localforage.getItem(key);
-      }
-      return SecureStore.getItemAsync(key);
-    } catch (e) {
-      throw e;
+    if (useLocalForage) {
+      return localforage.getItem(key);
     }
+    return SecureStore.getItemAsync(key);
   },
   setItem: (key, value) => {
-    try {
-      if (useLocalForage) {
-        return localforage.setItem(key, value);
-      }
-      return SecureStore.setItemAsync(key, value);
-    } catch (e) {
-      throw e;
+    if (useLocalForage) {
+      return localforage.setItem(key, value);
     }
+    return SecureStore.setItemAsync(key, value);
   },
   removeItem: (key) => {
-    try {
-      if (useLocalForage) {
-        return localforage.removeItem(key);
-      }
-      return SecureStore.deleteItemAsync(key);
-    } catch (e) {
-      throw e;
+    if (useLocalForage) {
+      return localforage.removeItem(key);
     }
+    return SecureStore.deleteItemAsync(key);
   },
   clear: () => {
-    try {
-      if (useLocalForage) {
-        return Promise.all([
-          localforage.removeItem("ATHARES_ALIAS"),
-          localforage.removeItem("ATHARES_PASSWORD"),
-          localforage.removeItem("ATHARES_TOKEN"),
-          localforage.removeItem("theme"),
-        ]);
-      }
+    if (useLocalForage) {
       return Promise.all([
-        SecureStore.deleteItemAsync("ATHARES_ALIAS"),
-        SecureStore.deleteItemAsync("ATHARES_PASSWORD"),
-        SecureStore.deleteItemAsync("ATHARES_TOKEN"),
-        SecureStore.deleteItemAsync("theme"),
+        localforage.removeItem("ATHARES_ALIAS"),
+        localforage.removeItem("ATHARES_PASSWORD"),
+        localforage.removeItem("ATHARES_TOKEN"),
+        localforage.removeItem("theme"),
       ]);
-    } catch (e) {
-      throw e;
     }
+    return Promise.all([
+      SecureStore.deleteItemAsync("ATHARES_ALIAS"),
+      SecureStore.deleteItemAsync("ATHARES_PASSWORD"),
+      SecureStore.deleteItemAsync("ATHARES_TOKEN"),
+      SecureStore.deleteItemAsync("theme"),
+    ]);
   },
 };
 

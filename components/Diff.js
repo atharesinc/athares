@@ -23,7 +23,7 @@ export default function Diff({
   unchangedColor = "transparent",
 }) {
   var diff = fnMap[type](inputA, inputB);
-  var result = diff.map(function(part, index) {
+  var result = diff.map(function (part, index) {
     var spanStyle = part.added
       ? { ...styles.addedText, ...addedText }
       : part.removed

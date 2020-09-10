@@ -1,18 +1,6 @@
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useGlobal,
-  Fragment,
-} from "reactn";
-import {
-  View,
-  TouchableOpacity,
-  Linking,
-  Alert,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import React, { useRef, useEffect, useState, useGlobal } from "reactn";
+import { View, TouchableOpacity, Linking, Alert } from "react-native";
+
 import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -31,7 +19,7 @@ import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import getEnvVars from "../../env";
 const { AUTH_PROFILE_ID } = getEnvVars();
 
-function Login(props) {
+export default function Login() {
   const [, setUser] = useGlobal("user");
 
   const [password, setPassword] = useState("");
@@ -52,10 +40,10 @@ function Login(props) {
     };
   }, []);
 
-  const goToRegister = () => props.navigation.navigate("register");
   const updateEmail = (text) => {
     setEmail(text.toLowerCase());
   };
+
   const updatePassword = (text) => {
     setPassword(text);
   };
@@ -98,7 +86,6 @@ function Login(props) {
         data: {
           userLogin: {
             auth: { idToken },
-            success,
           },
         },
       } = res2;
@@ -181,13 +168,3 @@ function Login(props) {
     </KeyboardAwareScrollView>
   );
 }
-
-export default Login;
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-});

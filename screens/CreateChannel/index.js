@@ -15,9 +15,7 @@ import { validateChannel } from "../../utils/validators";
 
 import { useMutation, useQuery } from "@apollo/client";
 
-import Title from "../../components/Title";
 import Input from "../../components/Input";
-import HelperText from "../../components/HelperText";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
 

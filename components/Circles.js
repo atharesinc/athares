@@ -15,8 +15,9 @@ import { GET_CIRCLES_BY_USER_ID } from "../graphql/queries";
 import { SUB_TO_USERS_CIRCLES } from "../graphql/subscriptions";
 
 import { useQuery, useSubscription } from "@apollo/client";
+import AsyncImage from "./AsyncImage";
 
-const Circles = ({ loggedIn = false, ...props }) => {
+const Circles = ({ loggedIn = false }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
   const [, setActiveRevision] = useGlobal("activeRevision");
@@ -43,13 +44,13 @@ const Circles = ({ loggedIn = false, ...props }) => {
 
   let circles = [];
 
-  const { loading, error, data, refetch } = useQuery(GET_CIRCLES_BY_USER_ID, {
+  const { loading, data, refetch } = useQuery(GET_CIRCLES_BY_USER_ID, {
     variables: {
       id: user || "",
     },
   });
 
-  const { data: sub } = useSubscription(SUB_TO_USERS_CIRCLES, {
+  const { loading: loadingSub } = useSubscription(SUB_TO_USERS_CIRCLES, {
     variables: { id: user || "" },
     onSubscriptionData,
   });
@@ -68,6 +69,7 @@ const Circles = ({ loggedIn = false, ...props }) => {
   }
 
   // this may come back to haunt me
+  // set the first result to active
   useEffect(() => {
     if (circles.length > 0) {
       setActiveCircle(circles[0].id);
@@ -92,14 +94,18 @@ const Circles = ({ loggedIn = false, ...props }) => {
         </Text>
       </TouchableOpacity>
       <ScrollView horizontal={true} contentContainerStyle={styles.circlesList}>
-        {circles.map((c) => (
-          <CircleIcon
-            selected={c.id === activeCircle}
-            selectCircle={selectCircle}
-            circle={c}
-            key={c.id}
-          />
-        ))}
+        {loading || loadingSub ? (
+          <AsyncImage />
+        ) : (
+          circles.map((c) => (
+            <CircleIcon
+              selected={c.id === activeCircle}
+              selectCircle={selectCircle}
+              circle={c}
+              key={c.id}
+            />
+          ))
+        )}
       </ScrollView>
     </View>
   );

@@ -4,11 +4,7 @@ import { View, StyleSheet } from "react-native";
 import Title from "./Title";
 import { Feather } from "@expo/vector-icons";
 
-export default function CenteredErrorLoader({
-  size = 25,
-  text = null,
-  ...props
-}) {
+export default function CenteredErrorLoader({ size = 25, text = null }) {
   return (
     <View style={styles.view}>
       <Feather name={"alert"} size={size} color={"#FFFFFF"} />

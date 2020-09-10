@@ -1,4 +1,4 @@
-import React, { Component } from "reactn";
+import React from "reactn";
 import ScreenWrapper from "../../../components/ScreenWrapper";
 import InfoLineStatic from "../../../components/InfoLineStatic";
 import Statistic from "../../../components/Statistic";
@@ -13,9 +13,12 @@ import {
 } from "react-native";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-function ViewOtherUser(props) {
+function ViewOtherUser() {
   let user,
-    stats = null;
+    stats = null,
+    data = null,
+    loading;
+
   if (data.User) {
     user = data.User;
     stats = {

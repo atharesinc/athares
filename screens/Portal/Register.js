@@ -1,22 +1,6 @@
-import React, {
-  Fragment,
-  useState,
-  useGlobal,
-  useRef,
-  useEffect,
-} from "reactn";
+import React, { useState, useGlobal, useRef, useEffect } from "reactn";
 
-import {
-  TouchableOpacity,
-  Linking,
-  View,
-  Alert,
-  Text,
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { TouchableOpacity, Linking, View, Alert, Text } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import MeshStore from "../../utils/meshStore";
@@ -35,7 +19,7 @@ import { useMutation } from "@apollo/client";
 
 const { DEFAULT_USER_IMG, AUTH_PROFILE_ID } = getEnvVars();
 
-function Register(props) {
+export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
@@ -43,7 +27,7 @@ function Register(props) {
   const [loading, setLoading] = useState(false);
   const [, setUser] = useGlobal("user");
 
-  const [error, setError] = useState("");
+  const [error] = useState("");
 
   const [signup] = useMutation(SIGN_UP);
   const [login] = useMutation(LOGIN);
@@ -65,9 +49,7 @@ function Register(props) {
     Linking.openURL("https://www.athares.us/policy");
   };
 
-  const toLogin = () => props.navigation.navigate("login");
-
-  const tryRegister = async (e) => {
+  const tryRegister = async () => {
     setLoading(true);
 
     const isValid = validateRegister({
@@ -103,7 +85,12 @@ function Register(props) {
         lastName,
         email,
         icon: DEFAULT_USER_IMG,
-        prefs: { create: { maySendMarketingEmail: true, userDisabled: false } },
+        prefs: {
+          create: {
+            maySendMarketingEmail: true,
+            userDisabled: false,
+          },
+        },
       };
 
       // first try to register
@@ -128,7 +115,6 @@ function Register(props) {
         data: {
           userLogin: {
             auth: { idToken },
-            success,
           },
         },
       } = res2;
@@ -199,13 +185,3 @@ function Register(props) {
     </KeyboardAwareScrollView>
   );
 }
-
-export default Register;
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-});

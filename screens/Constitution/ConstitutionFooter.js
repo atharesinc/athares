@@ -13,15 +13,12 @@ export default function ConstitutionFooter() {
 
   let belongsToCircle = false;
   // see if the user actually belongs to this circle
-  const { loading, error, data: belongsToCircleData } = useQuery(
-    IS_USER_IN_CIRCLE,
-    {
-      variables: {
-        circle: activeCircle || "",
-        user: user || "",
-      },
-    }
-  );
+  const { data: belongsToCircleData } = useQuery(IS_USER_IN_CIRCLE, {
+    variables: {
+      circle: activeCircle || "",
+      user: user || "",
+    },
+  });
 
   if (
     belongsToCircleData &&

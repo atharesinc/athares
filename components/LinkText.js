@@ -1,4 +1,4 @@
-import React from 'reactn';
+import React from "reactn";
 
 import { Text, View, StyleSheet, Clipboard, Platform } from "react-native";
 
@@ -21,10 +21,10 @@ const styles = StyleSheet.create({
   wrapper: {
     borderWidth: 1,
     borderColor: "#FFFFFF",
-    padding: 10
+    padding: 10,
   },
   text: {
     color: "#FFFFFF",
-    fontFamily: Platform.OS === "android" ? "monospace" : "Courier"
-  }
+    fontFamily: Platform.OS === "android" ? "monospace" : "Courier",
+  },
 });

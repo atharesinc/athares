@@ -20,7 +20,7 @@ import { pushTransition } from "../navigation/transitionConfigs";
 
 const Stack = createStackNavigator();
 
-export default function RootStack(props) {
+export default function RootStack() {
   const [isMobile] = useGlobal("isMobile");
   const [activeTheme] = useGlobal("activeTheme");
 

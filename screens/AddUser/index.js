@@ -1,5 +1,4 @@
 import React, { useState } from "reactn";
-import ScreenWrapper from "../../../components/ScreenWrapper";
 import InviteUser from "../../../components/InviteUser";
 
 import {
@@ -8,15 +7,14 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Alert,
 } from "react-native";
 
 import GlowButton from "../../../components/GlowButton";
 
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-function AddUser({ activeCircle, loading }) {
-  const [isFocused, setIsFocused] = useState(false);
+export default function AddUser({ activeCircle, loading }) {
+  const [, setIsFocused] = useState(false);
   const [tags, setTags] = useState([]);
 
   const renderTags = (tags) => {
@@ -26,35 +24,34 @@ function AddUser({ activeCircle, loading }) {
       </View>
     ));
   };
-  const submit = async (e) => {
+  const submit = async () => {
     // add each user to circle
-    let { tags } = state;
-    if (tags.length === 0) {
-      return;
-    }
-    try {
-      let invites = tags.map((user) => {
-        return props.addUserToCircle({
-          variables: {
-            user: user.id,
-            circle: props.activeCircle,
-          },
-        });
-      });
-
-      Promise.all(invites).then(() => {
-        Alert.alert(
-          `${tags.length > 1 ? "Users Added" : "User Added"}`,
-          `${
-            tags.length > 1 ? "These users have" : "This user has"
-          } been added.`
-        );
-        props.navigation.goBack(null);
-      });
-    } catch (err) {
-      console.error(new Error(err));
-      Alert.alert("Error", "There was an error inviting users.");
-    }
+    // let { tags } = state;
+    // if (tags.length === 0) {
+    //     return;
+    // }
+    // try {
+    //     let invites = tags.map((user) => {
+    //         return props.addUserToCircle({
+    //             variables: {
+    //                 user: user.id,
+    //                 circle: props.activeCircle,
+    //             },
+    //         });
+    //     });
+    //     Promise.all(invites).then(() => {
+    //         Alert.alert(
+    //             `${tags.length > 1 ? "Users Added" : "User Added"}`,
+    //             `${
+    //                 tags.length > 1 ? "These users have" : "This user has"
+    //             } been added.`
+    //         );
+    //         props.navigation.goBack(null);
+    //     });
+    // } catch (err) {
+    //     console.error(new Error(err));
+    //     Alert.alert("Error", "There was an error inviting users.");
+    // }
   };
 
   if (loading) {
@@ -94,11 +91,11 @@ function AddUser({ activeCircle, loading }) {
         </View>
 
         <Text style={styles.disclaimer}>
-          After pressing "Invite Users", the recipient(s) will be added
-          automatically to this circle.
+          After pressing &quot;Invite Users&quot;, the recipient(s) will be
+          added automatically to this circle.
         </Text>
         <Text style={styles.disclaimer}>
-          Invitations aren't subject to democratic process.
+          Invitations are not subject to democratic process.
         </Text>
         <GlowButton
           text="Invite Users"
@@ -173,6 +170,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default compose(
-  graphql(ADD_USER_TO_CIRCLE, { name: "addUserToCircle" })
-)(AddUser);
+// export default compose(
+//     graphql(ADD_USER_TO_CIRCLE, { name: "addUserToCircle" })
+// )(AddUser);

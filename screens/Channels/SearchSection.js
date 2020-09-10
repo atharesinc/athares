@@ -2,8 +2,8 @@ import React from "reactn";
 import { View, Text, StyleSheet } from "react-native";
 import SingleSearchItem from "./SingleSearchItem";
 
-const SearchSection = (props) => {
-  let { data, navigation, clearSearch } = props;
+export default function SearchSection(props) {
+  let { data, clearSearch } = props;
 
   // If the user hasn't entered any search terms, or there are no results for this section, don't display the section
   if (props.search.trim() === "" || data.length === 0) {
@@ -28,7 +28,7 @@ const SearchSection = (props) => {
       </View>
     </View>
   );
-};
+}
 
 // 282a38
 // 2f3242
@@ -49,5 +49,3 @@ const styles = StyleSheet.create({
   },
   suggestionItems: { backgroundColor: "#282a38" },
 });
-
-export default SearchSection;

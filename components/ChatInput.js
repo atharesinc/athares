@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "reactn";
+import React, { useState, useRef } from "reactn";
 import {
   View,
   StyleSheet,
@@ -13,9 +13,12 @@ import Loader from "./Loader";
 import { Feather } from "@expo/vector-icons";
 import CustomActions from "./CustomActions";
 //maybe not this one
-import { AutoGrowTextInput } from "react-native-auto-grow-textinput";
+// import { AutoGrowTextInput } from "react-native-auto-grow-textinput";
 import TextareaAutosize from "react-autosize-textarea";
-import { processFile, uploadToAWS } from "../utils/upload";
+import {
+  processFile,
+  // uploadToAWS
+} from "../utils/upload";
 
 export default function ChatInput(props) {
   const [messageState, setMessageState] = useState({
@@ -34,9 +37,9 @@ export default function ChatInput(props) {
     loadingImage,
   } = messageState;
 
-  const [showEmoji, setShowEmoji] = useState(false);
-  const [rotate, setRotate] = useState(0);
-  const [extension, setExtension] = useState(null);
+  // const [showEmoji, setShowEmoji] = useState(false);
+  // const [rotate, setRotate] = useState(0);
+  // const [extension, setExtension] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
 
   const submit = () => {
@@ -137,10 +140,10 @@ export default function ChatInput(props) {
     }
   };
 
-  const focusUp = (e) => {
+  const focusUp = () => {
     setIsFocused(true);
   };
-  const focusOff = (e) => {
+  const focusOff = () => {
     setIsFocused(false);
   };
 
@@ -284,13 +287,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function CrossAutoGrow({
-  onChangeText,
-  value,
-  style = {},
-  isFocused = false,
-  ...props
-}) {
+function CrossAutoGrow({ onChangeText, value, isFocused = false, ...props }) {
   const inputEl = useRef();
 
   const _updateTextForWeb = (e) => {

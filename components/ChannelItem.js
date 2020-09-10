@@ -3,13 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import * as RootNavigation from "../navigation/RootNavigation";
 
-const ChannelItem = ({
+export default function ChannelItem({
   channel = { name: "", channelType: "group" },
   lastMessage = null,
   showUnread = false,
-  ...props
-}) => {
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
+}) {
+  const [, setActiveChannel] = useGlobal("activeChannel");
 
   const nav = () => {
     setActiveChannel(channel.id);
@@ -46,9 +45,7 @@ const ChannelItem = ({
       )}
     </TouchableOpacity>
   );
-};
-
-export default ChannelItem;
+}
 
 const styles = StyleSheet.create({
   row: {

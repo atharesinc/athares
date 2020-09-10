@@ -2,7 +2,7 @@ import React from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
-const GovernanceChannelItem = ({ link, title, ...props }) => {
+const GovernanceChannelItem = ({ link, title }) => {
   const nav = () => {
     RootNavigation.navigate(link);
   };

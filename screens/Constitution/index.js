@@ -19,12 +19,14 @@ import {
 } from "react-native";
 import { useQuery, useSubscription } from "@apollo/client";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
+
 import ConstitutionFooter from "./ConstitutionFooter";
 import Input from "../../components/Input";
 import { useEffect } from "react";
 
-export default function Constitution({ ...props }) {
-  const [activeTheme] = useGlobal("activeTheme");
+export default function Constitution() {
+  // const [activeTheme] = useGlobal("activeTheme");
   const [activeCircle] = useGlobal("activeCircle");
   const [showConstSearch] = useGlobal("showConstSearch");
   const [, setActiveRevision] = useGlobal("activeRevision");
@@ -56,7 +58,7 @@ export default function Constitution({ ...props }) {
   );
 
   // listen for changes to amendments
-  const { data: sub } = useSubscription(SUB_TO_CIRCLES_AMENDMENTS, {
+  useSubscription(SUB_TO_CIRCLES_AMENDMENTS, {
     variables: { id: activeCircle || "" },
     onSubscriptionData,
   });
@@ -71,7 +73,7 @@ export default function Constitution({ ...props }) {
   }
 
   // listen to changes on amendments (specifically to see if amendment has outstanding revision)
-  const { data: sub2 } = useSubscription(SUB_TO_AMENDMENTS_REVISONS, {
+  useSubscription(SUB_TO_AMENDMENTS_REVISONS, {
     variables: { id: activeCircle || "" },
     onSubscriptionData: onSubscriptionData2,
   });
@@ -150,19 +152,21 @@ export default function Constitution({ ...props }) {
     <CenteredLoaderWithText text={"Getting Constitution"} />;
   }
 
+  // Network Error
+  if (!data || e2 || error) {
+    return <CenteredErrorLoader text={"Unable to connect to network"} />;
+  }
   if (data && data.circle) {
     circle = data.circle;
     amendments = circle.amendments.items;
 
-    amendments =
-      showConstSearch && searchParams.trim() !== ""
-        ? amendments.filter(
-            (a) =>
-              a.title.includes(searchParams) || a.text.includes(searchParams)
-          )
-        : amendments;
+    if (showConstSearch && searchParams.trim() !== "") {
+      const filteredAmendments = amendments.filter(
+        (a) => a.title.includes(searchParams) || a.text.includes(searchParams)
+      );
+      amendments = filteredAmendments;
+    }
 
-    // { backgroundColor: activeTheme.COLORS.DARK
     return (
       <View style={[styles.wrapper]}>
         <View>

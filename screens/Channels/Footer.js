@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 
-const Footer = ({ loggedIn = false, belongsToCircle = false, ...props }) => {
+const Footer = ({ loggedIn = false, belongsToCircle = false }) => {
   const [activeCircle] = useGlobal("activeCircle");
 
   const goToAddUser = () => {

@@ -1,5 +1,5 @@
 import React, { useGlobal, useEffect, useState } from "reactn";
-import { Text, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import {
   UPDATE_EMAIL_PERMISSION_FOR_CIRCLE,
@@ -19,6 +19,8 @@ import SwitchLine from "../../components/SwitchLine";
 import Title from "../../components/Title";
 import DisclaimerText from "../../components/DisclaimerText";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
+
 import GlowButton from "../../components/GlowButton";
 
 function CircleSettings(props) {
@@ -91,11 +93,11 @@ function CircleSettings(props) {
 
   useEffect(() => {
     if (!activeCircle) {
-      props.navigation.navigate(`app`);
+      props.navigation.navigate("app");
     }
   }, [activeCircle]);
 
-  const leaveCircle = async (e) => {
+  const leaveCircle = async () => {
     setLoading(true);
     try {
       let { id } = permissions;
@@ -124,6 +126,10 @@ function CircleSettings(props) {
 
   if (loading) {
     return <CenteredLoaderWithText text={"Leaving Circle"} />;
+  }
+
+  if (error) {
+    return <CenteredErrorLoader text={"Error Getting Settings"} />;
   }
 
   return (

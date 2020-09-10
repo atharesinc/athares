@@ -46,20 +46,20 @@ export default function EditAmendment(props) {
     }
   }, [data]);
 
-  const confirmRepeal = () => {
-    Alert.alert(
-      "Confirm Repeal?",
-      "Are you sure you'd like to repeal this amendment?\n\nBy starting the repeal process, you will create a revision with the intention of permanently deleting this amendment.",
-      [
-        {
-          text: "Yes, Repeal",
-          onPress: () => repeal(),
-        },
-        { text: "Cancel", onPress: () => {}, style: "cancel" },
-      ],
-      { cancelable: true }
-    );
-  };
+  // const confirmRepeal = () => {
+  //     Alert.alert(
+  //         "Confirm Repeal?",
+  //         "Are you sure you'd like to repeal this amendment?\n\nBy starting the repeal process, you will create a revision with the intention of permanently deleting this amendment.",
+  //         [
+  //             {
+  //                 text: "Yes, Repeal",
+  //                 onPress: () => repeal(),
+  //             },
+  //             { text: "Cancel", onPress: () => {}, style: "cancel" },
+  //         ],
+  //         { cancelable: true }
+  //     );
+  // };
 
   useEffect(() => {
     if (activeRevision) {
@@ -91,7 +91,7 @@ export default function EditAmendment(props) {
       createRevision(newRevision);
     } catch (err) {
       console.error(new Error(err));
-      swal("Error", "There was an error in the repeal process", "error");
+      // swal("Error", "There was an error in the repeal process", "error");
     }
   };
 
@@ -195,7 +195,7 @@ export default function EditAmendment(props) {
         />
         <DisclaimerText
           text={
-            'Pressing "Update Amendment" will create a revision for this amendment. If the revision gains the minimum number of votes to be ratified and the majority of voters support these changes, then the existing Amendment will be replaced with these changes.'
+            "Pressing 'Update Amendment' will create a revision for this amendment. If the revision gains the minimum number of votes to be ratified and the majority of voters support these changes, then the existing Amendment will be replaced with these changes."
           }
         />
         <View style={styles.voteSectionWrapper}>

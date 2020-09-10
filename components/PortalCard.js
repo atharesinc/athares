@@ -1,5 +1,5 @@
 import { StyleSheet, KeyboardAvoidingView, View } from "react-native";
-import React from 'reactn';
+import React from "reactn";
 
 const PortalCard = ({ children }) => (
   <KeyboardAvoidingView style={styles.keyboard} behavior="position">
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     width: "90%",
     maxHeight: "85%",
     paddingVertical: "10%",
-    paddingHorizontal: "2%"
+    paddingHorizontal: "2%",
   },
   card: {
     width: "100%",
@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
-    backgroundColor: "transparent"
-  }
+    backgroundColor: "transparent",
+  },
 });

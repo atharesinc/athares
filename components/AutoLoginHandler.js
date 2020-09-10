@@ -1,4 +1,4 @@
-import React, { useEffect, useGlobal } from "reactn";
+import { useEffect, useGlobal } from "reactn";
 
 import { LOGIN } from "../graphql/mutations";
 import { GET_USER_BY_EMAIL } from "../graphql/queries";
@@ -9,7 +9,7 @@ import MeshStore from "../utils/meshStore";
 import getEnvVars from "../env";
 const { AUTH_PROFILE_ID } = getEnvVars();
 
-export default function AutoLoginHandler(props) {
+export default function AutoLoginHandler() {
   const [, setUser] = useGlobal("user");
 
   // for auto login
@@ -51,7 +51,7 @@ export default function AutoLoginHandler(props) {
             data: {
               userLogin: {
                 auth: { idToken },
-                success,
+                // success,
               },
             },
           } = res2;

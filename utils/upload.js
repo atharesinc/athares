@@ -1,7 +1,4 @@
-import getEnvVars from "../env";
 const Buffer = require("buffer/").Buffer;
-
-const { AUTH_URL, APP_VERSION } = getEnvVars();
 
 // for uploading files, accepts a uri filepath or base64
 export const processFile = ({ uri, name = null }) => {
@@ -29,40 +26,36 @@ export const processFile = ({ uri, name = null }) => {
 
 // attach auth token and some other way to make sure only this function can call this url
 export async function uploadToAWS(signedLink, file) {
-  try {
-    // // SIGNED UPLOAD WITH XHR
-    if (/^data:.+;base64/.test(file.uri)) {
-      file.buffer = Buffer.from(
-        file.uri.replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      );
-    }
-
-    // promisify the xmhttprequest because fetch didn't work for me =(
-    await new Promise((resolve) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open("PUT", signedLink);
-      xhr.setRequestHeader("Content-Type", file.type + "; charset=utf-8");
-      xhr.setRequestHeader("X-Amz-ACL", "public-read");
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            resolve(xhr);
-          } else {
-            throw "Could not upload file";
-          }
-        }
-      };
-      xhr.send(file.buffer ? file.buffer : file);
-    });
-
-    return (
-      "https://athares-images.s3.us-east-2.amazonaws.com/uploads/" + file.name
+  // // SIGNED UPLOAD WITH XHR
+  if (/^data:.+;base64/.test(file.uri)) {
+    file.buffer = Buffer.from(
+      file.uri.replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
     );
-  } catch (err) {
-    throw err;
   }
+
+  // promisify the xmhttprequest because fetch didn't work for me =(
+  return new Promise((resolve) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", signedLink);
+    xhr.setRequestHeader("Content-Type", file.type + "; charset=utf-8");
+    xhr.setRequestHeader("X-Amz-ACL", "public-read");
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          // resolve(xhr);
+          resolve(
+            "https://athares-images.s3.us-east-2.amazonaws.com/uploads/" +
+              file.name
+          );
+        } else {
+          throw "Could not upload file";
+        }
+      }
+    };
+    xhr.send(file.buffer ? file.buffer : file);
+  });
 }
 
 function getImageFileExtension(filename) {

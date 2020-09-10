@@ -8,14 +8,7 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-function InfoLine({
-  value = "",
-  icon,
-  label,
-  iconStyles = {},
-  style = {},
-  ...props
-}) {
+function InfoLine({ value = "", icon, label, style = {}, ...props }) {
   const inputEl = useRef(null);
   const handleClick = () => {
     inputEl.current.focus();
@@ -65,10 +58,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     width: "100%",
     justifyContent: "space-between",
-    alignItems: "flex-start",
     flexDirection: "row",
     alignItems: "center",
-    overflow: "hidden",
     paddingRight: 30,
     overflow: "hidden",
   },

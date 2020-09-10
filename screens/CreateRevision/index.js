@@ -1,4 +1,4 @@
-import React, { useState, useGlobal, useEffect } from "reactn";
+import React, { useState, useGlobal } from "reactn";
 import {
   ScrollView,
   StyleSheet,
@@ -24,7 +24,7 @@ export default function CreateRevision(props) {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
+  const [, setActiveRevision] = useGlobal("activeRevision");
   const [activeCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
 
@@ -49,7 +49,7 @@ export default function CreateRevision(props) {
     return 0.4 / (1 + Math.pow(Math.E, -1 * n * 0.2));
   };
 
-  const submit = async (e) => {
+  const submit = async () => {
     // validate & trim fields
 
     try {
@@ -150,7 +150,7 @@ export default function CreateRevision(props) {
         />
         <DisclaimerText
           text={
-            'Pressing "Draft Amendment" will create a new revision for this amendment. Drafts must first be ratified by a minimum electorate of Circle members, and then must be approved with a majority of votes. Amendment drafts are publicly accessible.'
+            "Pressing 'Draft Amendment' will create a new revision for this amendment. Drafts must first be ratified by a minimum electorate of Circle members, and then must be approved with a majority of votes. Amendment drafts are publicly accessible."
           }
         />
         <GlowButton text="Draft Amendment" onPress={submit} />

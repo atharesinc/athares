@@ -1,6 +1,6 @@
 import React, { useGlobal, Fragment } from "reactn";
 
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View, StyleSheet } from "react-native";
 import Footer from "./Footer";
 import Circles from "../../components/Circles";
 import ChannelItem from "../../components/ChannelItem";
@@ -18,10 +18,9 @@ import { SUB_TO_CIRCLES_CHANNELS } from "../../graphql/subscriptions";
 
 import { useQuery, useSubscription } from "@apollo/client";
 
-function Dashboard({ renderAsSidebar = false, ...props }) {
+function Dashboard({ renderAsSidebar = false }) {
   const [activeCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
-  const [unreadDMs] = useGlobal("unreadDMs");
   const [unreadChannels] = useGlobal("unreadChannels");
   const [showSearch] = useGlobal("showSearch");
 
@@ -31,8 +30,8 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
 
   // get channel data, if any
   const {
-    loading: loading1,
-    error: e1,
+    // loading: loading1,
+    // error: e1,
     data: channelsData,
     refetch,
   } = useQuery(GET_CHANNELS_BY_CIRCLE_ID, {
@@ -41,7 +40,7 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
     },
   });
 
-  const { data: sub } = useSubscription(SUB_TO_CIRCLES_CHANNELS, {
+  useSubscription(SUB_TO_CIRCLES_CHANNELS, {
     variables: { id: activeCircle || "" },
     onSubscriptionData,
   });
@@ -66,15 +65,16 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
   }
 
   // see if the user actually belongs to this circle
-  const { loading: loading2, error: e2, data: belongsToCircleData } = useQuery(
-    IS_USER_IN_CIRCLE,
-    {
-      variables: {
-        circle: activeCircle || "",
-        user: user || "",
-      },
-    }
-  );
+  const {
+    // loading: loading2,
+    // error: e2,
+    data: belongsToCircleData,
+  } = useQuery(IS_USER_IN_CIRCLE, {
+    variables: {
+      circle: activeCircle || "",
+      user: user || "",
+    },
+  });
 
   if (
     belongsToCircleData &&
@@ -87,20 +87,8 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
 
   // responsive styles for channels component, which can either render on the side or as a full-screen mobile component
   const wrapperStyles = renderAsSidebar
-    ? {
-        flex: 0,
-        flexGrow: 1 / 3,
-        backgroundColor: "#fff",
-        flexDirection: "column",
-        minWidth: 300,
-      }
-    : {
-        alignItems: "stretch",
-        justifyContent: "space-between",
-        width: "100%",
-        flex: 1,
-        backgroundColor: "#282a38",
-      };
+    ? styles.desktopSidebar
+    : styles.mobileSidebar;
 
   return (
     <View style={wrapperStyles}>
@@ -159,3 +147,20 @@ function Dashboard({ renderAsSidebar = false, ...props }) {
 }
 
 export default Dashboard;
+
+const styles = StyleSheet.create({
+  desktopSidebar: {
+    flex: 0,
+    flexGrow: 1 / 3,
+    backgroundColor: "#fff",
+    flexDirection: "column",
+    minWidth: 300,
+  },
+  mobileSidebar: {
+    alignItems: "stretch",
+    justifyContent: "space-between",
+    width: "100%",
+    flex: 1,
+    backgroundColor: "#282a38",
+  },
+});

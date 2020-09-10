@@ -14,11 +14,11 @@ export default function Chat({ messages, ...props }) {
       message={item}
     />
   );
-  const _getItemLayout = (data, index) => ({
-    length: 50,
-    offset: 50 * index,
-    index,
-  });
+  // const _getItemLayout = (data, index) => ({
+  //     length: 50,
+  //     offset: 50 * index,
+  //     index,
+  // });
 
   const _keyExtractor = (item) => item.id;
 

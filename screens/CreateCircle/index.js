@@ -5,7 +5,6 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Alert,
-  TouchableOpacity,
   View,
 } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -36,8 +35,8 @@ function CreateCircle(props) {
   const [preamble, setPreamble] = useState("");
   const [uri, setUri] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
-  const [activeTheme] = useGlobal("activeTheme");
+  const [, setActiveCircle] = useGlobal("activeCircle");
+  // const [activeTheme] = useGlobal("activeTheme");
   const [user] = useGlobal("user");
   const [createCircle] = useMutation(CREATE_CIRCLE);
   const [getSignedUrl] = useMutation(CREATE_SIGNED_UPLOAD_LINK);
@@ -155,7 +154,7 @@ function CreateCircle(props) {
           <AvatarPicker onImageChange={setUri} uri={uri} />
           <DisclaimerText
             text={
-              'By pressing "Create Circle" you will create a new government with the above name, preamble, and the selected image.'
+              "By pressing 'Create Circle' you will create a new government with the above name, preamble, and the selected image."
             }
           />
           <GlowButton text="Create Circle" onPress={submit} />

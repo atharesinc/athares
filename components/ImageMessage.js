@@ -35,7 +35,7 @@ const ImageMessage = ({ file, fileName }) => {
         file,
         FileSystem.documentDirectory + "photos/" + fileName
       );
-      let res = await CameraRoll.saveToCameraRoll(local.uri, "photo");
+      await CameraRoll.saveToCameraRoll(local.uri, "photo");
     } catch (e) {
       console.error(e);
     }

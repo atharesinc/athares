@@ -1,5 +1,5 @@
 import { useLinking } from "@react-navigation/native";
-import { Linking } from "expo";
+// import { Linking } from "expo";
 
 export const linking = {
   prefixes: ["https://athar.es", "athares://", "http:loalhost:19006"],

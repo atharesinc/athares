@@ -1,12 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export default function TitleTabs({
-  tabs = ["tab"],
-  defaultTab = tabs[0],
-  activeTab,
-  ...props
-}) {
+export default function TitleTabs({ tabs = ["tab"], activeTab, ...props }) {
   const updateTab = (tab) => {
     props.onUpdateTab && props.onUpdateTab(tab);
   };

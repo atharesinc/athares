@@ -1,7 +1,6 @@
 import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
-import { Feather } from "@expo/vector-icons";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { useEffect } from "react";
 import DisclaimerText from "./DisclaimerText";
 import GhostButton from "./GhostButton";
@@ -14,9 +13,8 @@ export default function Amendment({
   isSelected,
   onPress,
   belongsToCircle = false,
-  ...props
 }) {
-  const [activeAmendment, setActiveAmendment] = useGlobal("activeAmendment");
+  const [, setActiveAmendment] = useGlobal("activeAmendment");
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
 
   const goToRevision = () => {
@@ -117,7 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#FFFFFFb7",
     fontSize: 12,
-    flex: 1,
   },
   amendmentText: {
     color: "#FFFFFF",
