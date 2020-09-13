@@ -22,6 +22,7 @@ import { setCustomText, setCustomTextInput } from "react-native-global-props";
 import AutoLoginHandler from "./components/AutoLoginHandler";
 import OnlineMonitor from "./components/OnlineMonitor";
 import RevisionMonitor from "./components/RevisionMonitor";
+import ChannelUpdateMonitor from "./components/ChannelUpdateMonitor";
 
 import MeshStore from "./utils/meshStore";
 // theming
@@ -179,6 +180,7 @@ export default function App(props) {
         <AutoLoginHandler />
         <OnlineMonitor />
         <RevisionMonitor />
+        <ChannelUpdateMonitor />
       </ApolloProvider>
     );
   }

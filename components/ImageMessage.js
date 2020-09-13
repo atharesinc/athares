@@ -100,6 +100,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#2f3242",
     borderRadius: 4,
     maxWidth: "50%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
   },
   labelText: {
     color: "#FFFFFF",

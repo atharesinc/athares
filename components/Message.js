@@ -10,7 +10,6 @@ const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
   const timestamp = parseDate(props.timestamp, "h:mm bbbb");
 
   const isImage = (file) => {
-    console.log("message", file);
     const imgs = ["gif", "png", "jpg", "jpeg", "bmp"];
 
     let extension = file.match(/\.(.{1,4})$/i)

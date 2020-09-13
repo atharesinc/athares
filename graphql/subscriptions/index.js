@@ -13,7 +13,6 @@ export const SUB_TO_MESSAGES_BY_CHANNEL_ID = gql`
         text
         createdAt
         file
-        fileName
         user {
           id
           icon

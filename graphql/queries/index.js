@@ -137,7 +137,7 @@ export const GET_MESSAGES_FROM_CHANNEL_ID = gql`
       id
       name
       description
-      messages {
+      messages(last: 20, sort: { createdAt: DESC }) {
         items {
           id
           text

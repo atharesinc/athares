@@ -1,4 +1,4 @@
-import React, { useState, useGlobal } from "reactn";
+import React, { useState, useGlobal, memo, useEffect } from "reactn";
 
 import {
   StyleSheet,
@@ -18,15 +18,16 @@ import {
   CREATE_SIGNED_UPLOAD_LINK,
 } from "../../graphql/mutations";
 import { GET_MESSAGES_FROM_CHANNEL_ID } from "../../graphql/queries";
-// import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../../graphql/subscriptions";
-import { useQuery, useMutation } from "@apollo/client";
+import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../graphql/subscriptions";
+import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { uploadToAWS } from "../../utils/upload";
 
-export default function ViewChannel() {
+export default memo(function ViewChannel() {
   const [uploadInProgress, setUploadInProgress] = useState(false);
   const [activeChannel] = useGlobal("activeChannel");
   const [user] = useGlobal("user");
+  const [messages, setMessages] = useState([]);
 
   // remove this channel from unread channels list on mount
   const { loading, error, data } = useQuery(GET_MESSAGES_FROM_CHANNEL_ID, {
@@ -37,6 +38,24 @@ export default function ViewChannel() {
 
   const [createMessage] = useMutation(CREATE_MESSAGE);
   const [getSignedUrl] = useMutation(CREATE_SIGNED_UPLOAD_LINK);
+
+  useSubscription(SUB_TO_MESSAGES_BY_CHANNEL_ID, {
+    variables: { id: activeChannel || "" },
+    onSubscriptionData,
+  });
+
+  function onSubscriptionData({ subscriptionData }) {
+    console.log("newMEssage", subscriptionData);
+    if (subscriptionData.data) {
+      // fire off query again  vs. just add the new value to candidates
+      // refetch({
+      //   id: user || "",
+      // });
+
+      // prepend because our list is backwards
+      setMessages([subscriptionData.data.Messages.node, ...messages]);
+    }
+  }
 
   //   removeUnreadChannel(chan) {
   //     let { unreadChannels } = this.global;
@@ -127,6 +146,12 @@ export default function ViewChannel() {
   //     });
   //   };
 
+  useEffect(() => {
+    if (data && data.channel) {
+      setMessages(data.channel.messages.items);
+    }
+  }, [data]);
+
   if (loading) {
     return <CenteredLoaderWithText text={"Getting Messages"} />;
   }
@@ -135,23 +160,26 @@ export default function ViewChannel() {
     return <CenteredErrorLoader />;
   }
   // subscribe and populate
-  if (data && data.channel) {
-    // const channel = data.channel;
-    const messages = data.channel.messages.items;
-    return (
-      <View style={[styles.wrapper]}>
-        <Chat user={user} messages={messages} />
-        <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
-        <KeyboardAvoidingView behavior="padding" />
-        {Platform.OS === "android" ? (
-          <KeyboardSpacer topSpacing={-130} />
-        ) : null}
-      </View>
-    );
-  } else {
-    return <CenteredLoaderWithText text={"Getting Messages"} />;
-  }
-}
+  // if (messages) {
+  // const channel = data.channel;
+  // const messages = data.channel.messages.items;
+
+  const getMoreMessages = (num) => {
+    console.log("at the end", num);
+  };
+
+  return (
+    <View style={[styles.wrapper]}>
+      <Chat user={user} messages={messages} getMoreMessages={getMoreMessages} />
+      <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
+      <KeyboardAvoidingView behavior="padding" />
+      {Platform.OS === "android" ? <KeyboardSpacer topSpacing={-130} /> : null}
+    </View>
+  );
+  // } else {
+  //   return <CenteredLoaderWithText text={"Getting Messages"} />;
+  // }
+});
 
 const styles = StyleSheet.create({
   wrapper: {
