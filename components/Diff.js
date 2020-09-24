@@ -27,16 +27,16 @@ export default function Diff({
     var spanStyle = part.added
       ? { ...styles.addedText, ...addedText }
       : part.removed
-      ? { ...styles.removedText, ...removedText }
-      : { ...styles.defaultText, ...unchangedText };
+        ? { ...styles.removedText, ...removedText }
+        : { ...styles.defaultText, ...unchangedText };
 
     var computedViewStyle = {
       ...viewStyle,
       backgroundColor: part.added
         ? addedColor
         : part.removed
-        ? removedColor
-        : unchangedColor,
+          ? removedColor
+          : unchangedColor,
     };
 
     return (

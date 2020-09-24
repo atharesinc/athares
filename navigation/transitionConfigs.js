@@ -31,13 +31,13 @@ export const pushTransition = (theme) => ({
 
     const translateUnfocused = next
       ? multiply(
-          next.progress.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -screen.width],
-            extrapolate: "clamp",
-          }),
-          inverted
-        )
+        next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -screen.width],
+          extrapolate: "clamp",
+        }),
+        inverted
+      )
       : 0;
 
     const overlayOpacity = current.progress.interpolate({
