@@ -9,7 +9,7 @@ import {
   Platform,
   ImageBackground,
 } from "react-native";
-import { SplashScreen } from "expo";
+import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 
 import { NavigationContainer } from "@react-navigation/native";
