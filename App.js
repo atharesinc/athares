@@ -18,10 +18,11 @@ import { navigationRef } from "./navigation/RootNavigation";
 import RootStack from "./screens";
 import defaultState from "./constants/defaultState";
 import { setCustomText, setCustomTextInput } from "react-native-global-props";
-import useLinking from "./navigation/useLinking";
+// import useLinking from "./navigation/useLinking";
 import AutoLoginHandler from "./components/AutoLoginHandler";
 import OnlineMonitor from "./components/OnlineMonitor";
 import RevisionMonitor from "./components/RevisionMonitor";
+import ChannelUpdateMonitor from "./components/ChannelUpdateMonitor";
 
 import MeshStore from "./utils/meshStore";
 // theming
@@ -54,12 +55,11 @@ setGlobal(defaultState);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-  const [initialNavigationState, setInitialNavigationState] = useState();
+  const [initialNavigationState] = useState();
   const [dimensions, setDimensions] = useGlobal("dimensions");
-  const [activeTheme, setActiveTheme] = useGlobal("activeTheme");
+  const [, setActiveTheme] = useGlobal("activeTheme");
   const [isMobile, setIsMobile] = useGlobal("isMobile");
-  const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
-  const [searchedCircles, setSearchedCircles] = useGlobal("searchedCircles");
+  const [, setSearchedCircles] = useGlobal("searchedCircles");
 
   // const { getInitialState } = useLinking(navigationRef);
 
@@ -180,6 +180,7 @@ export default function App(props) {
         <AutoLoginHandler />
         <OnlineMonitor />
         <RevisionMonitor />
+        <ChannelUpdateMonitor />
       </ApolloProvider>
     );
   }

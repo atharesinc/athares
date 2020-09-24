@@ -1,4 +1,4 @@
-import React, { Fragment } from "reactn";
+import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import ImageMessage from "./ImageMessage";
 import FileMessage from "./FileMessage";
@@ -9,17 +9,17 @@ import { parseDate } from "../utils/transform";
 const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
   const timestamp = parseDate(props.timestamp, "h:mm bbbb");
 
-  const isImage = (file, fileName) => {
+  const isImage = (file) => {
     const imgs = ["gif", "png", "jpg", "jpeg", "bmp"];
 
-    let extension = fileName.match(/\.(.{1,4})$/i)
-      ? fileName.match(/\.(.{1,4})$/i)[1]
+    let extension = file.match(/\.(.{1,4})$/i)
+      ? file.match(/\.(.{1,4})$/i)[1]
       : "";
 
     if (imgs.findIndex((i) => i === extension.toLowerCase()) !== -1) {
-      return <ImageMessage file={file} fileName={fileName} />;
+      return <ImageMessage file={file} fileName={file} />;
     } else {
-      return <FileMessage file={file} fileName={fileName} />;
+      return <FileMessage file={file} fileName={file} />;
     }
   };
 
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 7,
     borderRadius: 3,
+    flex: 1,
   },
   userAndTimeWrapper: {
     flexDirection: "row",
@@ -120,8 +121,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     color: "#FFFFFF",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    padding: 15,
     borderRadius: 3,
     fontFamily: "SpaceGrotesk",
     fontSize: 15,

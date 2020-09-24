@@ -1,7 +1,6 @@
 import React, { useEffect, useGlobal } from "reactn";
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -23,10 +22,10 @@ import { GET_REVISION_BY_ID, IS_USER_IN_CIRCLE } from "../../graphql/queries";
 
 import { useQuery, useMutation } from "@apollo/client";
 
-import * as RootNavigation from "../../navigation/RootNavigation";
+// import * as RootNavigation from "../../navigation/RootNavigation";
 
 export default function ViewRevision(props) {
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
+  const [, setActiveChannel] = useGlobal("activeChannel");
   const [activeRevision] = useGlobal("activeRevision");
   const [user] = useGlobal("user");
   const [activeCircle] = useGlobal("activeCircle");
@@ -161,7 +160,7 @@ export default function ViewRevision(props) {
           <DisclaimerText
             upper
             grey
-            text={`REVIEW PROPOSED AMENDMENT`}
+            text={"REVIEW PROPOSED AMENDMENT"}
             style={styles.marginBottomZero}
           />
           <VotesCounter support={support} reject={reject} />
@@ -268,12 +267,6 @@ const styles = StyleSheet.create({
   voteButtons: {
     width: "48%",
   },
-  backerWrapper: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
   backerImgWrapper: {
     borderRadius: 9999,
     height: 40,
@@ -284,10 +277,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderColor: "#FFF",
     borderWidth: 2,
-  },
-  backerImg: {
-    height: 40,
-    width: 40,
   },
   cardBody: {
     width: "100%",

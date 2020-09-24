@@ -2,9 +2,13 @@ import React from "reactn";
 import { Animated } from "react-native";
 
 export default class HeightOpenView extends React.Component {
-  state = {
-    heightAnim: new Animated.Value(0),
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      heightAnim: new Animated.Value(0),
+    };
+  }
 
   componentDidMount() {
     Animated.timing(this.state.heightAnim, {

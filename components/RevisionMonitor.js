@@ -31,7 +31,7 @@ export default function RevisionMonitor() {
 
   const [denyRevision] = useMutation(DENY_REVISION);
 
-  const { data: sub, error } = useSubscription(SUB_TO_USERS_REVISIONS, {
+  useSubscription(SUB_TO_USERS_REVISIONS, {
     variables: { id: user || "" },
     onSubscriptionData,
   });
@@ -214,34 +214,34 @@ export default function RevisionMonitor() {
   return null;
 }
 
-const exampleResponse = {
-  data: {
-    Revisions: {
-      previousValues: null,
-      mutation: "create",
-      node: {
-        circle: {
-          id: "ckd64p7y600co07mp579r8mc3",
-        },
-        repeal: false,
-        expires: "2020-07-29T02:27:04.367Z",
-        passed: null,
-        voterThreshold: "0",
-        id: "ckd6qz8ut00ou07lbc7ckf6hk",
-        title: "asdvasdvasdv",
-        newText: "asdvasdv",
-        oldText: null,
-        amendment: null,
-        votes: {
-          items: [
-            {
-              id: "ckd6qz8wq00ow07lbd7xz9y2c",
-              support: true,
-            },
-          ],
-        },
-      },
-    },
-  },
-  error: null,
-};
+// const exampleResponse = {
+//     data: {
+//         Revisions: {
+//             previousValues: null,
+//             mutation: "create",
+//             node: {
+//                 circle: {
+//                     id: "ckd64p7y600co07mp579r8mc3",
+//                 },
+//                 repeal: false,
+//                 expires: "2020-07-29T02:27:04.367Z",
+//                 passed: null,
+//                 voterThreshold: "0",
+//                 id: "ckd6qz8ut00ou07lbc7ckf6hk",
+//                 title: "asdvasdvasdv",
+//                 newText: "asdvasdv",
+//                 oldText: null,
+//                 amendment: null,
+//                 votes: {
+//                     items: [
+//                         {
+//                             id: "ckd6qz8wq00ow07lbd7xz9y2c",
+//                             support: true,
+//                         },
+//                     ],
+//                 },
+//             },
+//         },
+//     },
+//     error: null,
+// };

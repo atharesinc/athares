@@ -1,4 +1,4 @@
-import React, { useState, memo } from "reactn";
+import React, { memo } from "reactn";
 import { Image, TouchableOpacity, StyleSheet, View } from "react-native";
 import { pickImageURIAsync } from "../utils/mediaUtils";
 

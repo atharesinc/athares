@@ -1,5 +1,5 @@
 import React, { useGlobal, useEffect } from "reactn";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import RevisionCategory from "../../components/RevisionCategory";
 import * as RootNavigation from "../../navigation/RootNavigation";
 import DisclaimerText from "../../components/DisclaimerText";
@@ -17,7 +17,6 @@ const RevisionCard = ({
     id,
     repeal = false,
   },
-  ...props
 }) => {
   const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
 

@@ -1,6 +1,6 @@
 import React, { useGlobal } from "reactn";
 
-import { Text, TouchableOpacity, StyleSheet, View, Image } from "react-native";
+import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 import { GET_CHANNEL_NAME_BY_ID, GET_REVISION_BY_ID } from "../graphql/queries";
@@ -17,10 +17,10 @@ function Header({
 }) {
   const [showSearch, setShowSearch] = useGlobal("showSearch");
   const [dmSettings, setDMSettings] = useGlobal("dmSettings");
-  const [user, setUser] = useGlobal("user");
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
-  const [viewUser, setViewUser] = useGlobal("viewUser");
+  // const [user, setUser] = useGlobal("user");
+  const [activeChannel] = useGlobal("activeChannel");
+  const [activeRevision] = useGlobal("activeRevision");
+  // const [viewUser, setViewUser] = useGlobal("viewUser");
   const [, setIsMenuOpen] = useGlobal("isMenuOpen");
   const [showConstSearch, setShowConstSearch] = useGlobal("showConstSearch");
 
@@ -45,9 +45,9 @@ function Header({
       setDMSettings(!dmSettings);
     }
   };
-  const createRevision = () => {
-    props.navigation.navigate("createRevision");
-  };
+  // const createRevision = () => {
+  //     props.navigation.navigate("createRevision");
+  // };
 
   const toggleSearchConst = () => {
     setShowConstSearch(!showConstSearch);
@@ -120,13 +120,12 @@ function Header({
 
   // render channelName and back
   if (["channel", "DMChannel"].indexOf(name) !== -1) {
-    const { loading, data, ...rest } = useQuery(GET_CHANNEL_NAME_BY_ID, {
+    const { loading, data } = useQuery(GET_CHANNEL_NAME_BY_ID, {
       variables: {
         id: activeChannel || "",
       },
     });
 
-    console.log({ data, loading, rest, activeChannel });
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
@@ -194,7 +193,7 @@ function Header({
   if (data && data.user) {
     img = { uri: data.user.icon };
   }
-  console.log();
+
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>

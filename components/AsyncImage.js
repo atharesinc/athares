@@ -13,6 +13,51 @@ export default class AsyncImage extends Component {
       placeholderScale: new Animated.Value(1.0),
     };
   }
+  _onLoad = () => {
+    const { placeholderScale, placeholderOpacity, imageOpacity } = this.state;
+
+    Animated.sequence([
+      Animated.timing(placeholderOpacity, {
+        delay: 1500,
+        toValue: 1.0,
+        useNativeDriver: true,
+      }),
+      Animated.parallel([
+        Animated.timing(placeholderScale, {
+          toValue: 0.7,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+        Animated.timing(placeholderOpacity, {
+          toValue: 0.66,
+          duration: 100,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.parallel([
+        Animated.parallel([
+          Animated.timing(placeholderOpacity, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(placeholderScale, {
+            toValue: 1.2,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.timing(imageOpacity, {
+          toValue: 1.0,
+          delay: 200,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start(() => {
+      this.setState(() => ({ loaded: true }));
+    });
+  };
 
   render() {
     const { placeholderColor, placeholderSource, style, source } = this.props;
@@ -69,50 +114,4 @@ export default class AsyncImage extends Component {
       </View>
     );
   }
-
-  _onLoad = () => {
-    const { placeholderScale, placeholderOpacity, imageOpacity } = this.state;
-
-    Animated.sequence([
-      Animated.timing(placeholderOpacity, {
-        delay: 1500,
-        toValue: 1.0,
-        useNativeDriver: true,
-      }),
-      Animated.parallel([
-        Animated.timing(placeholderScale, {
-          toValue: 0.7,
-          duration: 100,
-          useNativeDriver: true,
-        }),
-        Animated.timing(placeholderOpacity, {
-          toValue: 0.66,
-          duration: 100,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.parallel([
-          Animated.timing(placeholderOpacity, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(placeholderScale, {
-            toValue: 1.2,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.timing(imageOpacity, {
-          toValue: 1.0,
-          delay: 200,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]).start(() => {
-      this.setState(() => ({ loaded: true }));
-    });
-  };
 }

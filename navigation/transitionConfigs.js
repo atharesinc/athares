@@ -2,7 +2,6 @@ import { Animated } from "react-native";
 import {
   TransitionSpecs,
   HeaderStyleInterpolators,
-  CardStyleInterpolators,
 } from "@react-navigation/stack";
 
 export const pushTransition = (theme) => ({
@@ -32,13 +31,13 @@ export const pushTransition = (theme) => ({
 
     const translateUnfocused = next
       ? multiply(
-          next.progress.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -screen.width],
-            extrapolate: "clamp",
-          }),
-          inverted
-        )
+        next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -screen.width],
+          extrapolate: "clamp",
+        }),
+        inverted
+      )
       : 0;
 
     const overlayOpacity = current.progress.interpolate({
@@ -74,7 +73,7 @@ export const noTransition = () => ({
   // animated: false,
   // gestureDirection: "horizontal",
   animationEnabled: false,
-  cardStyleInterpolator: ({ current, next, inverted, layouts: { screen } }) => {
+  cardStyleInterpolator: ({ current, next }) => {
     const opacity = Animated.add(
       current.progress,
       next ? next.progress : 0

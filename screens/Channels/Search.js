@@ -1,6 +1,5 @@
 import React, { useState, Fragment, useEffect, useRef } from "reactn";
-import { View, Text, TextInput, StyleSheet, Platform } from "react-native";
-import * as RootNavigation from "../../navigation/RootNavigation";
+import { View, TextInput, StyleSheet, Platform } from "react-native";
 import Loader from "../../components/Loader";
 import { SEARCH_ALL } from "../../graphql/queries";
 import { useLazyQuery } from "@apollo/client";
@@ -12,7 +11,7 @@ export const Search = () => {
   const [searchParams, setSearchParams] = useState("");
   const inputRef = useRef();
 
-  const [search, { loading, data, error }] = useLazyQuery(SEARCH_ALL);
+  const [search, { loading, data }] = useLazyQuery(SEARCH_ALL);
 
   const updateText = (text) => {
     setSearchParams(text);

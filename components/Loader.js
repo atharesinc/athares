@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Animated, Platform, Easing, View, Text } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { Animated, Platform, Easing } from "react-native";
 import Svg, { G, Path, Circle } from "react-native-svg";
 
 /* SVGR has dropped some elements not supported by react-native-svg: style */
@@ -8,7 +8,7 @@ const AnimatedG = Animated.createAnimatedComponent(G);
 
 export default function SvgComponent({ size = 150, ...props }) {
   const rotation = useRef(new Animated.Value(0));
-  const [offset, setOffset] = useState(0);
+  const [offset] = useState(0);
   const anim = useRef(
     Animated.loop(
       Animated.timing(rotation.current, {

@@ -1,12 +1,11 @@
-import { HttpLink, split, ApolloLink } from "@apollo/client";
-import { WebSocketLink } from "@apollo/client/link/ws";
+import { HttpLink, split } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { InMemoryCache } from "@apollo/client/cache";
 // import { RetryLink } from "@apollo/client/link/retry";
 import { setContext } from "@apollo/client/link/context";
-import { onError } from "@apollo/client/link/error";
+// import { onError } from "@apollo/client/link/error";
 import getEnvVars from "../env";
-const { GQL_HTTP_URL, GQL_WS_URL, EIGHT_BASE_WORKSPACE_ID } = getEnvVars();
+const { GQL_HTTP_URL, EIGHT_BASE_WORKSPACE_ID } = getEnvVars();
 import MeshStore from "../utils/meshStore";
 
 import { SubscriptionLink } from "@8base/apollo-links";
@@ -75,10 +74,14 @@ const wsLink = new SubscriptionLink({
 // create cache
 const cache = new InMemoryCache();
 
-const withToken = setContext(async (request) => {
+const withToken = setContext(async () => {
+  console.log("does token exist before setting context?", token);
+
   if (!token) {
     token = await MeshStore.getItem("ATHARES_TOKEN");
+    console.log("token about to set context", token);
   }
+
   return {
     headers: {
       authorization: token ? "Bearer " + token : "",
@@ -86,22 +89,22 @@ const withToken = setContext(async (request) => {
   };
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.forEach(({ message, locations, path, ...rest }) =>
-      console.log(
-        rest,
-        new Error(
-          `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
-            locations
-          )}, Path: ${path}`
-        )
-      )
-    );
-  if (networkError) {
-    console.log(`[Network error]: ${networkError}`);
-  }
-});
+// const errorLink = onError(({ graphQLErrors, networkError }) => {
+//     if (graphQLErrors)
+//         graphQLErrors.forEach(({ message, locations, path, ...rest }) =>
+//             console.log(
+//                 rest,
+//                 new Error(
+//                     `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
+//                         locations
+//                     )}, Path: ${path}`
+//                 )
+//             )
+//         );
+//     if (networkError) {
+//         console.log(`[Network error]: ${networkError}`);
+//     }
+// });
 
 // const authFlowLink = withToken.concat(resetToken);
 

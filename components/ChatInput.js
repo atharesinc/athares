@@ -1,4 +1,4 @@
-import React, { useState } from "reactn";
+import React, { useState, useRef } from "reactn";
 import {
   View,
   StyleSheet,
@@ -7,75 +7,120 @@ import {
   TouchableOpacity,
   Keyboard,
   Platform,
+  TextInput,
 } from "react-native";
 import Loader from "./Loader";
 import { Feather } from "@expo/vector-icons";
 import CustomActions from "./CustomActions";
-import { AutoGrowTextInput } from "react-native-auto-grow-textinput";
+//maybe not this one
+// import { AutoGrowTextInput } from "react-native-auto-grow-textinput";
+import TextareaAutosize from "react-autosize-textarea";
+import {
+  processFile,
+  // uploadToAWS
+} from "../utils/upload";
 
 export default function ChatInput(props) {
-  const [input, setInput] = useState("");
-  const [showFilePreview, setShowFilePreview] = useState(false);
-  const [file, setFile] = useState(null);
-  const [fileIsImage, setFileIsImage] = useState(false);
-  const [loadingImage, setLoadingImage] = useState(false);
-  const [showEmoji, setShowEmoji] = useState(false);
-  const [rotate, setRotate] = useState(0);
-  const [extension, setExtension] = useState(null);
+  const [messageState, setMessageState] = useState({
+    input: "",
+    showFilePreview: false,
+    file: null,
+    fileIsImage: false,
+    loadingImage: false,
+  });
+
+  const {
+    input,
+    showFilePreview,
+    file,
+    fileIsImage,
+    loadingImage,
+  } = messageState;
+
+  // const [showEmoji, setShowEmoji] = useState(false);
+  // const [rotate, setRotate] = useState(0);
+  // const [extension, setExtension] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
 
   const submit = () => {
     // send the message to parent
     props.onSend(input, file);
-    setInput("");
-    setShowFilePreview(false);
-    setFile(null);
-    setFileIsImage(false);
-    setLoadingImage(false);
+    console.log("am i getting here?");
+    setMessageState({
+      input: "",
+      showFilePreview: false,
+      file: null,
+      fileIsImage: false,
+      loadingImage: false,
+    });
   };
 
-  const updateFile = async (file) => {
-    if (!file || !file.uri) {
+  const updateFile = async (uri) => {
+    if (!uri) {
       return false;
     }
-    file.name =
-      file.name ||
-      file.uri.substring(file.uri.lastIndexOf("/") + 1, file.uri.length);
-    const imgs = ["gif", "png", "jpg", "jpeg", "bmp"];
-    let extension = file.uri.match(/\.(.{1,4})$/i);
+    setMessageState({
+      ...messageState,
+      loadingImage: true,
+    });
+    console.log("updating file in state", uri);
 
-    if (!extension) {
-      setShowFilePreview(true);
-      setFile(file);
-      setFileIsImage(false);
+    const preparedFile = processFile({ uri });
+
+    // file.name =
+    //   file.name ||
+    //   file.uri.substring(file.uri.lastIndexOf("/") + 1, file.uri.length);
+
+    const imgs = [
+      "image/gif",
+      "image/png",
+      "image/jpg",
+      "image/jpeg",
+      "image/bmp",
+    ];
+
+    // let extension = file.uri.match(/\.(.{1,4})$/i);
+
+    console.log(
+      preparedFile.type,
+      imgs.indexOf(preparedFile.type.toLowerCase()) !== -1
+    );
+    if (imgs.indexOf(preparedFile.type.toLowerCase()) !== -1) {
+      setMessageState({
+        ...messageState,
+        showFilePreview: true,
+        file: preparedFile,
+        fileIsImage: true,
+        loadingImage: false,
+      });
       return;
     }
-    if (imgs.indexOf(extension[1].toLowerCase()) !== -1) {
-      setShowFilePreview(true);
-      setFile(file);
-      setFileIsImage(true);
-      return;
-    }
-    setShowFilePreview(true);
-    setFile(file);
-    setFileIsImage(false);
+    setMessageState({
+      ...messageState,
+      showFilePreview: true,
+      file: preparedFile,
+      fileIsImage: false,
+      loadingImage: false,
+    });
   };
 
   const deleteImage = () => {
-    setShowFilePreview(false);
-    setFile(null);
-    setFileIsImage(false);
+    setMessageState({
+      ...messageState,
+      showFilePreview: false,
+      file: null,
+      fileIsImage: false,
+    });
   };
 
   const shouldRenderImage = () => {
-    if (fileIsImage) {
-      if (loadingImage) {
-        return <Loader size={20} style={{ flex: 0 }} />;
-      }
-      return <Image style={styles.previewImage} source={{ uri: file.uri }} />;
-    } else {
-      return <Feather name="file-text" color={"#FFFFFFb7"} size={20} />;
+    if (loadingImage) {
+      return <Loader size={20} style={{ flex: 0 }} />;
     }
+    if (fileIsImage) {
+      return <Image style={styles.previewImage} source={{ uri: file.uri }} />;
+    }
+    return <Feather name="file-text" color={"#FFFFFFb7"} size={20} />;
   };
 
   const shouldRenderSendButton = () => {
@@ -86,19 +131,27 @@ export default function ChatInput(props) {
         </TouchableOpacity>
       );
     } else {
-      return (
-        <View style={styles.sendContainer}>
-          <Feather name="send" size={20} color={"transparent"} />
-        </View>
-      );
+      // return (
+      //   <View style={styles.sendContainer}>
+      //     <Feather name="send" size={20} color={"transparent"} />
+      //   </View>
+      // );
+      return null;
     }
   };
 
-  const focusUp = (e) => {
+  const focusUp = () => {
     setIsFocused(true);
   };
-  const focusOff = (e) => {
+  const focusOff = () => {
     setIsFocused(false);
+  };
+
+  const updateInput = (text) => {
+    setMessageState({
+      ...messageState,
+      input: text,
+    });
   };
 
   return (
@@ -125,7 +178,7 @@ export default function ChatInput(props) {
       )}
       <View style={styles.composerContainer}>
         <View style={{ alignItems: "stretch", flexGrow: 1, flex: 1 }}>
-          <AutoGrowTextInput
+          {/* <AutoGrowTextInput
             value={input}
             style={[styles.composerInput, isFocused ? styles.focus : {}]}
             onChangeText={setInput}
@@ -136,6 +189,16 @@ export default function ChatInput(props) {
             onFocus={focusUp}
             onBlur={focusOff}
             autoFocus={true}
+          /> */}
+          <CrossAutoGrow
+            value={input}
+            onChangeText={updateInput}
+            placeholder={"Enter Message"}
+            // placeholderTextColor={"#FFFFFFb7"}
+            onFocus={focusUp}
+            onBlur={focusOff}
+            autoFocus={true}
+            isFocused={isFocused}
           />
           <CustomActions updateFile={updateFile} />
         </View>
@@ -156,6 +219,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 7,
     borderRadius: 3,
+    overflow: "hidden",
   },
   filePreviewWrapper: {
     backgroundColor: "#2f3242",
@@ -185,7 +249,8 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "#FFFFFF",
     fontFamily: "SpaceGrotesk",
-    flex: 1,
+    // flex: 1,
+    paddingHorizontal: 15,
     ...Platform.select({
       web: {
         outlineStyle: "none",
@@ -221,3 +286,63 @@ const styles = StyleSheet.create({
     backgroundColor: "#3a3e52",
   },
 });
+
+function CrossAutoGrow({ onChangeText, value, isFocused = false, ...props }) {
+  const inputEl = useRef();
+
+  const _updateTextForWeb = (e) => {
+    onChangeText(e.currentTarget.value);
+  };
+
+  // useEffect(() => {
+  //   // override weird unsetting of max height on web
+  //   if (Platform.OS === "web") {
+  //     inputEl.current.style.maxHeight = "300px !important";
+  //   }
+  // }, []);
+
+  if (Platform.OS === "web") {
+    const webStyles = {
+      padding: 10,
+      color: "#FFFFFF",
+      fontFamily: "SpaceGrotesk",
+      // flex: 1,
+      backgroundColor: isFocused ? "#3a3e52" : "transparent",
+      border: "none",
+      outlineStyle: "none",
+      fontSize: "inherit",
+      maxHeight: "300px",
+      boxSizing: "border-box",
+      resize: "none",
+      overflow: "hidden",
+      overflowWrap: "break-word",
+    };
+
+    return (
+      <TextareaAutosize
+        {...props}
+        value={value}
+        style={webStyles}
+        onChange={_updateTextForWeb}
+        maxRows={3}
+        ref={inputEl}
+      />
+    );
+  }
+
+  return (
+    <TextInput
+      multiline={true}
+      value={value}
+      onChangeText={onChangeText}
+      style={[
+        styles.composerInput,
+        isFocused ? styles.focus : {},
+        { maxHeight: 200, paddingHorizontal: 15 },
+      ]}
+      placeholderTextColor={"#FFFFFFb7"}
+      onSubmitEditing={Keyboard.dismiss}
+      {...props}
+    />
+  );
+}

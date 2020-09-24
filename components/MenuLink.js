@@ -1,5 +1,5 @@
 import React from "reactn";
-import { TouchableOpacity, Image, View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 const MenuLink = ({ icon, label, details = "", ...props }) => {

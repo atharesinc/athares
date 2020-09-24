@@ -20,75 +20,59 @@ export default function GlowButton({
   const wrapperStyle = [styles.wrapper, style];
   const [isFocused, setIsFocused] = useState(false);
 
+  const redButton = {
+    backgroundColor: "transparent",
+    borderWidth: 3,
+    borderColor: activeTheme.COLORS.RED,
+    shadowColor: activeTheme.COLORS.RED,
+  };
+
+  const greenButton = {
+    backgroundColor: "transparent",
+    borderWidth: 3,
+    borderColor: activeTheme.COLORS.GREEN,
+    shadowColor: activeTheme.COLORS.GREEN,
+  };
+
+  const ghostButton = {
+    backgroundColor: "transparent",
+    borderWidth: 3,
+    borderColor: "#FFFFFF",
+    shadowColor: "transparent",
+  };
+
+  const focusedButton = {
+    backgroundColor: activeTheme.COLORS.GREEN,
+    shadowColor: activeTheme.COLORS.GREEN,
+  };
+
+  const focusedRedButton = {
+    backgroundColor: activeTheme.COLORS.RED,
+    shadowColor: activeTheme.COLORS.RED,
+  };
+
   const buttonStyles = [
     styles.wrapperInner,
-    red
-      ? {
-          backgroundColor: "transparent",
-          borderWidth: 3,
-          borderColor: activeTheme.COLORS.RED,
-          shadowColor: activeTheme.COLORS.RED,
-        }
-      : {},
-    green
-      ? {
-          backgroundColor: "transparent",
-          borderWidth: 3,
-          borderColor: activeTheme.COLORS.GREEN,
-          shadowColor: activeTheme.COLORS.GREEN,
-        }
-      : {},
-    ghost
-      ? {
-          backgroundColor: "transparent",
-          borderWidth: 3,
-          borderColor: "#FFFFFF",
-          shadowColor: "transparent",
-        }
-      : {},
-    isFocused
-      ? {
-          backgroundColor: activeTheme.COLORS.GREEN,
-          shadowColor: activeTheme.COLORS.GREEN,
-        }
-      : {},
-    isFocused && red
-      ? {
-          backgroundColor: activeTheme.COLORS.RED,
-          shadowColor: activeTheme.COLORS.RED,
-        }
-      : {},
+    red ? redButton : {},
+    green ? greenButton : {},
+    ghost ? ghostButton : {},
+    isFocused ? focusedButton : {},
+    isFocused && red ? focusedRedButton : {},
   ];
 
   const finalTextStyle = [
     styles.text,
-    red
-      ? {
-          color: activeTheme.COLORS.RED,
-        }
-      : {},
-    green
-      ? {
-          color: activeTheme.COLORS.GREEN,
-        }
-      : {},
-    ghost
-      ? {
-          color: "#FFFFFF",
-        }
-      : {},
-    isFocused
-      ? {
-          color: activeTheme.COLORS.DARK,
-        }
-      : {},
+    red ? { color: activeTheme.COLORS.RED } : {},
+    green ? { color: activeTheme.COLORS.GREEN } : {},
+    ghost ? { color: "#FFFFFF" } : {},
+    isFocused ? { color: activeTheme.COLORS.DARK } : {},
     textStyle,
   ];
 
-  const focusUp = (e) => {
+  const focusUp = () => {
     setIsFocused(true);
   };
-  const focusOff = (e) => {
+  const focusOff = () => {
     setIsFocused(false);
   };
 

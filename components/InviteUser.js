@@ -8,7 +8,11 @@ import {
 } from "react-native";
 import AsyncImage from "./AsyncImage";
 
-function InviteUser({ style = {}, getUsers, tags, circle, ...props }) {
+export default function InviteUser({
+  style = {},
+  // getUsers, tags, circle,
+  ...props
+}) {
   const [input, setInput] = useState("");
 
   const handleAddition = (suggestion) => {
@@ -71,7 +75,7 @@ const s = StyleSheet.create({
     borderRadius: 0,
     paddingHorizontal: 15,
     height: 40,
-    width: 300,
+    // width: 300,
     justifyContent: "center",
     borderColor: "transparent",
     alignItems: "stretch",
@@ -115,9 +119,9 @@ const s = StyleSheet.create({
   },
 });
 
-export default compose(
-  graphql(GET_USERS_BY_CIRCLE_ID, {
-    name: "getUsers",
-    options: ({ circle }) => ({ variables: { id: circle || "" } }),
-  })
-)(InviteUser);
+// export default compose(
+//     graphql(GET_USERS_BY_CIRCLE_ID, {
+//         name: "getUsers",
+//         options: ({ circle }) => ({ variables: { id: circle || "" } }),
+//     })
+// )(InviteUser);

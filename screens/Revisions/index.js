@@ -10,6 +10,7 @@ import {
 import { useQuery } from "@apollo/client";
 
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 import GhostButton from "../../components/GhostButton";
 import DisclaimerText from "../../components/DisclaimerText";
 
@@ -57,15 +58,15 @@ export default function Revisions(props) {
 
   let allRevisions = [];
 
-  if (data && data.circle) {
-  }
+  // if (data && data.circle) {
+  // }
 
   if (loading || loading2) {
     return <CenteredLoaderWithText />;
   }
 
   // Network Error
-  if (!data) {
+  if (!data || e2) {
     return <CenteredErrorLoader text={"Unable to connect to network"} />;
   }
 
@@ -97,7 +98,7 @@ export default function Revisions(props) {
       <DisclaimerText
         upper
         grey
-        text={`Review proposed legislation and changes to existing laws`}
+        text={"Review proposed legislation and changes to existing laws"}
       />
 
       <GhostButton

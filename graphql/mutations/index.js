@@ -90,6 +90,14 @@ export const CREATE_CIRCLE = gql`
         name: $name
         preamble: $preamble
         users: { connect: { id: $user } }
+        circlePermissions: {
+          create: {
+            useEmail: false
+            useSMS: false
+            usePush: false
+            user: { connect: { id: $user } }
+          }
+        }
       }
     ) {
       id
@@ -388,9 +396,12 @@ export const DELETE_AMENDMENT = gql`
 `;
 
 export const DELETE_USER_FROM_CIRCLE = gql`
-  mutation($circle: ID!, $user: ID!) {
+  mutation($circle: ID!, $user: ID!, $permission: ID!) {
     circleUpdate(data: { id: $circle, users: { disconnect: { id: $user } } }) {
       id
+    }
+    circlePermissionDelete(filter: { id: $permission }) {
+      success
     }
   }
 `;
@@ -670,6 +681,17 @@ export const CREATE_SIGNED_UPLOAD_LINK = gql`
   mutation($name: String!, $type: String!) {
     getSignedUrl(name: $name, type: $type) {
       url
+    }
+  }
+`;
+
+export const GET_REFRESH_TOKEN = gql`
+  mutation($email: String!, $token: String!, $profileId: String!) {
+    userRefreshToken(
+      data: { email: $email, refreshToken: $token, authProfileId: $profileId }
+    ) {
+      idToken
+      refreshToken
     }
   }
 `;

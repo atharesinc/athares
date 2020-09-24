@@ -10,14 +10,13 @@ import Diff from "../../components/Diff";
 import { Feather } from "@expo/vector-icons";
 import Card from "../../components/Card";
 
-function DiffSection({ oldText = "", newText = "", ...props }) {
+function DiffSection({ oldText = "", newText = "" }) {
   const [mode, setMode] = useState(0);
 
   console.log(newText, oldText);
   const renderTab = () => {
     switch (mode) {
       case 1:
-        console.log("case 1", { inputA: oldText, inputB: newText });
         return (
           <ScrollView containerStyle={styles.textContainerStyle}>
             <Diff
@@ -31,8 +30,6 @@ function DiffSection({ oldText = "", newText = "", ...props }) {
           </ScrollView>
         );
       case 2:
-        console.log("case 2", { inputA: oldText, inputB: newText });
-
         return (
           <ScrollView containerStyle={styles.textContainerStyle}>
             <View style={styles.sideBySideWrapper}>
@@ -56,8 +53,6 @@ function DiffSection({ oldText = "", newText = "", ...props }) {
           </ScrollView>
         );
       default:
-        console.log("case default", { inputA: oldText, inputB: newText });
-
         return (
           <ScrollView containerStyle={styles.textContainerStyle}>
             <Text style={styles.unchangedText}>{newText}</Text>

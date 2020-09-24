@@ -10,38 +10,59 @@ import {
 } from "react-native";
 
 import {
-  pickFileAsync,
-  pickImageAsync,
+  pickFileURIAsync,
+  pickImageURIAsync,
   takePictureAsync,
 } from "../utils/mediaUtils";
 import { Feather } from "@expo/vector-icons";
 
 export default function CustomActions(props) {
-  const getImage = async () => {
-    Keyboard.dismiss();
-    let file = await pickImageAsync();
-    props.updateFile(file);
+  const getImageUri = async () => {
+    console.log("get images");
+    try {
+      Keyboard.dismiss();
+      let uri = await pickImageURIAsync();
+      console.log(uri);
+
+      props.updateFile(uri);
+    } catch (e) {
+      console.error(new Error(e));
+    }
   };
+
   const getPhoto = async () => {
-    Keyboard.dismiss();
-    let file = await takePictureAsync();
-    props.updateFile(file);
+    console.log("photos?");
+    try {
+      Keyboard.dismiss();
+      let uri = await takePictureAsync();
+      props.updateFile(uri);
+    } catch (e) {
+      console.error(new Error(e));
+    }
   };
-  const getFile = async () => {
-    Keyboard.dismiss();
-    let file = await pickFileAsync();
-    props.updateFile(file);
+
+  const getFileUri = async () => {
+    console.log("get files");
+    try {
+      Keyboard.dismiss();
+      let uri = await pickFileURIAsync();
+      console.log(uri);
+
+      props.updateFile(uri);
+    } catch (e) {
+      console.error(new Error(e));
+    }
   };
 
   return (
     <View style={[styles.container]}>
-      <TouchableOpacity style={[styles.wrapper]} onPress={getImage}>
+      <TouchableOpacity style={[styles.wrapper]} onPress={getImageUri}>
         <Feather name="image" size={20} color={"#FFFFFF"} />
       </TouchableOpacity>
       <TouchableOpacity style={[styles.wrapper]} onPress={getPhoto}>
         <Feather name="camera" size={20} color={"#FFFFFF"} />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.wrapper]} onPress={getFile}>
+      <TouchableOpacity style={[styles.wrapper]} onPress={getFileUri}>
         <Feather name="paperclip" size={20} color={"#FFFFFF"} />
       </TouchableOpacity>
     </View>

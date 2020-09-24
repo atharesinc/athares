@@ -4,11 +4,7 @@ import { Feather } from "@expo/vector-icons";
 
 import * as RootNavigation from "../../navigation/RootNavigation";
 
-export default function CircleTitle({
-  belongsToCircle = false,
-  title,
-  ...props
-}) {
+export default function CircleTitle({ belongsToCircle = false, title }) {
   const nav = () => {
     RootNavigation.navigate("circleSettings");
   };

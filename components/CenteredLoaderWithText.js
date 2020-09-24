@@ -4,11 +4,7 @@ import { View, StyleSheet } from "react-native";
 import Title from "./Title";
 import Loader from "./Loader";
 
-export default function CenteredLoaderWithText({
-  size,
-  text = null,
-  ...props
-}) {
+export default function CenteredLoaderWithText({ size, text = null }) {
   return (
     <View style={styles.view}>
       <Loader size={size} />

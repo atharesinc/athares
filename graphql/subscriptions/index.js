@@ -13,7 +13,6 @@ export const SUB_TO_MESSAGES_BY_CHANNEL_ID = gql`
         text
         createdAt
         file
-        fileName
         user {
           id
           icon
@@ -207,7 +206,7 @@ export const SUB_TO_USERS_CIRCLES = gql`
   subscription($id: ID!) {
     Circles(
       filter: {
-        mutation_in: [create, delete]
+        mutation_in: [create, update, delete]
         node: { users: { some: { id: { equals: $id } } } }
       }
     ) {

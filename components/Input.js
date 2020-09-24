@@ -20,10 +20,10 @@ export default function Input({
   const handlePress = () => {
     inputEl.current.focus();
   };
-  const focusUp = (e) => {
+  const focusUp = () => {
     setIsFocused(true);
   };
-  const focusOff = (e) => {
+  const focusOff = () => {
     setIsFocused(false);
   };
 

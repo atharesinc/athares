@@ -2,11 +2,12 @@ import React from "reactn";
 import { FlatList } from "react-native";
 import Message from "./Message";
 
-export default function Chat({ messages, ...props }) {
+export default function Chat({ messages, getMoreMessages, ...props }) {
   const _renderItem = ({ item, index }) => (
     <Message
       multiMsg={
-        index > 0 && messages[index - 1].user.id === messages[index].user.id
+        index < messages.length - 1 &&
+        messages[index + 1].user.id === messages[index].user.id
       }
       isMine={item.user.id === props.user}
       key={item.id}
@@ -14,16 +15,13 @@ export default function Chat({ messages, ...props }) {
       message={item}
     />
   );
-  const _getItemLayout = (data, index) => ({
-    length: 50,
-    offset: 50 * index,
-    index,
-  });
 
   const _keyExtractor = (item) => item.id;
 
   return (
     <FlatList
+      onEndReached={getMoreMessages}
+      inverted
       data={messages}
       renderItem={_renderItem}
       keyExtractor={_keyExtractor}

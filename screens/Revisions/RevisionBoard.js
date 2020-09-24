@@ -1,22 +1,15 @@
 import React from "reactn";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import RevisionCard from "./RevisionCard";
 import GlowButton from "../../components/GlowButton";
 import Title from "../../components/Title";
 
-import { Feather } from "@expo/vector-icons";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
 const RevisionBoard = ({
   boardName = "",
   revisions = [],
-  circleID,
+  // circleID,
   user,
   belongsToCircle = false,
   ...props

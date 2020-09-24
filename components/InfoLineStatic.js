@@ -1,11 +1,5 @@
 import React from "reactn";
-import {
-  TouchableOpacity,
-  TextInput,
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 const InfoLineText = ({ value = "", icon, label, style = {}, ...props }) => (
@@ -28,9 +22,6 @@ const styles = StyleSheet.create({
   touchWrap: {
     marginBottom: 20,
     width: "100%",
-    // borderRadius: 9999,
-    // borderWidth: 2,
-    // borderColor: "#FFFFFF",
     borderBottomWidth: 1,
     borderBottomColor: "#FFFFFF",
     paddingBottom: 10,
@@ -41,11 +32,8 @@ const styles = StyleSheet.create({
     // marginHorizontal: 15,
     width: "100%",
     justifyContent: "space-between",
-    alignItems: "flex-start",
     flexDirection: "row",
     alignItems: "center",
-    overflow: "hidden",
-    // paddingRight: 30,
     overflow: "hidden",
   },
   icon: {

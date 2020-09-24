@@ -1,19 +1,19 @@
-import React, { useGlobal, useEffect } from "reactn";
+import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
 import { fromNow } from "../../utils/transform";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import AsyncImage from "../../components/AsyncImage";
-import MeshStore from "../../utils/meshStore";
+// import MeshStore from "../../utils/meshStore";
 
 const SingleSearchItem = ({ item, category, ...props }) => {
-  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
-  const [activeAmendment, setActiveAmendment] = useGlobal("activeAmendment");
-  const [activeViewUser, setActiveViewUser] = useGlobal("activeViewUser");
-  const [showSearch, setShowSearch] = useGlobal("showSearch");
-  const [searchedCircles, setSearchedCircles] = useGlobal("searchedCircles");
+  const [, setActiveCircle] = useGlobal("activeCircle");
+  const [, setActiveChannel] = useGlobal("activeChannel");
+  const [, setActiveRevision] = useGlobal("activeRevision");
+  const [, setActiveAmendment] = useGlobal("activeAmendment");
+  const [, setActiveViewUser] = useGlobal("activeViewUser");
+  const [, setShowSearch] = useGlobal("showSearch");
+  // const [, setSearchedCircles] = useGlobal("searchedCircles");
 
   // on searching for a circle,
   // add it to list of searched circles so user has something to look at if logged out
@@ -121,7 +121,7 @@ const SingleSearchItem = ({ item, category, ...props }) => {
         <View>
           <Text style={styles.suggestionText}>
             {item[props.searchOn] +
-              (category !== "circles" ? " - " + item.circle?.name : "")}
+              (category !== "circles" ? " - " + item.circle.name : "")}
           </Text>
           {category !== "circles" && (
             <Text style={[styles.suggestionText, styles.smaller]}>

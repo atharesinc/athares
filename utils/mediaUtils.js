@@ -2,14 +2,14 @@ import * as Permissions from "expo-permissions";
 // import { Location } from 'expo-location';
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import Constants from "expo-constants";
+// import Constants from "expo-constants";
 
 import { Alert, Linking, Platform } from "react-native";
 
 export default async function getPermissionAsync(permission) {
   const { status } = await Permissions.askAsync(permission);
   if (status !== "granted") {
-    const { name } = Constants.manifest;
+    // const { name } = Constants.manifest;
     const permissionName = permission.toLowerCase().replace("_", " ");
     Alert.alert(
       "Cannot be done 😞",
@@ -84,6 +84,33 @@ export async function pickImageURIAsync() {
       allowsEditing: true,
       aspect: [1, 1],
     });
+
+    if (!result.cancelled) {
+      return result.uri;
+    }
+  }
+}
+
+export async function pickFileURIAsync() {
+  if (
+    Platform.OS === "web" ||
+    (await getPermissionAsync(Permissions.CAMERA_ROLL))
+  ) {
+    const result = await DocumentPicker.getDocumentAsync({ type: "*/*" });
+    // result looks like this:
+    console.log(result);
+    /*
+      {"type":"success",
+      "uri": <superlong base64 unless its way too long>,
+      "name":"Solved.zip",
+      "file":{},
+      "lastModified":1597707891895,
+      "size":102620,
+      "output":{"0":{}}}
+    */
+    if (result.size / 1000 / 1000 > 50) {
+      throw "Cannot upload file larger than 50MB";
+    }
 
     if (!result.cancelled) {
       return result.uri;

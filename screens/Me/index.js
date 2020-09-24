@@ -1,4 +1,4 @@
-import React, { useState } from "reactn";
+import React from "reactn";
 import ScreenWrapper from "../../../components/ScreenWrapper";
 import AvatarPicker from "../../../components/AvatarPicker";
 import InfoLine from "../../../components/InfoLine";
@@ -16,8 +16,13 @@ import { ImageManipulator } from "expo";
 import debounce from "lodash.debounce";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-function Me({ loading, data: { User: userPref }, getUser, ...props }) {
-  const [uri, setUri] = useState(null);
+export default function Me({
+  loading,
+  data: { User: userPref },
+  getUser,
+  ...props
+}) {
+  // const [uri, setUri] = useState(null);
 
   const updatePref = async (checked) => {
     let { id } = props.data.User.prefs;
@@ -88,7 +93,7 @@ function Me({ loading, data: { User: userPref }, getUser, ...props }) {
       });
     } catch (err) {
       console.error(err.message);
-      Alert.alert("Error", "There was an error updating your profile.");
+      // Alert.alert("Error", "There was an error updating your profile.");
     }
   };
 
@@ -132,12 +137,12 @@ function Me({ loading, data: { User: userPref }, getUser, ...props }) {
               value={user.phone}
               onChangeText={updatePhone}
             />
-            <InfoLine
-              icon={"at-sign"}
-              label={"Email"}
-              value={user.email}
-              onChangeText={updateEmail}
-            />
+            {/* <InfoLine
+                            icon={"at-sign"}
+                            label={"Email"}
+                            value={user.email}
+                            onChangeText={updateEmail}
+                        /> */}
             <InfoLine
               icon={"hash"}
               label={"Unique Name"}
@@ -180,17 +185,17 @@ function Me({ loading, data: { User: userPref }, getUser, ...props }) {
   );
 }
 
-export default compose(
-  graphql(GET_USER_BY_ID_ALL, {
-    name: "getUser",
-    options: ({ userId }) => ({ variables: { id: userId || "" } }),
-  }),
-  graphql(UPDATE_USER, { name: "updateUser" }),
-  graphql(UPDATE_ALLOW_MARKETING_EMAIL, { name: "updateMarketingEmail" }),
-  graphql(GET_USER_PREF_BY_ID, {
-    options: ({ userId }) => ({ variables: { id: userId || "" } }),
-  })
-)(Me);
+// export default compose(
+//     graphql(GET_USER_BY_ID_ALL, {
+//         name: "getUser",
+//         options: ({ userId }) => ({ variables: { id: userId || "" } }),
+//     }),
+//     graphql(UPDATE_USER, { name: "updateUser" }),
+//     graphql(UPDATE_ALLOW_MARKETING_EMAIL, { name: "updateMarketingEmail" }),
+//     graphql(GET_USER_PREF_BY_ID, {
+//         options: ({ userId }) => ({ variables: { id: userId || "" } }),
+//     })
+// )(Me);
 
 const styles = StyleSheet.create({
   header: {

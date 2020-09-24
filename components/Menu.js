@@ -12,7 +12,7 @@ import DisclaimerText from "./DisclaimerText";
 import { GET_USER_BY_ID } from "../graphql/queries";
 import packageJSON from "../package.json";
 
-function SideMenu(props) {
+function SideMenu() {
   const [, setActiveChannel] = useGlobal("activeChannel");
   const [, setActiveCircle] = useGlobal("activeCircle");
   const [, setActiveRevision] = useGlobal("activeRevision");
@@ -71,7 +71,7 @@ function SideMenu(props) {
     Linking.openURL("https://www.athar.es/policy");
   };
 
-  const { loading, error, data } = useQuery(GET_USER_BY_ID, {
+  const { data } = useQuery(GET_USER_BY_ID, {
     variables: { id: user || "" },
   });
 

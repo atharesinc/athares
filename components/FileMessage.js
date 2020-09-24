@@ -21,7 +21,8 @@ const FileMessage = ({ file, fileName }) => {
   };
   const download = async () => {
     try {
-      let local = await FileSystem.downloadAsync(
+      // let local =
+      await FileSystem.downloadAsync(
         file,
         FileSystem.documentDirectory + "downloads/" + fileName
       );

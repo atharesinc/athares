@@ -1,24 +1,33 @@
-import React, { useGlobal } from "reactn";
-import { Text, ScrollView, StyleSheet, View } from "react-native";
+import React, { useGlobal, useEffect, useState } from "reactn";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import {
   UPDATE_EMAIL_PERMISSION_FOR_CIRCLE,
   UPDATE_AMENDEMENT_PERMISSION_FOR_CIRCLE,
   UPDATE_REVISION_PERMISSION_FOR_CIRCLE,
+  DELETE_USER_FROM_CIRCLE,
 } from "../../graphql/mutations";
 
-import { GET_CIRCLE_PREFS_FOR_USER } from "../../graphql/queries";
+import {
+  GET_CIRCLE_PREFS_FOR_USER,
+  GET_CIRCLES_BY_USER_ID,
+} from "../../graphql/queries";
 
 import { useQuery, useMutation } from "@apollo/client";
 
 import SwitchLine from "../../components/SwitchLine";
 import Title from "../../components/Title";
-import DisclaimerText from "../../components/Title";
+import DisclaimerText from "../../components/DisclaimerText";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
+
+import GlowButton from "../../components/GlowButton";
 
 function CircleSettings(props) {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
+
+  const [loading, setLoading] = useState(false);
 
   const [_updateEmailPref] = useMutation(UPDATE_EMAIL_PERMISSION_FOR_CIRCLE);
   const [_updateAmendmentPref] = useMutation(
@@ -28,12 +37,26 @@ function CircleSettings(props) {
     UPDATE_REVISION_PERMISSION_FOR_CIRCLE
   );
 
-  const { loading, error, data } = useQuery(GET_CIRCLE_PREFS_FOR_USER, {
-    variables: {
-      circle: activeCircle || "",
-      user: user || "",
-    },
+  const [deleteUserFromCircle] = useMutation(DELETE_USER_FROM_CIRCLE, {
+    refetchQueries: [
+      {
+        query: GET_CIRCLES_BY_USER_ID,
+        variables: {
+          id: user || "",
+        },
+      },
+    ],
   });
+
+  const { loading: loadingQuery, error, data } = useQuery(
+    GET_CIRCLE_PREFS_FOR_USER,
+    {
+      variables: {
+        circle: activeCircle || "",
+        user: user || "",
+      },
+    }
+  );
 
   //  de/restructure circle permisssion
   let permissions = null;
@@ -68,11 +91,49 @@ function CircleSettings(props) {
     });
   };
 
-  if (loading) {
+  useEffect(() => {
+    if (!activeCircle) {
+      props.navigation.navigate("app");
+    }
+  }, [activeCircle]);
+
+  const leaveCircle = async () => {
+    setLoading(true);
+    try {
+      let { id } = permissions;
+
+      const res = await deleteUserFromCircle({
+        variables: {
+          user,
+          circle: activeCircle,
+          permission: id,
+        },
+      });
+
+      console.log("res", res);
+
+      setActiveCircle(null);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loadingQuery) {
     return <CenteredLoaderWithText text={"Getting Settings"} />;
   }
+
+  if (loading) {
+    return <CenteredLoaderWithText text={"Leaving Circle"} />;
+  }
+
+  if (error) {
+    return <CenteredErrorLoader text={"Error Getting Settings"} />;
+  }
+
   return (
-    <ScrollView contentContainerStyles={styles.wrapper}>
+    <ScrollView contentContainerStyle={styles.wrapper}>
       <Title text={"Notification Preferences"} />
       <DisclaimerText
         text={
@@ -81,25 +142,25 @@ function CircleSettings(props) {
       />
       <SwitchLine
         label={"Allow Email Notifications"}
-        value={permission.useEmail}
+        value={permissions.useEmail}
         onPress={updateEmailPref}
       />
-      {useEmail && (
+      {permissions.useEmail && (
         <View style={{ paddingLeft: 15 }}>
           <SwitchLine
             label={"Notify on New Revision"}
-            value={permission.revisions}
+            value={permissions.revisions}
             onPress={updateRevisionPref}
           />
           <SwitchLine
             label={"Notify on New Amendment"}
-            value={permssion.amendment}
+            value={permissions.amendment}
             onPress={updateAmendmentPref}
           />
         </View>
       )}
       {/* Leave Circle */}
-      <Title text={"Leave Circle"} red />
+      <Title text={"Leave Circle"} red style={styles.marginTop} />
       <DisclaimerText
         text={
           "Set your communication preferences for this Circle. By default you will receive an email notification when a new revision is created, and when a revision has passed or been rejected."
@@ -119,18 +180,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
   },
-  preamble: {
-    color: "#FFFFFF",
-    fontSize: 15,
-    marginBottom: 20,
-  },
-  loadingText: {
-    fontSize: 20,
-    color: "#FFFFFF",
-    marginTop: 15,
-    width: "100%",
-    textAlign: "center",
-  },
+  marginTop: { marginTop: 20 },
 });
 
 export default CircleSettings;

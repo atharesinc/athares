@@ -21,27 +21,19 @@ export default function GhostButton({
   const buttonStyles = [
     styles.wrapperInner,
     wide ? { width: "100%" } : {},
-    isFocused
-      ? {
-          backgroundColor: "#FFFFFF",
-        }
-      : {},
+    isFocused ? { backgroundColor: "#FFFFFF" } : {},
   ];
 
   const finalTextStyle = [
     styles.text,
     textStyle,
-    isFocused
-      ? {
-          color: activeTheme.COLORS.DARK,
-        }
-      : {},
+    isFocused ? { color: activeTheme.COLORS.DARK } : {},
   ];
 
-  const focusUp = (e) => {
+  const focusUp = () => {
     setIsFocused(true);
   };
-  const focusOff = (e) => {
+  const focusOff = () => {
     setIsFocused(false);
   };
 
