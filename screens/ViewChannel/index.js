@@ -52,8 +52,8 @@ export default memo(function ViewChannel() {
       //   id: user || "",
       // });
 
-      // prepend because our list is backwards
-      setMessages([subscriptionData.data.Messages.node, ...messages]);
+      // append the latest item to the list
+      setMessages([...messages, subscriptionData.data.Messages.node]);
     }
   }
 

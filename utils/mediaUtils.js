@@ -69,7 +69,7 @@ export async function takePictureAsync() {
     });
 
     if (!result.cancelled) {
-      return result;
+      return result.uri;
     }
   }
 }

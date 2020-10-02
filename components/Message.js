@@ -6,7 +6,7 @@ import AsyncImage from "./AsyncImage";
 import FadeInView from "./FadeInView";
 import { parseDate } from "../utils/transform";
 
-const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
+const Message = ({ message: msg, multiMsg, ...props }) => {
   const timestamp = parseDate(props.timestamp, "h:mm bbbb");
 
   const isImage = (file) => {
@@ -25,16 +25,14 @@ const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
 
   return (
     <FadeInView style={styles.messageWrapper}>
-      <View style={styles.userAndTimeWrapper}>
-        {multiMsg === false && (
-          <>
-            <Text style={styles.messageUserText}>
-              {msg.user.firstName + " " + msg.user.lastName}
-            </Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
-          </>
-        )}
-      </View>
+      {multiMsg === false && (
+        <View style={styles.userAndTimeWrapper}>
+          <Text style={styles.messageUserText}>
+            {msg.user.firstName + " " + msg.user.lastName}
+          </Text>
+          <Text style={styles.timestamp}>{timestamp}</Text>
+        </View>
+      )}
       <View style={styles.messageAvatarAndContentWrapper}>
         {multiMsg === false ? (
           <View style={styles.avatarWrapper}>
@@ -45,14 +43,14 @@ const Message = ({ message: msg, isMine, multiMsg, ...props }) => {
             />
           </View>
         ) : null}
-        <View
+        {/* <View
           style={[
             styles.messageContentWrapper,
             isMine ? styles.me : styles.otherUser,
           ]}
-        >
-          {msg.text ? <Text style={styles.messageText}>{msg.text}</Text> : null}
-        </View>
+        > */}
+        {msg.text ? <Text style={styles.messageText}>{msg.text}</Text> : null}
+        {/* </View> */}
       </View>
       {msg.file && isImage(msg.file)}
     </FadeInView>
@@ -72,28 +70,19 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
-    borderRadius: 3,
     flex: 1,
   },
   userAndTimeWrapper: {
     flexDirection: "row",
     alignItems: "flex-end",
-    marginBottom: 10,
+    marginVertical: 10,
   },
-  me: {
-    backgroundColor: "#2f3242",
-  },
-  otherUser: {
-    backgroundColor: "#3a3e52",
-  },
+  // me: {
+  //   backgroundColor: "#2f3242",
+  // },
+  // otherUser: {
+  //   backgroundColor: "#3a3e52",
+  // },
   messageWrapper: {
     margin: 15,
     marginTop: 5,
@@ -105,8 +94,8 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceGrotesk",
   },
   avatarWrapper: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
     borderRadius: 9999,
     justifyContent: "center",
     alignItems: "center",
@@ -116,13 +105,13 @@ const styles = StyleSheet.create({
     borderColor: "#FFFFFF",
   },
   messageAvatar: {
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
   },
   messageText: {
     color: "#FFFFFF",
-    padding: 15,
-    borderRadius: 3,
+    paddingVertical: 0,
+    paddingHorizontal: 15,
     fontFamily: "SpaceGrotesk",
     fontSize: 15,
   },

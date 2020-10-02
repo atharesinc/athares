@@ -1,10 +1,10 @@
-import { useGlobal, useEffect } from "reactn";
+import { useGlobal, useEffect, memo } from "reactn";
 import { useSubscription, useQuery } from "@apollo/client";
 
 import { GET_ALL_USERS_CIRCLES_CHANNELS } from "../graphql/queries";
 import { SUB_TO_ALL_CIRCLES_CHANNELS } from "../graphql/subscriptions";
 
-export default function ChannelUpdateMonitor() {
+export default memo(function ChannelUpdateMonitor() {
   const [channels, setChannels] = useGlobal("channels");
   const [unreadChannels, setUnreadChannels] = useGlobal("unreadChannels");
   const [activeChannel] = useGlobal("activeChannel");
@@ -12,7 +12,7 @@ export default function ChannelUpdateMonitor() {
 
   const { data } = useQuery(GET_ALL_USERS_CIRCLES_CHANNELS, {
     variables: {
-      id: user,
+      id: user || "",
     },
   });
 
@@ -97,4 +97,4 @@ export default function ChannelUpdateMonitor() {
   // }
 
   return null;
-}
+});

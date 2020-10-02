@@ -1,12 +1,10 @@
-import PropTypes from "prop-types";
 import React from "reactn";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
-  ViewPropTypes,
   Keyboard,
+  Platform,
 } from "react-native";
 
 import {
@@ -16,7 +14,12 @@ import {
 } from "../utils/mediaUtils";
 import { Feather } from "@expo/vector-icons";
 
-export default function CustomActions(props) {
+export default function CustomActions({
+  containerStyle = {},
+  wrapperStyle = {},
+  iconTextStyle = {},
+  ...props
+}) {
   const getImageUri = async () => {
     console.log("get images");
     try {
@@ -55,15 +58,41 @@ export default function CustomActions(props) {
   };
 
   return (
-    <View style={[styles.container]}>
-      <TouchableOpacity style={[styles.wrapper]} onPress={getImageUri}>
-        <Feather name="image" size={20} color={"#FFFFFF"} />
+    <View style={[styles.container, containerStyle]}>
+      <TouchableOpacity
+        style={[styles.wrapper, wrapperStyle]}
+        onPress={getImageUri}
+      >
+        <Feather
+          name="image"
+          size={20}
+          color={"#FFFFFF"}
+          style={[iconTextStyle]}
+        />
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.wrapper]} onPress={getPhoto}>
-        <Feather name="camera" size={20} color={"#FFFFFF"} />
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.wrapper]} onPress={getFileUri}>
-        <Feather name="paperclip" size={20} color={"#FFFFFF"} />
+      {Platform.OS !== "web" && (
+        <TouchableOpacity
+          style={[styles.wrapper, wrapperStyle]}
+          onPress={getPhoto}
+        >
+          <Feather
+            name="camera"
+            size={20}
+            color={"#FFFFFF"}
+            style={[iconTextStyle]}
+          />
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity
+        style={[styles.wrapper, wrapperStyle]}
+        onPress={getFileUri}
+      >
+        <Feather
+          name="paperclip"
+          size={20}
+          color={"#FFFFFF"}
+          style={[iconTextStyle]}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -86,25 +115,3 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
 });
-
-CustomActions.contextTypes = {
-  actionSheet: PropTypes.func,
-};
-
-CustomActions.defaultProps = {
-  onSend: () => {},
-  options: {},
-  renderIcon: null,
-  containerStyle: {},
-  wrapperStyle: {},
-  iconTextStyle: {},
-};
-
-CustomActions.propTypes = {
-  onSend: PropTypes.func,
-  options: PropTypes.object,
-  renderIcon: PropTypes.func,
-  containerStyle: ViewPropTypes.style,
-  wrapperStyle: ViewPropTypes.style,
-  iconTextStyle: Text.propTypes.style,
-};
