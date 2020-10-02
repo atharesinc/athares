@@ -20,7 +20,7 @@
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "double"],
+    "quotes": ["error", "double", { "allowTemplateLiterals": true }],
     "semi": ["error", "always"],
     "react/prop-types": 0,
     "react/display-name": 0
