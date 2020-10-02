@@ -67,7 +67,7 @@ export default function App(props) {
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
-        SplashScreen.preventAutoHide();
+        SplashScreen.preventAutoHideAsync();
 
         // Load our initial navigation state
         // setInitialNavigationState(await getInitialState());
@@ -110,7 +110,7 @@ export default function App(props) {
         console.warn(e);
       } finally {
         setLoadingComplete(true);
-        SplashScreen.hide();
+        SplashScreen.hideAsync();
       }
     }
 
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
-    backgroundColor: "transparent",
+    backgroundColor: "#282a38",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
