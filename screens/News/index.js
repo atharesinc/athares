@@ -1,6 +1,6 @@
 import React from "reactn";
 import { View, Image, StyleSheet } from "react-native";
-import Title from "../../components/Title";
+import ChannelGroupHeader from "../../components/ChannelGroupHeader";
 
 export default function News() {
   // const [isMobile] = useGlobal("isMobile");
@@ -15,7 +15,7 @@ export default function News() {
         }}
         source={require("../../assets/images/Athares-type-small-white.png")}
       />
-      <Title text={"News"} underline />
+      <ChannelGroupHeader title={"News"} displayPlus={false} />
     </View>
   );
 }

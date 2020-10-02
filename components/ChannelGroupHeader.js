@@ -2,22 +2,16 @@ import React from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-import * as RootNavigation from "../../navigation/RootNavigation";
-
-const ChannelGroupHeader = ({ displayPlus = false, title }) => {
-  const nav = () => {
-    // if (title === "DIRECT MESSAGES") {
-    //   RootNavigation.navigate("c");
-    // } else
-    if (title === "CHANNELS") {
-      RootNavigation.navigate("createChannel");
-    }
-  };
+const ChannelGroupHeader = ({
+  displayPlus = false,
+  title,
+  onPressPlus = () => {},
+}) => {
   return (
     <View style={styles.row}>
       <Text style={styles.channelTitle}>{title}</Text>
       {displayPlus ? (
-        <TouchableOpacity onPress={nav}>
+        <TouchableOpacity onPress={onPressPlus}>
           <Feather name="plus" size={20} color={"#FFFFFF"} />
         </TouchableOpacity>
       ) : (
@@ -37,8 +31,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     width: "100%",
-    borderBottomWidth: 1,
-    borderColor: "#FFFFFF",
     backgroundColor: "#3a3e52",
   },
   channelTitle: {

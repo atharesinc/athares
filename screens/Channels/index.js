@@ -4,7 +4,7 @@ import { ScrollView, View, StyleSheet } from "react-native";
 import Footer from "./Footer";
 import Circles from "../../components/Circles";
 import ChannelItem from "../../components/ChannelItem";
-import ChannelGroupHeader from "./ChannelGroupHeader";
+import ChannelGroupHeader from "../../components/ChannelGroupHeader";
 import GovernanceChannelItem from "./GovernanceChannelItem";
 import CircleTitle from "./CircleTitle";
 import DisclaimerText from "../../components/DisclaimerText";
@@ -17,6 +17,7 @@ import {
 import { SUB_TO_CIRCLES_CHANNELS } from "../../graphql/subscriptions";
 
 import { useQuery, useSubscription } from "@apollo/client";
+import * as RootNavigation from "../../navigation/RootNavigation";
 
 function Dashboard({ renderAsSidebar = false }) {
   const [activeCircle] = useGlobal("activeCircle");
@@ -45,6 +46,9 @@ function Dashboard({ renderAsSidebar = false }) {
     onSubscriptionData,
   });
 
+  const goToCreateChannel = () => {
+    RootNavigation.navigate("createChannel");
+  };
   function onSubscriptionData({ subscriptionData }) {
     if (subscriptionData.data) {
       // fire off query again  vs. just add the new value to candidates
@@ -118,6 +122,7 @@ function Dashboard({ renderAsSidebar = false }) {
             <ChannelGroupHeader
               title={"CHANNELS"}
               displayPlus={user && belongsToCircle}
+              onPressPlus={goToCreateChannel}
             />
 
             {channels.map((ch) => (
