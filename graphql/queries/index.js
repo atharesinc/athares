@@ -137,7 +137,7 @@ export const GET_MESSAGES_FROM_CHANNEL_ID = gql`
       id
       name
       description
-      messages(last: 20, sort: { createdAt: DESC }) {
+      messages(last: 20) {
         items {
           id
           text
@@ -308,6 +308,60 @@ export const SEARCH_FOR_USER = gql`
         icon
         pub
         email
+      }
+    }
+  }
+`;
+
+export const SEARCH_FOR_USER_NOT_IN_CIRCLE = gql`
+  query searchForUser($circle: ID!, $text: String!, $user: ID!) {
+    usersList(
+      first: 5
+      filter: {
+        id: { not_equals: $user }
+        circles: { none: { id: { equals: $circle } } }
+        OR: [
+          { firstName: { contains: $text } }
+          { lastName: { contains: $text } }
+          { email: { contains: $text } }
+          { uname: { contains: $text } }
+        ]
+      }
+    ) {
+      items {
+        id
+        firstName
+        lastName
+        uname
+        icon
+        pub
+        uname
+        email
+      }
+    }
+  }
+`;
+
+export const GET_MY_INVITES = gql`
+  query($id: String!) {
+    invitesList(
+      filter: { invitee: { equals: $id }, hasAccepted: { equals: false } }
+    ) {
+      items {
+        id
+        invitee
+        inviter {
+          id
+          firstName
+        }
+        createdAt
+        createdBy {
+          firstName
+        }
+        circle {
+          id
+          name
+        }
       }
     }
   }

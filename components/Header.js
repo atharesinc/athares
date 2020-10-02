@@ -70,7 +70,7 @@ function Header({
     createCircle: "Create Circle",
     circleSettings: "Circle Settings",
     createChannel: "Create Channel",
-    addUser: "Add User",
+    addUser: "Invite User",
     revisions: "Revisions",
     createDM: "New Message",
     createRevision: "Create Revision",

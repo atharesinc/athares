@@ -620,8 +620,15 @@ export const SIGNIN_USER = gql`
 `;
 
 export const CREATE_INVITE = gql`
-  mutation createInvite($inviter: ID!, $circle: ID!) {
-    createInvite(inviterId: $inviter, circleId: $circle, hasAccepted: false) {
+  mutation($me: ID!, $other: String!, $circle: ID!, $hash: String!) {
+    inviteCreate(
+      data: {
+        inviter: { connect: { id: $me } }
+        invitee: $other
+        circle: { connect: { id: $circle } }
+        dateHash: $hash
+      }
+    ) {
       id
     }
   }
