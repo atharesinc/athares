@@ -63,6 +63,10 @@ function SideMenu() {
     navigateToScreen("viewUser");
   };
 
+  const goToInvites = () => {
+    navigateToScreen("viewInvites");
+  };
+
   const goToAbout = () => {
     Linking.openURL("https://www.athar.es/about");
   };
@@ -99,6 +103,15 @@ function SideMenu() {
         <Title text={"Settings"} indent underline />
         <ScrollView>
           {/* Links */}
+          {userObj && (
+            <MenuLink
+              icon="mail"
+              label="Invites"
+              details="View and Accept Invites to Circles"
+              onPress={goToInvites}
+              badge
+            />
+          )}
           <MenuLink
             icon="help-circle"
             label="About"

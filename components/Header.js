@@ -6,6 +6,7 @@ import { Feather } from "@expo/vector-icons";
 import { GET_CHANNEL_NAME_BY_ID, GET_REVISION_BY_ID } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import RevisionCategory from "./RevisionCategory";
+import WithBadge from "./WithBadge";
 
 import AsyncImage from "./AsyncImage";
 
@@ -197,13 +198,15 @@ function Header({
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>
-        <View style={styles.userIconWrapper}>
-          <AsyncImage
-            source={img}
-            style={styles.userIcon}
-            placeholderColor={"#3a3e52"}
-          />
-        </View>
+        <WithBadge showBadge top={25} left={25}>
+          <View style={styles.userIconWrapper}>
+            <AsyncImage
+              source={img}
+              style={styles.userIcon}
+              placeholderColor={"#3a3e52"}
+            />
+          </View>
+        </WithBadge>
       </TouchableOpacity>
       <Text
         style={{

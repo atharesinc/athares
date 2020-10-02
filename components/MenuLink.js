@@ -1,11 +1,14 @@
 import React from "reactn";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import WithBadge from "./WithBadge";
 
-const MenuLink = ({ icon, label, details = "", ...props }) => {
+const MenuLink = ({ icon, label, details = "", badge = false, ...props }) => {
   return (
     <TouchableOpacity style={styles.menuLink} {...props}>
-      <Feather style={styles.icon} name={icon} color={"#FFFFFF"} size={25} />
+      <WithBadge showBadge={badge}>
+        <Feather style={styles.icon} name={icon} color={"#FFFFFF"} size={25} />
+      </WithBadge>
       <View>
         <Text style={styles.header}>{label}</Text>
         {details ? <Text style={styles.disclaimer}>{details}</Text> : null}
