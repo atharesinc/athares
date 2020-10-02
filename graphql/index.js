@@ -15,8 +15,6 @@ const httpLink = new HttpLink({
   uri: GQL_HTTP_URL,
 });
 
-let token;
-
 // Create a WebSocket link:
 // const wsLink = setContext(async () => {
 //   if (!token) {
@@ -75,12 +73,12 @@ const wsLink = new SubscriptionLink({
 const cache = new InMemoryCache();
 
 const withToken = setContext(async () => {
-  console.log("does token exist before setting context?", token);
+  // console.log("does token exist before setting context?", token);
 
-  if (!token) {
-    token = await MeshStore.getItem("ATHARES_TOKEN");
-    console.log("token about to set context", token);
-  }
+  // if (!token) {
+  const token = await MeshStore.getItem("ATHARES_TOKEN");
+  // console.log("token about to set context", token);
+  // }
 
   return {
     headers: {
