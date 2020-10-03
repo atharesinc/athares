@@ -65,6 +65,7 @@ function Header({
     "createDM",
     "createRevision",
     "editAmendment",
+    "viewInvites",
   ];
 
   const simpleChannelsObj = {
@@ -76,6 +77,7 @@ function Header({
     createDM: "New Message",
     createRevision: "Create Revision",
     editAmendment: "Edit Amendment",
+    viewInvites: "Invites",
   };
   // render screen name and back
   if (simpleChannelsArr.indexOf(name) !== -1) {

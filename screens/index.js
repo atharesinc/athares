@@ -15,6 +15,7 @@ import ViewRevision from "./ViewRevision";
 import EditAmendment from "./EditAmendment";
 import CircleSettings from "./CircleSettings";
 import AddUser from "./AddUser";
+import ViewInvites from "./ViewInvites";
 
 import Header from "../components/Header";
 import { pushTransition } from "../navigation/transitionConfigs";
@@ -61,6 +62,7 @@ export default function RootStack() {
       <Stack.Screen name="revisions" component={Revisions} />
       <Stack.Screen name="editAmendment" component={EditAmendment} />
       <Stack.Screen name="addUser" component={AddUser} />
+      <Stack.Screen name="viewInvites" component={ViewInvites} />
     </Stack.Navigator>
   );
 }

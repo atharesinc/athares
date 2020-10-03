@@ -1,0 +1,134 @@
+import React, {
+  useGlobal,
+  useEffect,
+  //  useState
+} from "reactn";
+import {
+  ScrollView,
+  StyleSheet,
+  // View
+} from "react-native";
+
+// import { UPDATE_INVITE } from "../../graphql/mutations";
+
+// import { GET_MY_INVITES } from "../../graphql/queries";
+
+// import { useQuery, useMutation } from "@apollo/client";
+
+// import SwitchLine from "../../components/SwitchLine";
+import Title from "../../components/Title";
+import DisclaimerText from "../../components/DisclaimerText";
+// import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+// import CenteredErrorLoader from "../../components/CenteredErrorLoader";
+
+// import GlowButton from "../../components/GlowButton";
+
+export default function ViewInvites(props) {
+  const [activeCircle] = useGlobal("activeCircle");
+  // const [user] = useGlobal("user");
+
+  // const [loading, setLoading] = useState(false);
+
+  // const [_updateEmailPref] = useMutation(UPDATE_EMAIL_PERMISSION_FOR_CIRCLE);
+  // const [_updateAmendmentPref] = useMutation(
+  //   UPDATE_AMENDEMENT_PERMISSION_FOR_CIRCLE
+  // );
+  // const [_updateRevisionPref] = useMutation(
+  //   UPDATE_REVISION_PERMISSION_FOR_CIRCLE
+  // );
+
+  // const [deleteUserFromCircle] = useMutation(DELETE_USER_FROM_CIRCLE, {
+  //   refetchQueries: [
+  //     {
+  //       query: GET_CIRCLES_BY_USER_ID,
+  //       variables: {
+  //         id: user || "",
+  //       },
+  //     },
+  //   ],
+  // });
+
+  // const { loading: loadingQuery, error, data } = useQuery(
+  //   GET_CIRCLE_PREFS_FOR_USER,
+  //   {
+  //     variables: {
+  //       circle: activeCircle || "",
+  //       user: user || "",
+  //     },
+  //   }
+  // );
+
+  //  de/restructure circle permisssion
+  // let permissions = null;
+  // if (data && data.circlePermissionsList) {
+  //   permissions = data.circlePermissionsList.items[0];
+  // }
+
+  useEffect(() => {
+    if (!activeCircle) {
+      props.navigation.navigate("app");
+    }
+  }, [activeCircle]);
+
+  // if (loadingQuery) {
+  //   return <CenteredLoaderWithText text={"Getting Invites"} />;
+  // }
+
+  // if (loading) {
+  //   return <CenteredLoaderWithText text={"Leaving Circle"} />;
+  // }
+
+  // if (error) {
+  //   return <CenteredErrorLoader text={"Error Getting Invites"} />;
+  // }
+
+  return (
+    <ScrollView contentContainerStyle={styles.wrapper}>
+      <Title text={"Notification Preferences"} />
+      <DisclaimerText
+        text={
+          "Set your communication preferences for this Circle. By default you will receive an email notification when a new revision is created, and when a revision has passed or been rejected."
+        }
+      />
+      {/* <SwitchLine
+        label={"Allow Email Notifications"}
+        value={permissions.useEmail}
+        onPress={updateEmailPref}
+      />
+      {permissions.useEmail && (
+        <View style={{ paddingLeft: 15 }}>
+          <SwitchLine
+            label={"Notify on New Revision"}
+            value={permissions.revisions}
+            onPress={updateRevisionPref}
+          />
+          <SwitchLine
+            label={"Notify on New Amendment"}
+            value={permissions.amendment}
+            onPress={updateAmendmentPref}
+          />
+        </View>
+      )} */}
+      {/* Leave Circle */}
+      <Title text={"Leave Circle"} red style={styles.marginTop} />
+      <DisclaimerText
+        text={
+          "Set your communication preferences for this Circle. By default you will receive an email notification when a new revision is created, and when a revision has passed or been rejected."
+        }
+        red
+      />
+      {/* <GlowButton text="Leave Circle" onPress={leaveCircle} red /> */}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  wrapper: {
+    alignItems: "stretch",
+    justifyContent: "flex-start",
+    width: "100%",
+    flex: 1,
+    padding: 15,
+  },
+  marginTop: { marginTop: 20 },
+});

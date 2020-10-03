@@ -343,21 +343,25 @@ export const SEARCH_FOR_USER_NOT_IN_CIRCLE = gql`
 `;
 
 export const GET_MY_INVITES = gql`
-  query($id: String!) {
+  query($id: String!, $minDate: DateTime!) {
     invitesList(
-      filter: { invitee: { equals: $id }, hasAccepted: { equals: false } }
+      filter: {
+        createdAt: { gte: $minDate }
+        invitee: { equals: $id }
+        hasAccepted: { equals: false }
+      }
     ) {
       items {
         id
+        hasAccepted
+        dateHash
         invitee
         inviter {
           id
           firstName
+          lastName
         }
         createdAt
-        createdBy {
-          firstName
-        }
         circle {
           id
           name
