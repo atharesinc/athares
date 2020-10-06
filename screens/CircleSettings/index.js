@@ -162,9 +162,7 @@ function CircleSettings(props) {
       {/* Leave Circle */}
       <Title text={"Leave Circle"} red style={styles.marginTop} />
       <DisclaimerText
-        text={
-          "Set your communication preferences for this Circle. By default you will receive an email notification when a new revision is created, and when a revision has passed or been rejected."
-        }
+        text={`By pressing "Leave Circle" you will be removed from all Circle communication. You will not be able to use its channels or vote in polls. If you would like to return to this Circle at a later time, you will need to be re-invited by someone inside the Circle.`}
         red
       />
       <GlowButton text="Leave Circle" onPress={leaveCircle} red />

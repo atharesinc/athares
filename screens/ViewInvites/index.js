@@ -1,123 +1,156 @@
 import React, {
   useGlobal,
-  useEffect,
   //  useState
 } from "reactn";
+
 import {
   ScrollView,
   StyleSheet,
   // View
 } from "react-native";
+import { subDays } from "date-fns";
 
-// import { UPDATE_INVITE } from "../../graphql/mutations";
+import { GET_MY_INVITES } from "../../graphql/queries";
+import {
+  UPDATE_INVITE,
+  ADD_USER_TO_CIRCLE,
+  DELETE_INVITE,
+} from "../../graphql/mutations";
 
-// import { GET_MY_INVITES } from "../../graphql/queries";
-
-// import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 
 // import SwitchLine from "../../components/SwitchLine";
 import Title from "../../components/Title";
 import DisclaimerText from "../../components/DisclaimerText";
-// import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
-// import CenteredErrorLoader from "../../components/CenteredErrorLoader";
+import InviteItem from "./InviteItem";
+
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 // import GlowButton from "../../components/GlowButton";
 
-export default function ViewInvites(props) {
-  const [activeCircle] = useGlobal("activeCircle");
-  // const [user] = useGlobal("user");
+export default function ViewInvites() {
+  const [user] = useGlobal("user");
 
-  // const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(true);
 
-  // const [_updateEmailPref] = useMutation(UPDATE_EMAIL_PERMISSION_FOR_CIRCLE);
-  // const [_updateAmendmentPref] = useMutation(
-  //   UPDATE_AMENDEMENT_PERMISSION_FOR_CIRCLE
-  // );
-  // const [_updateRevisionPref] = useMutation(
-  //   UPDATE_REVISION_PERMISSION_FOR_CIRCLE
-  // );
+  const { loading: loadingQuery, error, data } = useQuery(GET_MY_INVITES, {
+    variables: {
+      id: user || "",
+      minDate:
+        subDays(new Date(), 1).toJSON().substring(0, 10) + "T00:00:00.000Z",
+    },
+  });
 
-  // const [deleteUserFromCircle] = useMutation(DELETE_USER_FROM_CIRCLE, {
-  //   refetchQueries: [
-  //     {
-  //       query: GET_CIRCLES_BY_USER_ID,
-  //       variables: {
-  //         id: user || "",
-  //       },
-  //     },
-  //   ],
-  // });
+  const refetchQueries = [
+    {
+      query: GET_MY_INVITES,
+      variables: {
+        id: user || "",
+        minDate:
+          subDays(new Date(), 1).toJSON().substring(0, 10) + "T00:00:00.000Z",
+      },
+    },
+  ];
 
-  // const { loading: loadingQuery, error, data } = useQuery(
-  //   GET_CIRCLE_PREFS_FOR_USER,
-  //   {
-  //     variables: {
-  //       circle: activeCircle || "",
-  //       user: user || "",
-  //     },
-  //   }
-  // );
+  const [updateInvite] = useMutation(UPDATE_INVITE, {
+    refetchQueries,
+  });
 
-  //  de/restructure circle permisssion
-  // let permissions = null;
-  // if (data && data.circlePermissionsList) {
-  //   permissions = data.circlePermissionsList.items[0];
-  // }
+  const [deleteInvite] = useMutation(DELETE_INVITE, {
+    refetchQueries,
+  });
 
-  useEffect(() => {
-    if (!activeCircle) {
-      props.navigation.navigate("app");
-    }
-  }, [activeCircle]);
+  const [addToCircle] = useMutation(ADD_USER_TO_CIRCLE);
 
-  // if (loadingQuery) {
-  //   return <CenteredLoaderWithText text={"Getting Invites"} />;
-  // }
+  if (loadingQuery) {
+    return <CenteredLoaderWithText text={"Getting Invites"} />;
+  }
 
   // if (loading) {
-  //   return <CenteredLoaderWithText text={"Leaving Circle"} />;
+  // return <CenteredLoaderWithText text={"Joining"} />;
   // }
 
-  // if (error) {
-  //   return <CenteredErrorLoader text={"Error Getting Invites"} />;
-  // }
+  if (error) {
+    return <CenteredErrorLoader text={"Error Getting Invites"} />;
+  }
 
+  const accept = async (id, circleId) => {
+    try {
+      // accept the invite
+      let p1 = await updateInvite({
+        variables: {
+          id,
+          hasAccepted: true,
+        },
+      });
+
+      // join the circle
+      let p2 = addToCircle({
+        variables: { circle: circleId, user },
+      });
+
+      let [res1, res2] = await Promise.all([p1, p2]);
+
+      console.log(res1, res2);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const reject = async (id) => {
+    try {
+      // deny the invite
+      let res = await deleteInvite({
+        variables: {
+          id,
+        },
+      });
+      console.log(res);
+      // thats it!
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // const fakeData = [
+  //   {
+  //     id: "9a8s7d9fa87sdf",
+  //     inviter: {
+  //       id: "9s87df9b87",
+  //       firstName: "Jim",
+  //       lastName: "John",
+  //     },
+  //     createdAt: subDays(new Date(), 2).toJSON(),
+  //     circle: {
+  //       id: "98s7dfg9s87dfg",
+  //       name: "Athares2",
+  //     },
+  //   },
+  //   {
+  //     id: "76cvb8n7c65v8b76",
+  //     inviter: {
+  //       id: "f98g7b6",
+  //       firstName: "Allan",
+  //       lastName: "Partridge",
+  //     },
+  //     createdAt: subDays(new Date(), 1).toJSON(),
+  //     circle: {
+  //       id: "98s7d6f9sdfgsdfg",
+  //       name: "French Club",
+  //     },
+  //   },
+  // ];
   return (
     <ScrollView contentContainerStyle={styles.wrapper}>
-      <Title text={"Notification Preferences"} />
+      <Title text={"Circle Invites"} />
       <DisclaimerText
-        text={
-          "Set your communication preferences for this Circle. By default you will receive an email notification when a new revision is created, and when a revision has passed or been rejected."
-        }
+        text={"Here you can accept or deny invitations to specific Circles"}
       />
-      {/* <SwitchLine
-        label={"Allow Email Notifications"}
-        value={permissions.useEmail}
-        onPress={updateEmailPref}
-      />
-      {permissions.useEmail && (
-        <View style={{ paddingLeft: 15 }}>
-          <SwitchLine
-            label={"Notify on New Revision"}
-            value={permissions.revisions}
-            onPress={updateRevisionPref}
-          />
-          <SwitchLine
-            label={"Notify on New Amendment"}
-            value={permissions.amendment}
-            onPress={updateAmendmentPref}
-          />
-        </View>
-      )} */}
-      {/* Leave Circle */}
-      <Title text={"Leave Circle"} red style={styles.marginTop} />
-      <DisclaimerText
-        text={
-          "Set your communication preferences for this Circle. By default you will receive an email notification when a new revision is created, and when a revision has passed or been rejected."
-        }
-        red
-      />
-      {/* <GlowButton text="Leave Circle" onPress={leaveCircle} red /> */}
+
+      {data.invitesList.items.map((item) => (
+        <InviteItem key={item.id} data={item} accept={accept} reject={reject} />
+      ))}
     </ScrollView>
   );
 }

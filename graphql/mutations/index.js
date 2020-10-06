@@ -635,10 +635,18 @@ export const CREATE_INVITE = gql`
 `;
 
 export const UPDATE_INVITE = gql`
-  mutation($id: ID!{
-    inviteUpdate(data: { id: $id, hasAccepted: true }) {
+  mutation($id: ID!, $hasAccepted: Boolean!) {
+    inviteUpdate(data: { id: $id, hasAccepted: $hasAccepted }) {
       id
       hasAccepted
+    }
+  }
+`;
+
+export const DELETE_INVITE = gql`
+  mutation($id: ID!) {
+    inviteDelete(data: { id: $id }) {
+      success
     }
   }
 `;

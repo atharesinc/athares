@@ -353,9 +353,6 @@ export const GET_MY_INVITES = gql`
     ) {
       items {
         id
-        hasAccepted
-        dateHash
-        invitee
         inviter {
           id
           firstName
