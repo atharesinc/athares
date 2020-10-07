@@ -10,7 +10,6 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  ImageBackground,
 } from "react-native";
 import { ImageManipulator } from "expo";
 import debounce from "lodash.debounce";
@@ -113,21 +112,16 @@ export default function Me({
     <ScreenWrapper styles={styles.wrapper}>
       <KeyboardAvoidingView behavior="position">
         <ScrollView styles={styles.wrapper}>
-          <ImageBackground
-            source={require("../../../assets/nasa-earth.jpg")}
-            style={styles.backgroundImage}
-          >
-            <View style={styles.userAndImageWrapper}>
-              <Text style={styles.userNameText}>
-                {user.firstName + " " + user.lastName}
-              </Text>
-              <AvatarPicker
-                uri={user.uri}
-                onImageChange={updateURI}
-                rounded={true}
-              />
-            </View>
-          </ImageBackground>
+          <View style={styles.userAndImageWrapper}>
+            <Text style={styles.userNameText}>
+              {user.firstName + " " + user.lastName}
+            </Text>
+            <AvatarPicker
+              uri={user.uri}
+              onImageChange={updateURI}
+              rounded={true}
+            />
+          </View>
           {/* Info */}
           <View style={styles.section}>
             <Text style={styles.sectionHeading}>Info</Text>

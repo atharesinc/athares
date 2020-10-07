@@ -83,7 +83,6 @@ export default function RevisionMonitor() {
   // }
 
   function getNext() {
-    console.log("getting the next revision");
     clearTimeout(checkItemsTimer.current);
     let now = unixTime();
 
@@ -92,7 +91,7 @@ export default function RevisionMonitor() {
     }
 
     let revisions = candidates;
-    console.log("we got these many to go through", revisions.length);
+    // console.log("we got these many to go through", revisions.length);
 
     let items = revisions.sort(
       (a, b) => unixTime(a.expires) - unixTime(b.expires)
@@ -104,16 +103,13 @@ export default function RevisionMonitor() {
 
     // find soonest ending item, see if it has expired
     for (let i = 0, j = items.length; i < j; i++) {
-      console.log("checking this one", items[i]);
       if (unixTime(items[i].expires) <= now) {
         // process this item
-        console.log("checking if pass!");
         checkIfPass(items[i]);
         break;
       } else if (unixTime(items[i].expires) > now) {
         // there aren't any revisions that need to be processed, set a timer for the soonest occurring one
         let time = unixTime(items[i].expires) - now;
-        console.log("none to check");
         checkItemsTimer.current = setTimeout(getNext, time);
         break;
       }
@@ -139,17 +135,14 @@ export default function RevisionMonitor() {
         unixTime() >= unixTime(revision.expires) &&
         votes.length >= revision.voterThreshold
       ) {
-        console.log("this one has passed!");
         // if this revision is a repeal, update the revision like in updateAmendment but also delete amendment
         if (revision.repeal === true) {
-          console.log("it has been repealed");
           await deleteAmendment({
             variables: {
               revision: revision.id,
               amendment: revision.amendment.id,
             },
           });
-          // getNext();
         } else {
           // create a separate unique identifier to make sure our new amendment doesn't get created twice
 
@@ -160,10 +153,8 @@ export default function RevisionMonitor() {
               text: revision.newText,
             })
           );
-          console.log(revision, !!revision.amendment);
-          if (revision.amendment) {
-            console.log("updating amendment");
 
+          if (revision.amendment) {
             await updateAmendment({
               variables: {
                 amendment: revision.amendment.id,
@@ -174,10 +165,7 @@ export default function RevisionMonitor() {
                 hash,
               },
             });
-            // getNext();
           } else {
-            console.log("creating new amendment");
-
             await createAmendmentFromRevision({
               variables: {
                 title: revision.title,
@@ -187,18 +175,16 @@ export default function RevisionMonitor() {
                 hash,
               },
             });
-            // getNext();
           }
         }
       } else {
-        console.log("it failed!");
         // it fails and we ignore it forever
+
         await denyRevision({
           variables: {
             id: revision.id,
           },
         });
-        // getNext();
       }
 
       // in any case, remove this one and start over

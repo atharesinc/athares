@@ -15,46 +15,6 @@ const httpLink = new HttpLink({
   uri: GQL_HTTP_URL,
 });
 
-// Create a WebSocket link:
-// const wsLink = setContext(async () => {
-//   if (!token) {
-//     token = await MeshStore.getItem("ATHARES_TOKEN");
-//   }
-
-//   // return new SubscriptionLink({
-//   //   uri: "wss://api-ws.8base.com",
-//   //   getAuthState: () => ({
-//   //     token,
-//   //     workspaceId: EIGHT_BASE_WORKSPACE_ID,
-//   //   }),
-//   //   onAuthError: (error) => {
-//   //     console.log("log", "[Subscription error]:", error);
-//   //   },
-//   // });
-//   return new WebSocketLink({
-//     uri: GQL_WS_URL,
-//     // // uri: "wss://ws.8base.com",
-//     // token,
-//     // workspaceId: EIGHT_BASE_WORKSPACE_ID,
-//     // getAuthState: () => ({
-//     //   token,
-//     //   workspaceId: EIGHT_BASE_WORKSPACE_ID,
-//     // }),
-//     // onAuthError: (error) => {
-//     //   console.log("log", "[Subscription error]:", error);
-//     // },
-//     options: {
-//       reconnect: false,
-//       connectionParams: {
-//         // Authorization: token ? `Bearer ${token}` : null,
-//         authToken: token ? "Bearer " + token : "",
-//         //   token: token ? "Bearer " + token : "",
-//         //   workspaceId: EIGHT_BASE_WORKSPACE_ID,
-//       },
-//     },
-//   });
-// });
-
 const wsLink = new SubscriptionLink({
   uri: "wss://ws.8base.com",
   getAuthState: async () => {

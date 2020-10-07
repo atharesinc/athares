@@ -21,11 +21,9 @@ export default function CustomActions({
   ...props
 }) {
   const getImageUri = async () => {
-    console.log("get images");
     try {
       Keyboard.dismiss();
       let uri = await pickImageURIAsync();
-      console.log(uri);
 
       props.updateFile(uri);
     } catch (e) {
@@ -34,7 +32,6 @@ export default function CustomActions({
   };
 
   const getPhoto = async () => {
-    console.log("photos?");
     try {
       Keyboard.dismiss();
       let uri = await takePictureAsync();
@@ -45,11 +42,9 @@ export default function CustomActions({
   };
 
   const getFileUri = async () => {
-    console.log("get files");
     try {
       Keyboard.dismiss();
       let uri = await pickFileURIAsync();
-      console.log(uri);
 
       props.updateFile(uri);
     } catch (e) {

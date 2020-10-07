@@ -98,7 +98,7 @@ export async function pickFileURIAsync() {
   ) {
     const result = await DocumentPicker.getDocumentAsync({ type: "*/*" });
     // result looks like this:
-    console.log(result);
+    // console.log(result);
     /*
       {"type":"success",
       "uri": <superlong base64 unless its way too long>,

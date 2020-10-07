@@ -34,7 +34,6 @@ export default memo(function ChannelUpdateMonitor() {
   });
 
   function onSubscriptionData({ subscriptionData }) {
-    console.log("a channel has been updated", subscriptionData);
     if (subscriptionData.data) {
       let updatedChannel = subscriptionData.data.Messages.node.channel.id;
 
@@ -46,7 +45,6 @@ export default memo(function ChannelUpdateMonitor() {
     }
   }
 
-  console.table({ unreadChannels, channels });
   // componentDidUpdate(prevProps) {
   //     if (
   //         this.props.getAllMyChannels.User &&

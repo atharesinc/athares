@@ -102,15 +102,13 @@ function CircleSettings(props) {
     try {
       let { id } = permissions;
 
-      const res = await deleteUserFromCircle({
+      await deleteUserFromCircle({
         variables: {
           user,
           circle: activeCircle,
           permission: id,
         },
       });
-
-      console.log("res", res);
 
       setActiveCircle(null);
     } catch (e) {

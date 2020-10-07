@@ -29,7 +29,6 @@ export default function InviteMonitor() {
       minDate:
         subDays(new Date(), 1).toJSON().substring(0, 10) + "T00:00:00.000Z",
     }).then(({ data }) => {
-      console.log("im getting called!", data);
       setInvites(data.invitesList.items.map((i) => i.id));
     });
   };

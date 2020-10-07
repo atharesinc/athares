@@ -57,8 +57,6 @@ export const GET_USER_BY_ID_ALL = gql`
       lastName
       icon
       uname
-      email
-      phone
       createdAt
       circles {
         items {

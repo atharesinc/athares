@@ -13,7 +13,6 @@ import Card from "../../components/Card";
 function DiffSection({ oldText = "", newText = "" }) {
   const [mode, setMode] = useState(0);
 
-  console.log(newText, oldText);
   const renderTab = () => {
     switch (mode) {
       case 1:

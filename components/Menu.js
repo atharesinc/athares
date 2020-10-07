@@ -92,7 +92,7 @@ function SideMenu() {
   if (!isMenuOpen) {
     return null;
   }
-  console.log("invites", invites, "shoul show badge", invites.length !== 0);
+
   return (
     <View style={[styles.wrapper, responsiveWidth]}>
       <View>

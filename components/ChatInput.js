@@ -45,7 +45,6 @@ export default function ChatInput(props) {
   const submit = () => {
     // send the message to parent
     props.onSend(input, file);
-    console.log("am i getting here?");
     setMessageState({
       input: "",
       showFilePreview: false,
@@ -63,7 +62,6 @@ export default function ChatInput(props) {
       ...messageState,
       loadingImage: true,
     });
-    console.log("updating file in state", uri);
 
     const preparedFile = processFile({ uri });
 
@@ -79,12 +77,6 @@ export default function ChatInput(props) {
       "image/bmp",
     ];
 
-    // let extension = file.uri.match(/\.(.{1,4})$/i);
-
-    console.log(
-      preparedFile.type,
-      imgs.indexOf(preparedFile.type.toLowerCase()) !== -1
-    );
     if (imgs.indexOf(preparedFile.type.toLowerCase()) !== -1) {
       setMessageState({
         ...messageState,

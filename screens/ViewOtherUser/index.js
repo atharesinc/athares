@@ -1,92 +1,80 @@
-import React from "reactn";
-import ScreenWrapper from "../../../components/ScreenWrapper";
-import InfoLineStatic from "../../../components/InfoLineStatic";
-import Statistic from "../../../components/Statistic";
-import {
-  Text,
-  View,
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  ImageBackground,
-  Image,
-} from "react-native";
+import React, { useGlobal } from "reactn";
+import { useQuery } from "@apollo/client";
+
+import Statistic from "../../components/Statistic";
+import Title from "../../components/Title";
+import DisclaimerText from "../../components/DisclaimerText";
+
+import { GET_USER_BY_ID_ALL } from "../../graphql/queries";
+
+import { View, ScrollView, StyleSheet, Image } from "react-native";
+
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
-function ViewOtherUser() {
+export default function ViewOtherUser() {
+  const [activeViewUser] = useGlobal("activeViewUser");
+  const [isMobile] = useGlobal("isMobile");
+
   let user,
-    stats = null,
-    data = null,
-    loading;
+    stats = null;
 
-  if (data.User) {
-    user = data.User;
+  const { data, loading, error } = useQuery(GET_USER_BY_ID_ALL, {
+    variables: {
+      id: activeViewUser || "",
+    },
+  });
+
+  if (loading) {
+    return <CenteredLoaderWithText text={"Loading User Info"} />;
+  }
+
+  if (error) {
+    return <CenteredErrorLoader text={"Error Fetching User"} />;
+  }
+
+  if (data && data.user) {
+    user = data.user;
     stats = {
-      voteCount: user.votes.length,
-      circleCount: user.circles.length,
-      revisionCount: user.revisions.length,
-      passedRevisionCount: user.revisions.filter((r) => r.passed).length,
+      voteCount: user.votes.items.length,
+      circleCount: user.circles.items.length,
+      revisionCount: user.revisions.items.length,
+      passedRevisionCount: user.revisions.items.filter((r) => r.passed).length,
     };
   }
-  if (loading) {
-    return <CenteredLoaderWithText />;
-  }
-  return (
-    <ScreenWrapper styles={[styles.wrapper]}>
-      <KeyboardAvoidingView behavior="position">
-        <ScrollView styles={[styles.wrapper]}>
-          <ImageBackground
-            source={require("../../../assets/nasa-earth.jpg")}
-            style={styles.backgroundImage}
-          >
-            <View style={styles.userAndImageWrapper}>
-              <Text style={styles.userNameText}>
-                {user.firstName + " " + user.lastName}
-              </Text>
-              <View style={[styles.previewWrapper]}>
-                <Image source={{ uri: user.icon }} style={[styles.preview]} />
-              </View>
-            </View>
-          </ImageBackground>
-          {/* Info */}
-          <View style={styles.section}>
-            <Text style={styles.sectionHeading}>Info</Text>
-            <InfoLineStatic icon={"phone"} label="Phone" value={user.phone} />
-            <InfoLineStatic icon={"at-sign"} label="Email" value={user.email} />
-            <InfoLineStatic
-              icon={"hash"}
-              label="Unique Name"
-              value={user.uname}
-            />
-          </View>
 
-          {/* Stats */}
-          <View style={styles.section}>
-            <Text style={styles.sectionHeading}>Statistics</Text>
-            <View style={styles.wrapSection}>
-              <Statistic header="Circles" text={stats.circleCount} />
-              <Statistic
-                header="Revisions Proposed"
-                text={stats.revisionCount}
-              />
-              <Statistic
-                header="Revisions Accepted"
-                text={stats.passedRevisionCount}
-              />
-              <Statistic header="Times Voted" text={stats.voteCount} />
-              <Statistic
-                header="User Since"
-                text={new Date(user.createdAt).toLocaleDateString()}
-              />
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </ScreenWrapper>
+  return (
+    <ScrollView
+      contentContainerStyle={[
+        styles.wrapper,
+        !isMobile ? { paddingHorizontal: "20%" } : {},
+      ]}
+    >
+      <View style={styles.userAndImageWrapper}>
+        <View style={[styles.previewWrapper]}>
+          <Image source={{ uri: user.icon }} style={styles.preview} />
+        </View>
+        <Title text={user.firstName + " " + user.lastName} />
+        {user.uname && <DisclaimerText text={user.uname} />}
+      </View>
+
+      {/* Stats */}
+      <View style={styles.section}>
+        <Statistic header="Circles" text={stats.circleCount} />
+        <Statistic header="Revisions Proposed" text={stats.revisionCount} />
+        <Statistic
+          header="Revisions Accepted"
+          text={stats.passedRevisionCount}
+        />
+        <Statistic header="Times Voted" text={stats.voteCount} />
+        <Statistic
+          header="User Since"
+          text={new Date(user.createdAt).toLocaleDateString()}
+        />
+      </View>
+    </ScrollView>
   );
 }
-
-export default ViewOtherUser;
 
 const styles = StyleSheet.create({
   header: {
@@ -112,7 +100,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     width: "100%",
-    backgroundColor: "#00000080",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -121,37 +108,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginBottom: 10,
   },
-  sectionHeading: {
-    fontSize: 20,
-    color: "#FFFFFF",
-    marginBottom: 10,
-  },
-  disclaimer: {
-    fontSize: 15,
-    color: "#FFFFFFb7",
-    marginBottom: 5,
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: "#FFF",
-  },
-  picker: {
-    flexDirection: "column",
-    alignItems: "stretch",
-    marginBottom: 20,
-  },
-  backgroundImage: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   marginTop: {
     marginTop: 15,
-  },
-  wrapSection: {
-    flexDirection: "row",
-    flexWrap: "wrap",
   },
   preview: {
     height: 150,

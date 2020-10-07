@@ -65,7 +65,6 @@ export default function Constitution() {
 
   function onSubscriptionData({ subscriptionData }) {
     if (subscriptionData.data) {
-      console.log("got an update!", subscriptionData);
       refetch({
         id: activeCircle,
       });
@@ -80,7 +79,6 @@ export default function Constitution() {
 
   function onSubscriptionData2({ subscriptionData }) {
     if (subscriptionData.data) {
-      console.log("got an update in revisions!", subscriptionData);
       refetch({
         id: activeCircle,
       });

@@ -161,8 +161,6 @@ export default function EditAmendment(props) {
         },
       });
 
-      console.log({ newRevision, newRevisionRes });
-
       newRevision.id = newRevisionRes.data.revisionCreate.id;
 
       setActiveRevision(newRevision.id);
@@ -177,8 +175,6 @@ export default function EditAmendment(props) {
   if (loading || loadingQuery) {
     return <CenteredLoaderWithText />;
   }
-
-  console.log(data);
 
   return (
     <ScrollView contentContainerStyle={styles.wrapper}>

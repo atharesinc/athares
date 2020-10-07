@@ -92,9 +92,7 @@ export default function ViewInvites() {
         variables: { circle: circleId, user },
       });
 
-      let [res1, res2] = await Promise.all([p1, p2]);
-
-      console.log(res1, res2);
+      await Promise.all([p1, p2]);
     } catch (e) {
       console.error(e);
     } finally {
@@ -113,12 +111,12 @@ export default function ViewInvites() {
       setLoadingState({ loading: true, id });
 
       // deny the invite
-      let res = await deleteInvite({
+      await deleteInvite({
         variables: {
           id,
         },
       });
-      console.log(res);
+
       // thats it!
     } catch (e) {
       console.error(e);

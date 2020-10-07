@@ -74,7 +74,7 @@ export default function AddUser(props) {
 
   const submit = async () => {
     setLoadingInvites(true);
-    console.log(tags);
+
     // add each user to circle
 
     if (tags.length === 0) {
@@ -109,9 +109,7 @@ export default function AddUser(props) {
             "Can't insert data. Field 'dateHash' has unique values"
           )
         ) {
-          console.log(
-            "User just tried to invite someone they already invited. Pretend as normal."
-          );
+          // User just tried to invite someone they already invited. Pretend as normal."
         } else {
           throw new Error(failedInvites[0].reason);
         }
@@ -133,14 +131,13 @@ export default function AddUser(props) {
   if (loadingInvites) {
     return <CenteredLoaderWithText />;
   }
-  console.log(data, activeCircle);
+
   let suggestions = [];
   // if we have ay results, filter out suggestions for people we've already added
   if (data && data.usersList && data.usersList.items.length !== 0) {
     suggestions = data.usersList.items.filter(
       (s) => tags.findIndex((t) => t.id === s.id) === -1
     );
-    console.log({ suggestions });
   }
 
   return (

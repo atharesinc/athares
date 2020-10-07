@@ -132,10 +132,7 @@ export default function Login() {
       },
     });
 
-    console.log("new token", res);
-
     // store new token
-
     await MeshStore.setItem("ATHARES_TOKEN", res.refreshToken);
 
     // try to login again

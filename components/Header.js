@@ -3,7 +3,11 @@ import React, { useGlobal } from "reactn";
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
-import { GET_CHANNEL_NAME_BY_ID, GET_REVISION_BY_ID } from "../graphql/queries";
+import {
+  GET_CHANNEL_NAME_BY_ID,
+  GET_REVISION_BY_ID,
+  GET_USER_BY_ID,
+} from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import RevisionCategory from "./RevisionCategory";
 import WithBadge from "./WithBadge";
@@ -18,10 +22,10 @@ function Header({
 }) {
   const [showSearch, setShowSearch] = useGlobal("showSearch");
   const [dmSettings, setDMSettings] = useGlobal("dmSettings");
-  // const [user, setUser] = useGlobal("user");
+  const [user] = useGlobal("user");
   const [activeChannel] = useGlobal("activeChannel");
   const [activeRevision] = useGlobal("activeRevision");
-  // const [viewUser, setViewUser] = useGlobal("viewUser");
+  const [activeViewUser] = useGlobal("activeViewUser");
   const [, setIsMenuOpen] = useGlobal("isMenuOpen");
   const [showConstSearch, setShowConstSearch] = useGlobal("showConstSearch");
   const [invites] = useGlobal("invites");
@@ -32,21 +36,25 @@ function Header({
   const toggleDrawer = () => {
     setIsMenuOpen(true);
   };
+
   const toggleSearch = () => {
     setShowSearch(!showSearch);
   };
+
   const back = () => {
     if (!props.previous) {
       RootNavigation.navigate("app");
     }
     props.navigation.goBack(null);
   };
+
   const more = () => {
     let { name } = scene.route;
     if (name === "DMChannel") {
       setDMSettings(!dmSettings);
     }
   };
+
   // const createRevision = () => {
   //     props.navigation.navigate("createRevision");
   // };
@@ -174,30 +182,53 @@ function Header({
     );
   }
   // render username and back
-  if (["viewUser", "viewOtherUser"].indexOf(name) !== -1) {
+  if (name === "viewUser") {
+    const { data } = useQuery(GET_USER_BY_ID, {
+      variables: { id: user || "" },
+    });
+
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
           <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
-        {data.User && (
+        {data && data.user && (
           <Text style={styles.headerText} numberOfLines={1}>
-            {data.User.firstName + " " + data.User.lastName}
+            {data.user.firstName + " " + data.user.lastName}
           </Text>
         )}
         <Feather name="more-vertical" size={30} color={"transparent"} />
       </View>
     );
   }
+
+  // render other user's profile
+  if (name === "viewOtherUser") {
+    const { data } = useQuery(GET_USER_BY_ID, {
+      variables: { id: activeViewUser || "" },
+    });
+    return (
+      <View style={[styles.header, styles.headerThemeDark]}>
+        <TouchableOpacity onPress={back}>
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
+        </TouchableOpacity>
+        {data && data.user && (
+          <Text style={styles.headerText} numberOfLines={1}>
+            {data.user.firstName + " " + data.user.lastName}
+          </Text>
+        )}
+        <Feather name="more-vertical" size={30} color={"transparent"} />
+      </View>
+    );
+  }
+
   // render dashboard with user drawer
 
-  // if (data.User) {
   let img = require("../assets/images/user-default.png");
 
   if (data && data.user) {
     img = { uri: data.user.icon };
   }
-  console.log("invites", invites, "shoul show badge", invites.length !== 0);
 
   return (
     <View style={styles.header}>

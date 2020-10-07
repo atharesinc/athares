@@ -78,7 +78,6 @@ const SingleSearchItem = ({ item, category, ...props }) => {
 
           break;
         case "revisions":
-          console.log({ item });
           setActiveCircle(item.circle.id);
           setActiveRevision(id, () => {
             RootNavigation.navigate("viewRevision");

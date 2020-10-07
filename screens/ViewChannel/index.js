@@ -45,7 +45,6 @@ export default memo(function ViewChannel() {
   });
 
   function onSubscriptionData({ subscriptionData }) {
-    console.log("newMEssage", subscriptionData);
     if (subscriptionData.data) {
       // fire off query again  vs. just add the new value to candidates
       // refetch({
@@ -84,7 +83,6 @@ export default memo(function ViewChannel() {
     try {
       if (file) {
         setUploadInProgress(true);
-        console.log({ file });
         // get file object
         // const preparedFile = processFile(file);
 
@@ -115,12 +113,11 @@ export default memo(function ViewChannel() {
         user: user,
         file: url ? url : null,
       };
-      const res = await createMessage({
+      await createMessage({
         variables: {
           ...newMessage,
         },
       });
-      console.log({ res });
     } catch (err) {
       console.error(new Error(err));
       Alert.alert(

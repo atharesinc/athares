@@ -58,7 +58,7 @@ export default function AutoLoginHandler() {
 
           //store locally
           await MeshStore.setItem("ATHARES_TOKEN", idToken);
-          console.log("token after auto-login", idToken);
+          // console.log("token after auto-login", idToken);
           setUser(id);
         }
       } catch (err) {
