@@ -7,6 +7,7 @@ export default function DisclaimerText({
   upper = false,
   grey = false,
   spaced = false,
+  blue = false,
   style = {},
   ...props
 }) {
@@ -19,6 +20,8 @@ export default function DisclaimerText({
     grey ? styles.grey : {},
     red ? { color: activeTheme.COLORS.RED } : {},
     green ? { color: activeTheme.COLORS.GREEN } : {},
+    blue ? { color: activeTheme.COLORS.BLUE1 } : {},
+
     style,
   ];
   return (

@@ -624,13 +624,34 @@ export const GET_CIRCLE_PREFS_FOR_USER = gql`
   }
 `;
 
-export const GET_USER_PREF_BY_ID = gql`
+export const GET_USER_WITH_PREF_BY_ID = gql`
   query($id: ID!) {
     user(id: $id) {
       id
       prefs {
         id
         maySendMarketingEmail
+      }
+      firstName
+      lastName
+      icon
+      uname
+      createdAt
+      circles {
+        items {
+          id
+        }
+      }
+      revisions {
+        items {
+          id
+          passed
+        }
+      }
+      votes {
+        items {
+          id
+        }
       }
     }
   }

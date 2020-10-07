@@ -1,9 +1,4 @@
-import React from "reactn";
-import ScreenWrapper from "../../../components/ScreenWrapper";
-import AvatarPicker from "../../../components/AvatarPicker";
-import InfoLine from "../../../components/InfoLine";
-import Statistic from "../../../components/Statistic";
-import SwitchLine from "../../../components/SwitchLine";
+import React, { useGlobal } from "reactn";
 import {
   Text,
   View,
@@ -11,38 +6,80 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
 } from "react-native";
-import { ImageManipulator } from "expo";
+import * as ImageManipulator from "expo-image-manipulator";
 import debounce from "lodash.debounce";
-import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-export default function Me({
-  loading,
-  data: { User: userPref },
-  getUser,
-  ...props
-}) {
-  // const [uri, setUri] = useState(null);
+import AvatarPicker from "../../components/AvatarPicker";
+import InfoLine from "../../components/InfoLine";
+import Title from "../../components/Title";
+import Statistic from "../../components/Statistic";
+import SwitchLine from "../../components/SwitchLine";
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import {
+  UPDATE_ALLOW_MARKETING_EMAIL,
+  UPDATE_USER,
+  CREATE_SIGNED_UPLOAD_LINK,
+} from "../../graphql/mutations";
+import { GET_USER_WITH_PREF_BY_ID } from "../../graphql/queries";
+import { useQuery, useMutation } from "@apollo/client";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
+import { processFile, uploadToAWS } from "../../utils/upload";
+import DisclaimerText from "../../components/DisclaimerText";
+
+export default function Me() {
+  const [user] = useGlobal("user");
+  const [isMobile] = useGlobal("isMobile");
+
+  const { data, loading, error } = useQuery(GET_USER_WITH_PREF_BY_ID, {
+    variables: {
+      id: user || "",
+    },
+  });
+
+  const [updateMarketingEmail] = useMutation(UPDATE_ALLOW_MARKETING_EMAIL);
+  const [updateUserMutation] = useMutation(UPDATE_USER);
+  const [getSignedUrl] = useMutation(CREATE_SIGNED_UPLOAD_LINK);
 
   const updatePref = async (checked) => {
-    let { id } = props.data.User.prefs;
+    let { id } = data.user.prefs;
 
-    await props.updateMarketingEmail({
+    await updateMarketingEmail({
       variables: {
         id,
         flag: checked,
       },
     });
   };
+
   const updateURI = async (uri) => {
-    if (uri !== props.getUser.User.icon) {
-      uri = await ImageManipulator.manipulateAsync(
+    if (uri !== data.user.icon) {
+      let finalImage = await ImageManipulator.manipulateAsync(
         uri,
         [{ resize: { width: 200, height: 200 } }],
-        { format: "png", compress: 0.5, base64: true }
+        { format: "png", compress: 0.5 }
       );
-      uri = "data:image/png;base64," + uri.base64;
+      // finalImage = "data:image/png;base64," + finalImage.base64;
+
+      // get file object
+      const preparedFile = processFile(finalImage);
+
+      // get presigned upload link for this image
+      let signedUploadUrl = await getSignedUrl({
+        variables: {
+          name: preparedFile.name,
+          type: preparedFile.type,
+        },
+      });
+
+      // upload file using our pre-approved AWS url
+      let res = await uploadToAWS(
+        signedUploadUrl.data.getSignedUrl.url,
+        preparedFile
+      );
+
+      // finally set the url we want to save to the db with our image
+      updateUser({ icon: res });
     }
-    updateUser({ icon: uri });
   };
 
   const updatePhone = (text) => {
@@ -54,9 +91,7 @@ export default function Me({
       { leading: false, trailing: true }
     );
   };
-  // updateEmail = text => {
-  //   updateUser({ email: text })
-  // };
+
   const updateName = (text) => {
     debounce(
       () => {
@@ -68,25 +103,23 @@ export default function Me({
       { leading: false, trailing: true }
     );
   };
+
   const updateUser = async (updates) => {
     try {
-      // create circle
-      const {
-        getUser: { User: user },
-      } = props;
+      const { user: userObj } = data;
 
       let updatedUser = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phone: user.phone,
-        uname: user.uname,
-        icon: user.icon,
+        firstName: userObj.firstName,
+        lastName: userObj.lastName,
+        phone: userObj.phone,
+        uname: userObj.uname,
+        icon: userObj.icon,
         ...updates,
       };
 
-      await props.updateUser({
+      await updateUserMutation({
         variables: {
-          id: props.userId,
+          id: user,
           ...updatedUser,
         },
       });
@@ -96,86 +129,88 @@ export default function Me({
     }
   };
 
-  if (loading || !userPref || !getUser.User) {
-    return <CenteredLoaderWithText />;
+  if (loading) {
+    return <CenteredLoaderWithText text={"Loading Profile"} />;
   }
 
-  const user = getUser.User;
+  if (error) {
+    return <CenteredErrorLoader text={"Error Retrieving Profile"} />;
+  }
+
+  console.log(data);
+  const userObj = data.user;
   const stats = {
-    voteCount: user.votes.items.length,
-    circleCount: user.circles.items.length,
-    revisionCount: user.revisions.items.length,
-    passedRevisionCount: user.revisions.items.filter((r) => r.passed).length,
+    voteCount: userObj.votes.items.length,
+    circleCount: userObj.circles.items.length,
+    revisionCount: userObj.revisions.items.length,
+    passedRevisionCount: userObj.revisions.items.filter((r) => r.passed).length,
   };
 
   return (
-    <ScreenWrapper styles={styles.wrapper}>
+    <ScrollView
+      styles={[styles.wrapper, !isMobile ? { paddingHorizontal: "20%" } : {}]}
+    >
       <KeyboardAvoidingView behavior="position">
-        <ScrollView styles={styles.wrapper}>
-          <View style={styles.userAndImageWrapper}>
-            <Text style={styles.userNameText}>
-              {user.firstName + " " + user.lastName}
-            </Text>
-            <AvatarPicker
-              uri={user.uri}
-              onImageChange={updateURI}
-              rounded={true}
-            />
-          </View>
-          {/* Info */}
-          <View style={styles.section}>
-            <Text style={styles.sectionHeading}>Info</Text>
-            <InfoLine
-              icon={"phone"}
-              label={"Phone"}
-              value={user.phone}
-              onChangeText={updatePhone}
-            />
-            {/* <InfoLine
+        <View style={styles.userAndImageWrapper}>
+          <Text style={styles.userNameText}>
+            {userObj.firstName + " " + userObj.lastName}
+          </Text>
+          <AvatarPicker
+            uri={userObj.uri}
+            onImageChange={updateURI}
+            rounded={true}
+          />
+        </View>
+        {/* Info */}
+        <View style={styles.section}>
+          <Title text={"My Info"} />
+          <InfoLine
+            label={"Phone"}
+            value={userObj.phone}
+            onChangeText={updatePhone}
+          />
+          {/* <InfoLine
                             icon={"at-sign"}
                             label={"Email"}
                             value={user.email}
                             onChangeText={updateEmail}
                         /> */}
-            <InfoLine
-              icon={"hash"}
-              label={"Unique Name"}
-              value={user.uname}
-              onChangeText={updateName}
-            />
-          </View>
+          <InfoLine
+            label={"Unique Name"}
+            value={userObj.uname}
+            onChangeText={updateName}
+          />
+          <DisclaimerText
+            blue
+            text={"Email and Phone Number will not be publicly visible."}
+          />
+        </View>
 
-          {/* Stats */}
-          <View style={styles.section}>
-            <Text style={styles.sectionHeading}>Statistics</Text>
-            <View style={styles.wrapSection}>
-              <Statistic header="Circles" text={stats.circleCount} />
-              <Statistic
-                header="Revisions Proposed"
-                text={stats.revisionCount}
-              />
-              <Statistic
-                header="Revisions Accepted"
-                text={stats.passedRevisionCount}
-              />
-              <Statistic header="Times Voted" text={stats.voteCount} />
-              <Statistic
-                header="User Since"
-                text={new Date(user.createdAt).toLocaleDateString()}
-              />
-            </View>
-          </View>
-          <View style={[styles.section, { marginBottom: 50 }]}>
-            <Text style={styles.sectionHeading}>User Preferences</Text>
-            <SwitchLine
-              onPress={updatePref}
-              label={"Allow Marketing Emails"}
-              value={userPref.prefs.maySendMarketingEmail}
-            />
-          </View>
-        </ScrollView>
+        {/* Stats */}
+        <View style={styles.section}>
+          <Title text={"Statistics"} />
+          <Statistic header="Circles" text={stats.circleCount} />
+          <Statistic header="Revisions Proposed" text={stats.revisionCount} />
+          <Statistic
+            header="Revisions Accepted"
+            text={stats.passedRevisionCount}
+          />
+          <Statistic header="Times Voted" text={stats.voteCount} />
+          <Statistic
+            header="User Since"
+            text={new Date(userObj.createdAt).toLocaleDateString()}
+          />
+        </View>
+        <View style={[styles.section, { marginBottom: 50 }]}>
+          <Title text={"User Preferences"} />
+          <SwitchLine
+            onPress={updatePref}
+            label={"Allow Marketing Emails"}
+            value={userObj.prefs.maySendMarketingEmail}
+          />
+        </View>
       </KeyboardAvoidingView>
-    </ScreenWrapper>
+    </ScrollView>
   );
 }
 

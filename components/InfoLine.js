@@ -6,9 +6,8 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 
-function InfoLine({ value = "", icon, label, style = {}, ...props }) {
+function InfoLine({ value = "", label, style = {}, ...props }) {
   const inputEl = useRef(null);
   const handleClick = () => {
     inputEl.current.focus();
@@ -20,15 +19,7 @@ function InfoLine({ value = "", icon, label, style = {}, ...props }) {
       onPress={handleClick}
     >
       <View style={[styles.wrapper]}>
-        <View style={styles.linePre}>
-          <Feather
-            name={icon}
-            size={25}
-            color={"#FFFFFF"}
-            styles={styles.icon}
-          />
-          <Text style={styles.label}>{label}</Text>
-        </View>
+        <Text style={styles.label}>{label}</Text>
         <TextInput
           {...props}
           value={value}
@@ -63,9 +54,6 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     overflow: "hidden",
   },
-  icon: {
-    marginRight: 15,
-  },
   linePre: {
     alignItems: "center",
     flexDirection: "row",
@@ -76,10 +64,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: "50%",
     textAlign: "right",
+    fontFamily: "SpaceGrotesk",
   },
   label: {
     fontSize: 16,
     color: "#FFF",
     marginLeft: 10,
+    fontFamily: "SpaceGrotesk",
   },
 });

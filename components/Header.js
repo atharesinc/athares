@@ -22,7 +22,7 @@ function Header({
 }) {
   const [showSearch, setShowSearch] = useGlobal("showSearch");
   const [dmSettings, setDMSettings] = useGlobal("dmSettings");
-  const [user] = useGlobal("user");
+  // const [user] = useGlobal("user");
   const [activeChannel] = useGlobal("activeChannel");
   const [activeRevision] = useGlobal("activeRevision");
   const [activeViewUser] = useGlobal("activeViewUser");
@@ -183,20 +183,20 @@ function Header({
   }
   // render username and back
   if (name === "viewUser") {
-    const { data } = useQuery(GET_USER_BY_ID, {
-      variables: { id: user || "" },
-    });
+    // const { data } = useQuery(GET_USER_BY_ID, {
+    //   variables: { id: user || "" },
+    // });
 
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
         <TouchableOpacity onPress={back}>
           <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
-        {data && data.user && (
-          <Text style={styles.headerText} numberOfLines={1}>
-            {data.user.firstName + " " + data.user.lastName}
-          </Text>
-        )}
+
+        <Text style={styles.headerText} numberOfLines={1}>
+          Profile
+        </Text>
+
         <Feather name="more-vertical" size={30} color={"transparent"} />
       </View>
     );

@@ -16,7 +16,7 @@ import EditAmendment from "./EditAmendment";
 import CircleSettings from "./CircleSettings";
 import AddUser from "./AddUser";
 import ViewInvites from "./ViewInvites";
-// import ViewUser from "./Me";
+import ViewUser from "./Me";
 import ViewOtherUser from "./ViewOtherUser";
 
 import Header from "../components/Header";
@@ -65,7 +65,7 @@ export default function RootStack() {
       <Stack.Screen name="editAmendment" component={EditAmendment} />
       <Stack.Screen name="addUser" component={AddUser} />
       <Stack.Screen name="viewInvites" component={ViewInvites} />
-      {/* <Stack.Screen name="viewUser" component={ViewUser} /> */}
+      <Stack.Screen name="viewUser" component={ViewUser} />
       <Stack.Screen name="viewOtherUser" component={ViewOtherUser} />
     </Stack.Navigator>
   );
