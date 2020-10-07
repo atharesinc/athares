@@ -1,7 +1,4 @@
-import React, {
-  useGlobal,
-  //  useState
-} from "reactn";
+import React, { useGlobal, useState } from "reactn";
 
 import {
   ScrollView,
@@ -32,7 +29,10 @@ import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 export default function ViewInvites() {
   const [user] = useGlobal("user");
 
-  // const [loading, setLoading] = useState(true);
+  const [loadingState, setLoadingState] = useState({
+    loading: false,
+    id: null,
+  });
 
   const { loading: loadingQuery, error, data } = useQuery(GET_MY_INVITES, {
     variables: {
@@ -77,6 +77,7 @@ export default function ViewInvites() {
 
   const accept = async (id, circleId) => {
     try {
+      setLoadingState({ loading: true, id });
       // accept the invite
       let p1 = await updateInvite({
         variables: {
@@ -95,11 +96,15 @@ export default function ViewInvites() {
       console.log(res1, res2);
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoadingState({ loading: false, id: null });
     }
   };
 
   const reject = async (id) => {
     try {
+      setLoadingState({ loading: true, id });
+
       // deny the invite
       let res = await deleteInvite({
         variables: {
@@ -110,6 +115,8 @@ export default function ViewInvites() {
       // thats it!
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoadingState({ loading: false, id: null });
     }
   };
 
@@ -149,7 +156,13 @@ export default function ViewInvites() {
       />
 
       {data.invitesList.items.map((item) => (
-        <InviteItem key={item.id} data={item} accept={accept} reject={reject} />
+        <InviteItem
+          key={item.id}
+          data={item}
+          loading={loadingState.loading && item.id === loadingState.id}
+          accept={accept}
+          reject={reject}
+        />
       ))}
     </ScrollView>
   );

@@ -5,6 +5,7 @@ import { fromNow } from "../../utils/transform";
 
 export default function InviteItem({
   data: { circle, id, createdAt, inviter },
+  loading,
   ...props
 }) {
   const [activeTheme] = useGlobal("activeTheme");
@@ -30,19 +31,19 @@ export default function InviteItem({
         </Text>
       </View>
       <View style={styles.row}>
-        <TouchableOpacity onPress={accept}>
+        <TouchableOpacity onPress={accept} disabled={loading}>
           <Feather
             style={styles.icon}
             name={"check-circle"}
-            color={activeTheme.COLORS.GREEN}
+            color={activeTheme.COLORS.GREEN + (loading ? "50" : "")}
             size={25}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={reject}>
+        <TouchableOpacity onPress={reject} disabled={loading}>
           <Feather
             style={styles.icon}
             name={"x-square"}
-            color={activeTheme.COLORS.RED}
+            color={activeTheme.COLORS.RED + (loading ? "50" : "")}
             size={25}
           />
         </TouchableOpacity>
