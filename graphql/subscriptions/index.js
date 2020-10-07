@@ -161,6 +161,28 @@ export const SUB_TO_USERS_REVISIONS = gql`
   }
 `;
 
+export const SUB_TO_INVITES = gql`
+  subscription($user: String!) {
+    Invites(
+      filter: { mutation_in: [create], node: { invitee: { equals: $user } } }
+    ) {
+      node {
+        id
+        inviter {
+          id
+          firstName
+          lastName
+        }
+        createdAt
+        circle {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
 export const SUB_TO_CIRCLES_CHANNELS = gql`
   subscription($id: ID!) {
     Channels(

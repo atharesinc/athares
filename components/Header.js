@@ -24,6 +24,7 @@ function Header({
   // const [viewUser, setViewUser] = useGlobal("viewUser");
   const [, setIsMenuOpen] = useGlobal("isMenuOpen");
   const [showConstSearch, setShowConstSearch] = useGlobal("showConstSearch");
+  const [invites] = useGlobal("invites");
 
   // replace this with a query hook
   const data = null;
@@ -196,11 +197,12 @@ function Header({
   if (data && data.user) {
     img = { uri: data.user.icon };
   }
+  console.log("invites", invites, "shoul show badge", invites.length !== 0);
 
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>
-        <WithBadge showBadge top={25} left={25}>
+        <WithBadge showBadge={invites.length !== 0} top={25} left={25}>
           <View style={styles.userIconWrapper}>
             <AsyncImage
               source={img}

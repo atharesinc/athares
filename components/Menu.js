@@ -25,6 +25,7 @@ function SideMenu() {
   const [, setUnreadDMs] = useGlobal("setUnreadDMs");
   const [isMobile] = useGlobal("isMobile");
   const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
+  const [invites] = useGlobal("invites");
 
   const navigateToScreen = (route) => {
     if (route === "login") {
@@ -91,6 +92,7 @@ function SideMenu() {
   if (!isMenuOpen) {
     return null;
   }
+  console.log("invites", invites, "shoul show badge", invites.length !== 0);
   return (
     <View style={[styles.wrapper, responsiveWidth]}>
       <View>
@@ -109,7 +111,7 @@ function SideMenu() {
               label="Invites"
               details="View and Accept Invites to Circles"
               onPress={goToInvites}
-              badge
+              badge={invites.length !== 0}
             />
           )}
           <MenuLink

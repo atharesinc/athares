@@ -23,6 +23,7 @@ import AutoLoginHandler from "./components/AutoLoginHandler";
 import OnlineMonitor from "./components/OnlineMonitor";
 import RevisionMonitor from "./components/RevisionMonitor";
 import ChannelUpdateMonitor from "./components/ChannelUpdateMonitor";
+import InviteMonitor from "./components/InviteMonitor";
 
 import MeshStore from "./utils/meshStore";
 // theming
@@ -181,6 +182,7 @@ export default function App(props) {
         <OnlineMonitor />
         <RevisionMonitor />
         <ChannelUpdateMonitor />
+        <InviteMonitor />
       </ApolloProvider>
     );
   }

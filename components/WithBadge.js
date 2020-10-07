@@ -16,6 +16,7 @@ export default function WithBadge({
     left ? { marginLeft: left } : {},
   ];
 
+  console.log(showBadge);
   return (
     <View style={wrapperStyles}>
       {children}

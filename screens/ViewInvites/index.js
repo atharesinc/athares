@@ -28,6 +28,7 @@ import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 export default function ViewInvites() {
   const [user] = useGlobal("user");
+  const [invites, setInvites] = useGlobal("invites");
 
   const [loadingState, setLoadingState] = useState({
     loading: false,
@@ -98,7 +99,13 @@ export default function ViewInvites() {
       console.error(e);
     } finally {
       setLoadingState({ loading: false, id: null });
+      removeInvite(id);
     }
+  };
+
+  const removeInvite = (id) => {
+    const newArr = invites.filter((i) => i !== id);
+    setInvites(newArr);
   };
 
   const reject = async (id) => {
@@ -117,6 +124,7 @@ export default function ViewInvites() {
       console.error(e);
     } finally {
       setLoadingState({ loading: false, id: null });
+      removeInvite(id);
     }
   };
 

@@ -26,4 +26,5 @@ export default {
   showConstSearch: false,
   activeViewUser: null,
   searchedCircles: [],
+  invites: [],
 };
