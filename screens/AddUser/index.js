@@ -182,26 +182,19 @@ export default function AddUser(props) {
           <Suggestions suggestions={suggestions} addTag={addTag} />
         )}
         {/* Display list of users selected to invite */}
-        <View style={styles.picker}>
-          {tags.length !== 0 && (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
+        {tags.length !== 0 && (
+          <View style={styles.picker}>
+            <Text style={styles.toText}>Invite:</Text>
+            <ScrollView
+              contentContainerStyle={styles.tagsList}
+              horizontal={true}
             >
-              <Text style={styles.toText}>Invite:</Text>
-              <ScrollView
-                contentContainerStyle={styles.tagsList}
-                horizontal={true}
-              >
-                {tags.map((t) => (
-                  <AddTag key={t.id} {...t} removeTag={removeTag} />
-                ))}
-              </ScrollView>
-            </View>
-          )}
-        </View>
+              {tags.map((t) => (
+                <AddTag key={t.id} {...t} removeTag={removeTag} />
+              ))}
+            </ScrollView>
+          </View>
+        )}
       </KeyboardAvoidingView>
       <View style={{ padding: 15 }}>
         <DisclaimerText
@@ -249,9 +242,11 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceGrotesk",
   },
   picker: {
-    flexDirection: "column",
-    alignItems: "stretch",
     marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    paddingVertical: 5,
   },
   tagsList: {
     backgroundColor: "transparent",
