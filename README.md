@@ -27,6 +27,7 @@ npm start
 ```
 
 Once the QR code is visible, the dev server is ready to build the application, press any of the following to run the application:
-`w` to run it for web, this should open the app in your default browser, logs will appear in the browser's console
-`i` to run it in the ios Simulator, logs will appear in the console from which you ran `npm start`
-`a` to run it in an Android Emulator, logs will appear in the console from which you ran `npm start`
+
+- `w` to run it for web, this should open the app in your default browser, logs will appear in the browser's console
+- `i` to run it in the ios Simulator, logs will appear in the console from which you ran `npm start`
+- `a` to run it in an Android Emulator, logs will appear in the console from which you ran `npm start`
