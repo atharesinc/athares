@@ -31,3 +31,7 @@ Once the QR code is visible, the dev server is ready to build the application, p
 - `w` to run it for web, this should open the app in your default browser, logs will appear in the browser's console
 - `i` to run it in the ios Simulator, logs will appear in the console from which you ran `npm start`
 - `a` to run it in an Android Emulator, logs will appear in the console from which you ran `npm start`
+
+You can run it on device as a native app by downloading the Expo app from the Google Play or App Store and scanning the QR code in-app. 
+
+For a brief overview of expo check out [expo.io](https://expo.io/)
