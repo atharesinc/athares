@@ -13,7 +13,7 @@ before_script:
   - npm install -g expo-cli
 script:
   - npm ci
-  - npx jest --ci
+  - npx jest --ci --passWithNoTests
 jobs:
   include:
     - stage: deploy
