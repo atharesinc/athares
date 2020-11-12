@@ -151,7 +151,7 @@ export default function Constitution() {
   }
 
   // Network Error
-  if (!data || e2 || error) {
+  if (e2 || error) {
     return <CenteredErrorLoader text={"Unable to connect to network"} />;
   }
   if (data && data.circle) {
