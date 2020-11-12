@@ -151,6 +151,7 @@ export default function App(props) {
               <NavigationContainer
                 ref={navigationRef}
                 initialState={initialNavigationState}
+                linking={{ enabled: true }}
               >
                 <Drawer>
                   <SafeAreaView style={styles.container}>
