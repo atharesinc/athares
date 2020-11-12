@@ -65,10 +65,6 @@ export default function ChatInput(props) {
 
     const preparedFile = processFile({ uri });
 
-    // file.name =
-    //   file.name ||
-    //   file.uri.substring(file.uri.lastIndexOf("/") + 1, file.uri.length);
-
     const imgs = [
       "image/gif",
       "image/png",
@@ -123,11 +119,6 @@ export default function ChatInput(props) {
         </TouchableOpacity>
       );
     } else {
-      // return (
-      //   <View style={styles.sendContainer}>
-      //     <Feather name="send" size={20} color={"transparent"} />
-      //   </View>
-      // );
       return null;
     }
   };
@@ -170,23 +161,10 @@ export default function ChatInput(props) {
       )}
       <View style={styles.composerContainer}>
         <View style={{ alignItems: "stretch", flexGrow: 1, flex: 1 }}>
-          {/* <AutoGrowTextInput
-            value={input}
-            style={[styles.composerInput, isFocused ? styles.focus : {}]}
-            onChangeText={setInput}
-            placeholder={"Enter Message"}
-            multiline={true}
-            onSubmitEditing={Keyboard.dismiss}
-            placeholderTextColor={"#FFFFFFb7"}
-            onFocus={focusUp}
-            onBlur={focusOff}
-            autoFocus={true}
-          /> */}
           <CrossAutoGrow
             value={input}
             onChangeText={updateInput}
             placeholder={"Enter Message"}
-            // placeholderTextColor={"#FFFFFFb7"}
             onFocus={focusUp}
             onBlur={focusOff}
             autoFocus={true}
@@ -324,6 +302,7 @@ function CrossAutoGrow({ onChangeText, value, isFocused = false, ...props }) {
 
   return (
     <TextInput
+      nativeID="chat-input"
       multiline={true}
       value={value}
       onChangeText={onChangeText}

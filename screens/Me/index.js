@@ -1,4 +1,4 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, useState } from "reactn";
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
 import debounce from "lodash.debounce";
+// import AwesomeDebouncePromise from "awesome-debounce-promise";
 
 import AvatarPicker from "../../components/AvatarPicker";
 import InfoLine from "../../components/InfoLine";
@@ -15,21 +16,31 @@ import Title from "../../components/Title";
 import Statistic from "../../components/Statistic";
 import SwitchLine from "../../components/SwitchLine";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import Loader from "../../components/Loader";
+
 import {
   UPDATE_ALLOW_MARKETING_EMAIL,
   UPDATE_USER,
   CREATE_SIGNED_UPLOAD_LINK,
 } from "../../graphql/mutations";
-import { GET_USER_WITH_PREF_BY_ID } from "../../graphql/queries";
+import {
+  GET_USER_WITH_PREF_BY_ID,
+  CHECK_IF_UNAME_TAKEN,
+  CHECK_IF_EMAIL_TAKEN,
+  CHECK_IF_PHONE_TAKEN,
+} from "../../graphql/queries";
 import { useQuery, useMutation } from "@apollo/client";
 import CenteredErrorLoader from "../../components/CenteredErrorLoader";
-import { processFile, uploadToAWS } from "../../utils/upload";
 import DisclaimerText from "../../components/DisclaimerText";
+import useImperativeQuery from "../../utils/useImperativeQuery";
+import { processFile, uploadToAWS } from "../../utils/upload";
+import { validateEmailAddress } from "../../utils/validators";
 
 export default function Me() {
   const [user] = useGlobal("user");
   const [isMobile] = useGlobal("isMobile");
-
+  const [updating, setUpdating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const { data, loading, error } = useQuery(GET_USER_WITH_PREF_BY_ID, {
     variables: {
       id: user || "",
@@ -39,6 +50,9 @@ export default function Me() {
   const [updateMarketingEmail] = useMutation(UPDATE_ALLOW_MARKETING_EMAIL);
   const [updateUserMutation] = useMutation(UPDATE_USER);
   const [getSignedUrl] = useMutation(CREATE_SIGNED_UPLOAD_LINK);
+  const isUnameTaken = useImperativeQuery(CHECK_IF_UNAME_TAKEN);
+  const isEmailTaken = useImperativeQuery(CHECK_IF_EMAIL_TAKEN);
+  const isPhoneTaken = useImperativeQuery(CHECK_IF_PHONE_TAKEN);
 
   const updatePref = async (checked) => {
     let { id } = data.user.prefs;
@@ -82,31 +96,97 @@ export default function Me() {
     }
   };
 
-  const updatePhone = (text) => {
-    debounce(
-      () => {
-        updateUser({ phone: text });
-      },
-      1000,
-      { leading: false, trailing: true }
-    );
-  };
+  async function updatePhone(text) {
+    if (text !== "") {
+      const res = await isPhoneTaken({ id: user, phone: text });
+      if (res && res.data.usersList.items.length !== 0) {
+        setErrorMessage("this phone has been taken", text);
+        return;
+      }
+    }
+    updateUser({ phone: text.trim() });
+  }
 
-  const updateName = (text) => {
-    debounce(
-      () => {
-        updateUser({
-          uname: text,
-        });
-      },
-      1000,
-      { leading: false, trailing: true }
-    );
-  };
+  async function updateEmail(text) {
+    // Validate cause that's sketchy
+    const isValid = validateEmailAddress({ email: text });
+    if (isValid !== undefined) {
+      setErrorMessage("Please supply a valid email address");
+      return false;
+    }
+
+    const res = await isEmailTaken({ id: user, email: text });
+    if (res && res.data.usersList.items.length !== 0) {
+      setErrorMessage("This email has been taken");
+      return;
+    }
+    updateUser({ email: text.trim() });
+  }
+
+  async function updateName(text) {
+    if (text !== "") {
+      // Validate to see if this uname is taken
+      const res = await isUnameTaken({ id: user, uname: text });
+      if (res && res.data.usersList.items.length !== 0) {
+        setErrorMessage("This username has been taken");
+        return;
+      }
+    }
+    updateUser({
+      uname: text.trim(),
+    });
+  }
+  function updateFirst(text) {
+    if (text === "") {
+      setErrorMessage("First name must not be empty");
+      return;
+    }
+    updateUser({
+      firstName: text.trim(),
+    });
+  }
+  function updateLast(text) {
+    if (text === "") {
+      setErrorMessage("Last name must not be empty");
+      return;
+    }
+    updateUser({
+      lastName: text.trim(),
+    });
+  }
+  // Lovely debounced versions that actually get called
+  const debouncedUpdateFirst = debounce(updateFirst, 1000, {
+    leading: false,
+    trailing: true,
+  });
+  const debouncedUpdateLast = debounce(updateLast, 1000, {
+    leading: false,
+    trailing: true,
+  });
+  const debouncedUpdatePhone = debounce(updatePhone, 1000, {
+    leading: false,
+    trailing: true,
+  });
+  const debouncedUpdateEmail = debounce(updateEmail, 1000, {
+    leading: false,
+    trailing: true,
+  });
+  const debouncedUpdateName = debounce(updateName, 1000, {
+    leading: false,
+    trailing: true,
+  });
 
   const updateUser = async (updates) => {
+    // This might need to be split up with an effect
+    setErrorMessage(null);
+    setUpdating(true);
     try {
       const { user: userObj } = data;
+
+      // if the end result is the same as what we started with, don't send request
+      if (userObj[Object.keys(updates)[0]] === Object.values(updates)[0]) {
+        return;
+      }
 
       let updatedUser = {
         firstName: userObj.firstName,
@@ -114,6 +194,7 @@ export default function Me() {
         phone: userObj.phone,
         uname: userObj.uname,
         icon: userObj.icon,
+        email: userObj.email,
         ...updates,
       };
 
@@ -126,6 +207,8 @@ export default function Me() {
     } catch (err) {
       console.error(err.message);
       // Alert.alert("Error", "There was an error updating your profile.");
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -165,25 +248,53 @@ export default function Me() {
         <View style={styles.section}>
           <Title text={"My Info"} />
           <InfoLine
-            label={"Phone"}
-            value={userObj.phone}
-            onChangeText={updatePhone}
+            label={"First Name"}
+            defaultValue={userObj.firstName}
+            onChangeText={debouncedUpdateFirst}
           />
-          {/* <InfoLine
-                            icon={"at-sign"}
-                            label={"Email"}
-                            value={user.email}
-                            onChangeText={updateEmail}
-                        /> */}
+          <InfoLine
+            label={"Last Name"}
+            defaultValue={userObj.lastName}
+            onChangeText={debouncedUpdateLast}
+          />
+          <InfoLine
+            label={"Email"}
+            defaultValue={userObj.email}
+            onChangeText={debouncedUpdateEmail}
+          />
+          <InfoLine
+            label={"Phone"}
+            defaultValue={userObj.phone}
+            onChangeText={debouncedUpdatePhone}
+          />
           <InfoLine
             label={"Unique Name"}
-            value={userObj.uname}
-            onChangeText={updateName}
+            defaultValue={userObj.uname}
+            onChangeText={debouncedUpdateName}
           />
-          <DisclaimerText
-            blue
-            text={"Email and Phone Number will not be publicly visible."}
-          />
+
+          {errorMessage ? (
+            <DisclaimerText
+              red
+              text={errorMessage}
+              style={{ marginBottom: 0 }}
+            />
+          ) : updating ? (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Loader size={25} />
+              <DisclaimerText
+                grey
+                text={"Updating..."}
+                style={{ marginBottom: 0, marginLeft: 5 }}
+              />
+            </View>
+          ) : (
+            <DisclaimerText
+              blue
+              text={"Email and Phone Number will not be publicly visible."}
+              style={{ marginBottom: 0 }}
+            />
+          )}
         </View>
 
         {/* Stats */}
@@ -214,26 +325,7 @@ export default function Me() {
   );
 }
 
-// export default compose(
-//     graphql(GET_USER_BY_ID_ALL, {
-//         name: "getUser",
-//         options: ({ userId }) => ({ variables: { id: userId || "" } }),
-//     }),
-//     graphql(UPDATE_USER, { name: "updateUser" }),
-//     graphql(UPDATE_ALLOW_MARKETING_EMAIL, { name: "updateMarketingEmail" }),
-//     graphql(GET_USER_PREF_BY_ID, {
-//         options: ({ userId }) => ({ variables: { id: userId || "" } }),
-//     })
-// )(Me);
-
 const styles = StyleSheet.create({
-  header: {
-    textTransform: "uppercase",
-    letterSpacing: 2,
-    fontSize: 13,
-    color: "#FFFFFFb7",
-    marginBottom: 25,
-  },
   wrapper: {
     alignItems: "stretch",
     justifyContent: "flex-start",
@@ -250,7 +342,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     width: "100%",
-    backgroundColor: "#00000080",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -259,36 +350,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginBottom: 10,
   },
-  sectionHeading: {
-    fontSize: 20,
-    color: "#FFFFFF",
-    marginBottom: 10,
-  },
-  disclaimer: {
-    fontSize: 15,
-    color: "#FFFFFFb7",
-    marginBottom: 5,
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-    color: "#FFF",
-  },
-  picker: {
-    flexDirection: "column",
-    alignItems: "stretch",
-    marginBottom: 20,
-  },
-  backgroundImage: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   marginTop: {
     marginTop: 15,
-  },
-  wrapSection: {
-    flexDirection: "row",
-    flexWrap: "wrap",
   },
 });

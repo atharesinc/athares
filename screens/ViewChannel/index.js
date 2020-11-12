@@ -1,4 +1,4 @@
-import React, { useState, useGlobal, memo, useEffect } from "reactn";
+import React, { useState, useGlobal, memo, useEffect, useRef } from "reactn";
 
 import {
   StyleSheet,
@@ -22,19 +22,28 @@ import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../graphql/subscriptions";
 import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import { uploadToAWS } from "../../utils/upload";
+import useImperativeQuery from "../../utils/useImperativeQuery";
 
 export default memo(function ViewChannel() {
   const [uploadInProgress, setUploadInProgress] = useState(false);
   const [activeChannel] = useGlobal("activeChannel");
   const [user] = useGlobal("user");
   const [messages, setMessages] = useState([]);
+  const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
+  const [scrollUps, setScrollUps] = useState(1);
+  const hasOlderMessages = useRef(true);
+
+  console.log("activeChannel", activeChannel);
 
   // remove this channel from unread channels list on mount
   const { loading, error, data } = useQuery(GET_MESSAGES_FROM_CHANNEL_ID, {
     variables: {
       id: activeChannel || "",
+      skip: 0,
     },
   });
+
+  const getMoreMessagesQuery = useImperativeQuery(GET_MESSAGES_FROM_CHANNEL_ID);
 
   const [createMessage] = useMutation(CREATE_MESSAGE);
   const [getSignedUrl] = useMutation(CREATE_SIGNED_UPLOAD_LINK);
@@ -46,11 +55,6 @@ export default memo(function ViewChannel() {
 
   function onSubscriptionData({ subscriptionData }) {
     if (subscriptionData.data) {
-      // fire off query again  vs. just add the new value to candidates
-      // refetch({
-      //   id: user || "",
-      // });
-
       // append the latest item to the list
       setMessages([...messages, subscriptionData.data.Messages.node]);
     }
@@ -128,26 +132,61 @@ export default memo(function ViewChannel() {
       setUploadInProgress(false);
     }
   };
-  //   _subToMore = (subscribeToMore) => {
-  //     subscribeToMore({
-  //       document: SUB_TO_MESSAGES_BY_CHANNEL_ID,
-  //       variables: { id: this.props.activeChannel || "" },
-  //       updateQuery: (prev, { subscriptionData }) => {
-  //         let newMsg = subscriptionData.data.Message.node;
-  //         // merge new messages into prev.messages
-  //         if (prev) {
-  //           prev.Channel.messages = [...prev.Channel.messages, newMsg];
-  //         }
-  //         return prev;
-  //       },
-  //     });
-  //   };
 
   useEffect(() => {
     if (data && data.channel) {
       setMessages(data.channel.messages.items);
+      console.log(
+        data.channel.messages.items.length,
+        {
+          hasOlderMessages: hasOlderMessages.current,
+        },
+        data.channel.messages.items.length === 20
+      );
+
+      // don't let the user scroll back futher if the number of inital messages is less than 20
+      hasOlderMessages.current = data.channel.messages.items.length === 20;
     }
   }, [data]);
+
+  // after we get the older messages, get rid of the older messages loader
+  useEffect(() => {
+    setIsLoadingOlderMessages(false);
+  }, [messages]);
+
+  const getMoreMessages = async (num) => {
+    console.log("at the end", num);
+    console.log("should I try to get more messages?");
+    // don't let the user scroll back futher if the number of inital messages is less than 20
+    if (!hasOlderMessages.current) {
+      console.log("dont make call!");
+      return;
+    }
+
+    setIsLoadingOlderMessages(true);
+    console.log("getting the 20 messages before message #" + 20 * scrollUps);
+    let olderMessages = await getMoreMessagesQuery({
+      id: activeChannel,
+      skip: 20 * scrollUps,
+    });
+
+    console.log("olderMessages ", olderMessages.data.channel.messages.items);
+    console.log([...olderMessages.data.channel.messages.items, ...messages]);
+
+    // if we've reached the end of the list, don't keep trying to update
+    if (olderMessages.data.channel.messages.items.length < 20) {
+      hasOlderMessages.current = false;
+    }
+
+    // update our cursor for getting new messages
+    setScrollUps((num) => num + 1);
+
+    // finally prepend our older messages to the end of the list
+    setMessages((msgs) => [
+      ...olderMessages.data.channel.messages.items,
+      ...msgs,
+    ]);
+  };
 
   if (loading) {
     return <CenteredLoaderWithText text={"Getting Messages"} />;
@@ -156,18 +195,15 @@ export default memo(function ViewChannel() {
   if (error) {
     return <CenteredErrorLoader />;
   }
-  // subscribe and populate
-  // if (messages) {
-  // const channel = data.channel;
-  // const messages = data.channel.messages.items;
-
-  const getMoreMessages = (num) => {
-    console.log("at the end", num);
-  };
 
   return (
     <View style={[styles.wrapper]}>
-      <Chat user={user} messages={messages} getMoreMessages={getMoreMessages} />
+      <Chat
+        isLoadingOlderMessages={isLoadingOlderMessages}
+        user={user}
+        messages={messages}
+        getMoreMessages={getMoreMessages}
+      />
       <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
       <KeyboardAvoidingView behavior="padding" />
       {Platform.OS === "android" ? <KeyboardSpacer topSpacing={-130} /> : null}

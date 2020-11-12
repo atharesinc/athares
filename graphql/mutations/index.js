@@ -54,6 +54,7 @@ export const UPDATE_USER = gql`
     $firstName: String!
     $lastName: String!
     $phone: String
+    $email: String!
     $uname: String
     $icon: String!
   ) {
@@ -62,6 +63,7 @@ export const UPDATE_USER = gql`
         id: $id
         firstName: $firstName
         lastName: $lastName
+        email: $email
         phone: $phone
         uname: $uname
         icon: $icon
@@ -70,6 +72,7 @@ export const UPDATE_USER = gql`
       id
       firstName
       lastName
+      email
       phone
       icon
       uname

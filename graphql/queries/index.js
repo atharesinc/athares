@@ -130,12 +130,12 @@ export const GET_CHANNEL_NAME_BY_ID = gql`
 `;
 
 export const GET_MESSAGES_FROM_CHANNEL_ID = gql`
-  query getMessagesByChannelId($id: ID!) {
+  query getMessagesByChannelId($id: ID!, $skip: Int!) {
     channel(id: $id) {
       id
       name
       description
-      messages(last: 20) {
+      messages(last: 20, skip: $skip) {
         items {
           id
           text
@@ -628,6 +628,8 @@ export const GET_USER_WITH_PREF_BY_ID = gql`
   query($id: ID!) {
     user(id: $id) {
       id
+      email
+      phone
       prefs {
         id
         maySendMarketingEmail
@@ -652,6 +654,36 @@ export const GET_USER_WITH_PREF_BY_ID = gql`
         items {
           id
         }
+      }
+    }
+  }
+`;
+
+export const CHECK_IF_UNAME_TAKEN = gql`
+  query($id: ID!, $uname: String!) {
+    usersList(filter: { id: { not_equals: $id }, uname: { equals: $uname } }) {
+      items {
+        id
+      }
+    }
+  }
+`;
+
+export const CHECK_IF_EMAIL_TAKEN = gql`
+  query($id: ID!, $email: String!) {
+    usersList(filter: { id: { not_equals: $id }, email: { equals: $email } }) {
+      items {
+        id
+      }
+    }
+  }
+`;
+
+export const CHECK_IF_PHONE_TAKEN = gql`
+  query($id: ID!, $phone: String!) {
+    usersList(filter: { id: { not_equals: $id }, phone: { equals: $phone } }) {
+      items {
+        id
       }
     }
   }

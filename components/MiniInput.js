@@ -1,20 +1,12 @@
-import React, { useRef, useState } from "reactn";
+import React, { useRef, useState } from "react";
 import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
   Platform,
 } from "react-native";
-import Title from "./Title";
-import HelperText from "./HelperText";
 
-export default function Input({
-  style = {},
-  label = null,
-  description = null,
-  textStyle = {},
-  ...props
-}) {
+export default function MiniInput({ style = {}, onChangeText, ...props }) {
   const inputEl = useRef();
   const [isFocused, setIsFocused] = useState(false);
 
@@ -29,39 +21,27 @@ export default function Input({
   };
 
   return (
-    <TouchableOpacity
-      style={[inputStyles.wrapper, style]}
-      onPress={handlePress}
-    >
-      {label && <Title text={label} />}
+    <TouchableOpacity style={[styles.wrapper, style]} onPress={handlePress}>
       <TextInput
         {...props}
-        style={[
-          inputStyles.input,
-          isFocused ? inputStyles.focus : {},
-          textStyle,
-        ]}
+        style={[styles.input, isFocused ? styles.focus : {}]}
         ref={inputEl}
-        numberOfLines={props.multiline ? 2 : 1}
+        numberOfLines={1}
         placeholderColor={"#FFFFFFb7"}
         onFocus={focusUp}
         onBlur={focusOff}
+        onChangeText={onChangeText}
       />
-      {description && (
-        <HelperText text={description} style={{ marginBottom: 0 }} />
-      )}
     </TouchableOpacity>
   );
 }
 
-const inputStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   wrapper: {
     borderColor: "transparent",
-    width: "100%",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    marginBottom: 20,
     overflow: "hidden",
     ...Platform.select({
       web: {
@@ -70,6 +50,7 @@ const inputStyles = StyleSheet.create({
     }),
   },
   input: {
+    textAlign: "right",
     color: "#FFF",
     fontSize: 15,
     width: "100%",
@@ -82,8 +63,9 @@ const inputStyles = StyleSheet.create({
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
     elevation: 7,
-    padding: 10,
-    marginBottom: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 5,
     justifyContent: "flex-start",
     textAlignVertical: "top",
     borderRadius: 3,

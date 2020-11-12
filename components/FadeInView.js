@@ -1,36 +1,26 @@
-import React from "reactn";
+import React, { useState, useEffect } from "reactn";
 import { Animated } from "react-native";
 
-export default class FadeInView extends React.Component {
-  constructor() {
-    super();
+export default function FadeInView(props) {
+  const [fadeAnim] = useState(new Animated.Value(0));
 
-    this.state = {
-      fadeAnim: new Animated.Value(0),
-    };
-  }
-
-  componentDidMount() {
-    Animated.timing(this.state.fadeAnim, {
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
       useNativeDriver: true,
       toValue: 1,
       duration: 1000,
     }).start();
-  }
+  }, []);
 
-  render() {
-    let { fadeAnim } = this.state;
-
-    return (
-      <Animated.View
-        {...this.props}
-        style={{
-          ...this.props.style,
-          opacity: fadeAnim,
-        }}
-      >
-        {this.props.children}
-      </Animated.View>
-    );
-  }
+  return (
+    <Animated.View
+      {...props}
+      style={{
+        opacity: fadeAnim,
+        ...props.style,
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
 }

@@ -154,7 +154,7 @@ export default function App(props) {
       <ApolloProvider client={client}>
         <ImageBackground
           source={require("./assets/images/iss-master.jpg")}
-          style={[styles.image]}
+          style={[styles.container, { width: dimensions.width }]}
           progressiveRenderingEnabled
           onLayout={onRotate}
         >
@@ -189,29 +189,6 @@ export default function App(props) {
 }
 
 // import * as RootNavigation from "./navigation/RootNavigation";
-
-// const Channels = () => {
-//   const toLogin = () => {
-//     RootNavigation.navigate("login");
-
-//     // return navigation.navigate("Login");
-//   };
-//   const toMain = () => {
-//     RootNavigation.navigate("app");
-//     // return navigation.navigate("Login");
-//   };
-//   return (
-//     <View style={channelStyles.wrapper}>
-//       <Text>Channels List</Text>
-//       <TouchableOpacity onPress={toLogin}>
-//         <Text>Login </Text>
-//       </TouchableOpacity>
-//       <TouchableOpacity onPress={toMain}>
-//         <Text>Login </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
 
 // const Main = ({ navigation }) => {
 //   const toLogin = () => {
@@ -262,11 +239,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
-    backgroundColor: "#282a38",
+    backgroundColor: "transparent",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
   },
+  // imageContainer: {
+  //   flex: 1,
+  //   width: Dimensions.get("window").width,
+  //   height: Dimensions.get("window").height,
+  //   backgroundColor: "transparent",
+  //   flexDirection: "row",
+  //   justifyContent: "flex-start",
+  //   alignItems: "stretch",
+  // },
   image: {
     flex: 1,
     backgroundColor: "transparent",

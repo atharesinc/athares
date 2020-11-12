@@ -5,10 +5,11 @@ import { Feather } from "@expo/vector-icons";
 const ChannelGroupHeader = ({
   displayPlus = false,
   title,
+  rounded = false,
   onPressPlus = () => {},
 }) => {
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, { borderRadius: rounded ? 4 : 0 }]}>
       <Text style={styles.channelTitle}>{title}</Text>
       {displayPlus ? (
         <TouchableOpacity onPress={onPressPlus}>
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     width: "100%",
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#2f3242",
   },
   channelTitle: {
     color: "#FFFFFF",

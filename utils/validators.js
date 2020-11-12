@@ -97,3 +97,15 @@ export const validateUpdatedRevision = ({ text }) => {
     }
   );
 };
+
+export const validateEmailAddress = ({ email }) => {
+  return validate(
+    { email },
+    {
+      email: {
+        presence: { allowEmpty: false },
+        email: true,
+      },
+    }
+  );
+};

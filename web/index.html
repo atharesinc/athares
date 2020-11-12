@@ -59,6 +59,21 @@
           background-color: black;
         }
       }*/
+      ::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: #ffffffb7;
+        opacity: 1; /* Firefox */
+      }
+
+      :-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        color: #ffffffb7;
+      }
+
+      ::-ms-input-placeholder {
+        /* Microsoft Edge */
+        color: #ffffffb7;
+      }
     </style>
   </head>
 
@@ -90,7 +105,7 @@
           "
         >
           <p>Oh no! It looks like JavaScript is not enabled in your browser.</p>
-          <p style="margin: 20px 0;">
+          <p style="margin: 20px 0">
             <button
               type="submit"
               style="

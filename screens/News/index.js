@@ -15,7 +15,7 @@ export default function News() {
         }}
         source={require("../../assets/images/Athares-type-small-white.png")}
       />
-      <ChannelGroupHeader title={"News"} displayPlus={false} />
+      <ChannelGroupHeader title={"News"} displayPlus={false} rounded />
     </View>
   );
 }

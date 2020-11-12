@@ -1,35 +1,17 @@
-import React, { useRef } from "reactn";
-import {
-  TouchableOpacity,
-  TextInput,
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import MiniInput from "./MiniInput";
 
-function InfoLine({ value = "", label, style = {}, ...props }) {
-  const inputEl = useRef(null);
-  const handleClick = () => {
-    inputEl.current.focus();
-  };
-
+function InfoLine({ defaultValue = "", onChangeText, label, style = {} }) {
   return (
-    <TouchableOpacity
-      style={{ ...styles.touchWrap, ...style }}
-      onPress={handleClick}
-    >
-      <View style={[styles.wrapper]}>
-        <Text style={styles.label}>{label}</Text>
-        <TextInput
-          {...props}
-          value={value}
-          style={styles.input}
-          placeholder="Not set"
-          ref={inputEl}
-          numberOfLines={1}
-        />
-      </View>
-    </TouchableOpacity>
+    <View style={[styles.wrapper, style]}>
+      <Text style={styles.label}>{label}</Text>
+      <MiniInput
+        defaultValue={defaultValue || ""}
+        placeholder="Not set"
+        onChangeText={onChangeText}
+      />
+    </View>
   );
 }
 
@@ -37,7 +19,7 @@ export default InfoLine;
 
 const styles = StyleSheet.create({
   touchWrap: {
-    marginBottom: 20,
+    marginBottom: 10,
     width: "100%",
     borderRadius: 9999,
     borderWidth: 2,
@@ -46,13 +28,17 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     marginVertical: 5,
-    marginHorizontal: 15,
     width: "100%",
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 30,
     overflow: "hidden",
+  },
+  overrideInput: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginBottom: 0,
+    width: "auto",
   },
   linePre: {
     alignItems: "center",
@@ -65,11 +51,11 @@ const styles = StyleSheet.create({
     width: "50%",
     textAlign: "right",
     fontFamily: "SpaceGrotesk",
+    marginBottom: 5,
   },
   label: {
     fontSize: 16,
     color: "#FFF",
-    marginLeft: 10,
     fontFamily: "SpaceGrotesk",
   },
 });
