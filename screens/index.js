@@ -36,6 +36,9 @@ export default function RootStack() {
       headerMode="screen"
       // props =  { scene, previous, navigation }
       screenOptions={{
+        headerTitle: (props) => {
+          console.log(props);
+        },
         header: (props) => <Header {...props} />,
         ...pushTransition(activeTheme),
       }}

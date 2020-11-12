@@ -16,7 +16,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "./navigation/RootNavigation";
 import RootStack from "./screens";
 import defaultState from "./constants/defaultState";
-// import useLinking from "./navigation/useLinking";
+import { linkingConfig } from "./navigation/useLinking";
 import AutoLoginHandler from "./components/AutoLoginHandler";
 import OnlineMonitor from "./components/OnlineMonitor";
 import RevisionMonitor from "./components/RevisionMonitor";
@@ -151,7 +151,7 @@ export default function App(props) {
               <NavigationContainer
                 ref={navigationRef}
                 initialState={initialNavigationState}
-                linking={{ enabled: true }}
+                linking={linkingConfig}
               >
                 <Drawer>
                   <SafeAreaView style={styles.container}>
@@ -173,52 +173,6 @@ export default function App(props) {
     );
   }
 }
-
-// import * as RootNavigation from "./navigation/RootNavigation";
-
-// const Main = ({ navigation }) => {
-//   const toLogin = () => {
-//     return navigation.navigate("login");
-//   };
-//   return (
-//     <View style={styles.container}>
-//       <Text>Main</Text>
-//       <TouchableOpacity onPress={navigation.goBack}>
-//         <Text>Back </Text>
-//       </TouchableOpacity>
-
-//       <TouchableOpacity onPress={toLogin}>
-//         <Text>Login </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// const Login = ({ navigation }) => {
-//   const toMain = () => navigation.navigate("app");
-
-//   return (
-//     <View style={styles.container}>
-//       <Text>Login</Text>
-//       <TouchableOpacity onPress={navigation.goBack}>
-//         <Text>Back </Text>
-//       </TouchableOpacity>
-
-//       <TouchableOpacity onPress={toMain}>
-//         <Text>Main </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-// const channelStyles = StyleSheet.create({
-//   wrapper: {
-//     flex: 0,
-//     flexGrow: 1 / 3,
-//     backgroundColor: "#fff",
-//     flexDirection: "column",
-//     minWidth: 250,
-//   },
-// });
 
 const styles = StyleSheet.create({
   container: {

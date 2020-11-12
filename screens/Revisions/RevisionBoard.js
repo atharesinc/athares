@@ -1,4 +1,4 @@
-import React from "reactn";
+import React, { useGlobal } from "reactn";
 import { View, StyleSheet, ScrollView } from "react-native";
 import RevisionCard from "./RevisionCard";
 import GlowButton from "../../components/GlowButton";
@@ -9,14 +9,16 @@ import * as RootNavigation from "../../navigation/RootNavigation";
 const RevisionBoard = ({
   boardName = "",
   revisions = [],
-  // circleID,
   user,
   belongsToCircle = false,
   ...props
 }) => {
+  const [activeCircle] = useGlobal("activeCircle");
+
   const goToCreateRevision = () => {
-    RootNavigation.navigate("createRevision");
+    RootNavigation.navigate("createRevision", { circle: activeCircle });
   };
+
   return (
     <View style={styles.revisionBoard}>
       <Title text={boardName} underline style={styles.boardHeader} />

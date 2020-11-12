@@ -1,7 +1,6 @@
 import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
-import { useEffect } from "react";
 import DisclaimerText from "./DisclaimerText";
 import GhostButton from "./GhostButton";
 import GlowButton from "./GlowButton";
@@ -15,18 +14,23 @@ export default function Amendment({
   belongsToCircle = false,
 }) {
   const [, setActiveAmendment] = useGlobal("activeAmendment");
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
+  const [, setActiveRevision] = useGlobal("activeRevision");
+  const [activeCircle] = useGlobal("activeCircle");
 
   const goToRevision = () => {
-    setActiveRevision(amendment.revision.id);
-    RootNavigation.navigate("editRevision");
+    setActiveRevision(amendment.revision.id, () => {
+      RootNavigation.navigate("editRevision", {
+        revision: amendment.revision.id,
+        circle: activeCircle,
+      });
+    });
   };
 
-  useEffect(() => {
-    if (activeRevision) {
-      RootNavigation.navigate("viewRevision");
-    }
-  }, [activeRevision]);
+  // useEffect(() => {
+  //   if (activeRevision) {
+  //     RootNavigation.navigate("viewRevision", { revision: activeRevision });
+  //   }
+  // }, [activeRevision]);
 
   const selectThisAmendment = () => {
     onPress(amendment.id);
@@ -37,7 +41,10 @@ export default function Amendment({
       return false;
     }
     setActiveAmendment(amendment.id);
-    RootNavigation.navigate("editAmendment");
+    RootNavigation.navigate("editAmendment", {
+      amendment: amendment.id,
+      circle: activeCircle,
+    });
   };
 
   const hasOutstandingRevision =

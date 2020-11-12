@@ -38,7 +38,10 @@ export default function CreateChannel(props) {
   useEffect(() => {
     // navigate away after we've updated active channel to view
     if (activeChannel) {
-      props.navigation.navigate("channel");
+      props.navigation.navigate("channel", {
+        circle: activeCircle,
+        channel: activeChannel,
+      });
     }
   }, [activeChannel]);
 

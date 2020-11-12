@@ -24,6 +24,7 @@ import Input from "../../components/Input";
 
 import { useQuery, useMutation } from "@apollo/client";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 export default function EditAmendment(props) {
   const [text, setText] = useState("");
@@ -34,7 +35,7 @@ export default function EditAmendment(props) {
   const [createRevisionMutation] = useMutation(CREATE_REVISION_FROM_AMENDMENT);
   const [activeAmendment] = useGlobal("activeAmendment");
 
-  const { data, loading: loadingQuery } = useQuery(GET_AMENDMENT_BY_ID, {
+  const { data, loading: loadingQuery, error } = useQuery(GET_AMENDMENT_BY_ID, {
     variables: {
       id: activeAmendment || "",
     },
@@ -63,7 +64,10 @@ export default function EditAmendment(props) {
 
   useEffect(() => {
     if (activeRevision) {
-      props.navigation.navigate("viewRevision");
+      props.navigation.navigate("viewRevision", {
+        revision: activeRevision,
+        circle: activeCircle,
+      });
     }
   }, [activeRevision]);
 
@@ -172,8 +176,12 @@ export default function EditAmendment(props) {
     }
   };
 
-  if (loading || loadingQuery) {
+  if (loading || loadingQuery || !data) {
     return <CenteredLoaderWithText />;
+  }
+  // Network Error
+  if (error) {
+    return <CenteredErrorLoader text={"Unable to connect to network"} />;
   }
 
   return (

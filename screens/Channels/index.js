@@ -47,7 +47,7 @@ function Dashboard({ renderAsSidebar = false }) {
   });
 
   const goToCreateChannel = () => {
-    RootNavigation.navigate("createChannel");
+    RootNavigation.navigate("createChannel", { circle: activeCircle });
   };
   function onSubscriptionData({ subscriptionData }) {
     if (subscriptionData.data) {

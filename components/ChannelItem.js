@@ -17,7 +17,7 @@ export default function ChannelItem({
     //   RootNavigation.navigate("DMChannel");
     // } else
     if (channel.channelType === "group") {
-      RootNavigation.navigate("channel");
+      RootNavigation.navigate("channel", { channel: channel.id });
     }
   };
   return (
