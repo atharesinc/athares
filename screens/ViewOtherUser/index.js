@@ -14,7 +14,6 @@ import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 export default function ViewOtherUser() {
   const [activeViewUser] = useGlobal("activeViewUser");
-  const [isMobile] = useGlobal("isMobile");
 
   let user,
     stats = null;
@@ -44,22 +43,26 @@ export default function ViewOtherUser() {
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.wrapper,
-        !isMobile ? { paddingHorizontal: "20%" } : {},
-      ]}
-    >
+    <ScrollView contentContainerStyle={[styles.wrapper]}>
       <View style={styles.userAndImageWrapper}>
         <View style={[styles.previewWrapper]}>
           <Image source={{ uri: user.icon }} style={styles.preview} />
         </View>
-        <Title text={user.firstName + " " + user.lastName} />
-        {user.uname && <DisclaimerText text={user.uname} />}
       </View>
 
       {/* Stats */}
       <View style={styles.section}>
+        <Title
+          text={user.firstName + " " + user.lastName}
+          textStyle={{ marginBottom: 0 }}
+        />
+        {user.uname && (
+          <DisclaimerText
+            grey
+            text={"@" + user.uname}
+            style={styles.disclaimer}
+          />
+        )}
         <Statistic header="Circles" text={stats.circleCount} />
         <Statistic header="Revisions Proposed" text={stats.revisionCount} />
         <Statistic
@@ -95,6 +98,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFFFFF",
     marginBottom: 10,
+  },
+  disclaimer: {
+    width: "100%",
   },
   userAndImageWrapper: {
     flex: 1,

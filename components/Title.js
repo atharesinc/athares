@@ -9,6 +9,7 @@ export default function Title({
   indent = false,
   center = false,
   style = {},
+  textStyle = {},
 }) {
   const [activeTheme] = useGlobal("activeTheme");
 
@@ -17,6 +18,7 @@ export default function Title({
     spaced ? styles.spaced : {},
     red ? { color: activeTheme.COLORS.RED } : {},
     indent ? styles.indent : {},
+    textStyle,
   ];
 
   const viewStyle = [
