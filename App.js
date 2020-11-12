@@ -4,7 +4,6 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  Text,
   Dimensions,
   Platform,
   ImageBackground,
@@ -17,7 +16,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { navigationRef } from "./navigation/RootNavigation";
 import RootStack from "./screens";
 import defaultState from "./constants/defaultState";
-import { setCustomText, setCustomTextInput } from "react-native-global-props";
 // import useLinking from "./navigation/useLinking";
 import AutoLoginHandler from "./components/AutoLoginHandler";
 import OnlineMonitor from "./components/OnlineMonitor";
@@ -93,19 +91,6 @@ export default function App(props) {
         if (searches !== null) {
           setSearchedCircles(JSON.parse(searches));
         }
-
-        // Make sure to use this font EVERYWHERE so we don't have to manually assign it
-        const customTextProps = {
-          style: {
-            fontFamily: "SpaceGrotesk",
-          },
-        };
-        // I don't think this does anything...at least in web
-        Text.defaultProps = Text.defaultProps || {};
-        Text.defaultProps.style = { fontFamily: "SpaceGrotesk" };
-
-        setCustomText(customTextProps);
-        setCustomTextInput(customTextProps);
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);

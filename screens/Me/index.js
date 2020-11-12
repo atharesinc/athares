@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
 import debounce from "lodash.debounce";
-// import AwesomeDebouncePromise from "awesome-debounce-promise";
 
 import AvatarPicker from "../../components/AvatarPicker";
 import InfoLine from "../../components/InfoLine";
