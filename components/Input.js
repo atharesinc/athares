@@ -43,7 +43,7 @@ export default function Input({
         ]}
         ref={inputEl}
         numberOfLines={props.multiline ? 2 : 1}
-        placeholderColor={"#FFFFFFb7"}
+        placeholderTextColor={"#FFFFFFb7"}
         onFocus={focusUp}
         onBlur={focusOff}
       />

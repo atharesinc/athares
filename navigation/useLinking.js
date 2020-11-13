@@ -1,34 +1,12 @@
 // import { useLinking } from "@react-navigation/native";
 // import { Linking } from "expo";
 
-export const linking = {
-  // routes: [
-  //   {
-  //     name: 'register',
-
-  //   },
-  // ]
-  config: {
-    // Channels: "",
-    login: { path: "login" },
-    register: { path: "register" },
-    news: { path: "news" },
-    channels: { path: "app" },
-    createCircle: { path: "createCircle" },
-  },
-};
-
-// export default function (containerRef) {
-//   return useLinking(containerRef, linking);
-// }
-
 export const linkingConfig = {
   prefixes: ["https://athar.es", "athares://", "http:localhost:19006"],
   config: {
     screens: {
       // GOOD
       app: "",
-      circle: ":circle",
       // GOOD
       portal: "portal",
       // GOOD

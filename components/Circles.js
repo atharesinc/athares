@@ -30,7 +30,7 @@ const Circles = ({ loggedIn = false }) => {
       setActiveChannel(null);
     }
     setActiveCircle(id, () => {
-      RootNavigation.navigate("news", { circle: id });
+      RootNavigation.navigate("app");
     });
   };
 

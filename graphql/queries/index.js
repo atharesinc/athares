@@ -135,7 +135,7 @@ export const GET_MESSAGES_FROM_CHANNEL_ID = gql`
       id
       name
       description
-      messages(last: 20, skip: $skip) {
+      messages(skip: $skip, last: 20) {
         items {
           id
           text

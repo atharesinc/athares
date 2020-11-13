@@ -1,6 +1,11 @@
 import React, { useState, useGlobal, memo, useEffect, useRef } from "reactn";
 
-import { StyleSheet, Alert, KeyboardAvoidingView, View } from "react-native";
+import {
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 
 import Chat from "../../components/Chat";
 import ChatInput from "../../components/ChatInput";
@@ -17,7 +22,7 @@ import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import { uploadToAWS } from "../../utils/upload";
 import useImperativeQuery from "../../utils/useImperativeQuery";
 
-export default memo(function ViewChannel() {
+export default memo(function ViewChannel(props) {
   const [uploadInProgress, setUploadInProgress] = useState(false);
   const [activeChannel] = useGlobal("activeChannel");
   const [user] = useGlobal("user");
@@ -29,7 +34,7 @@ export default memo(function ViewChannel() {
   // remove this channel from unread channels list on mount
   const { loading, error, data } = useQuery(GET_MESSAGES_FROM_CHANNEL_ID, {
     variables: {
-      id: activeChannel || "",
+      id: props.route.params.channel,
       skip: 0,
     },
   });
@@ -165,27 +170,32 @@ export default memo(function ViewChannel() {
     ]);
   };
 
-  if (loading) {
-    return <CenteredLoaderWithText text={"Getting Messages"} />;
-  }
-
   if (error) {
     return <CenteredErrorLoader />;
   }
 
+  if (loading || !data.channel) {
+    return <CenteredLoaderWithText text={"Getting Messages"} />;
+  }
+
+  const offset =
+    Platform.OS === "ios" ? 100 : Platform.OS === "android" ? 90 : 0;
+
   return (
-    <View style={[styles.wrapper]}>
+    <KeyboardAvoidingView
+      style={styles.wrapper}
+      behavior="height"
+      keyboardVerticalOffset={offset}
+    >
       <Chat
         isLoadingOlderMessages={isLoadingOlderMessages}
         user={user}
         messages={messages}
         getMoreMessages={getMoreMessages}
+        channelName={data.channel.name}
       />
-      <KeyboardAvoidingView>
-        <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
-      </KeyboardAvoidingView>
-      {/* {Platform.OS === "android" ? <KeyboardSpacer topSpacing={-130} /> : null} */}
-    </View>
+      <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
+    </KeyboardAvoidingView>
   );
 });
 
