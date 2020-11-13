@@ -113,7 +113,7 @@ function CreateCircle(props) {
 
       Alert.alert("Circle Created", `${name} has been created successfully.`);
       // props.navigation.goBack(null);
-      props.navigation.navigate("constitution");
+      props.navigation.navigate("constitution", { circle: newCircle.id });
     } catch (err) {
       console.error(new Error(err));
       Alert.alert("Error", err.message);

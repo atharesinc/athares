@@ -103,7 +103,10 @@ export default function CreateRevision(props) {
       newRevision.id = newRevisionRes.data.revisionCreate.id;
 
       setActiveRevision(newRevision.id, () => {
-        props.navigation.navigate("viewRevision");
+        props.navigation.navigate("viewRevision", {
+          circle: activeCircle,
+          revision: newRevision.id,
+        });
       });
     } catch (err) {
       if (

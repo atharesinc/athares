@@ -27,11 +27,11 @@ function SideMenu() {
   const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
   const [invites] = useGlobal("invites");
 
-  const navigateToScreen = (route) => {
+  const navigateToScreen = (route, params = null) => {
     if (route === "login") {
       RootNavigation.navigate("portal", { screen: "login" });
     } else {
-      RootNavigation.navigate(route);
+      RootNavigation.navigate(route, params);
     }
     setIsMenuOpen(false);
   };
@@ -53,7 +53,7 @@ function SideMenu() {
 
     apolloClient.clearStore();
 
-    navigateToScreen("app");
+    navigateToScreen("app", { circle: null });
   };
 
   const goToLogin = () => {

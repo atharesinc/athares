@@ -219,7 +219,6 @@ export default function Me() {
     return <CenteredErrorLoader text={"Error Retrieving Profile"} />;
   }
 
-  console.log(data);
   const userObj = data.user;
   const stats = {
     voteCount: userObj.votes.items.length,

@@ -66,27 +66,33 @@ const SingleSearchItem = ({ item, category, ...props }) => {
         case "channels":
           setActiveCircle(item.circle.id);
           setActiveChannel(id, () => {
-            RootNavigation.navigate("channel");
+            RootNavigation.navigate("channel", {
+              circle: item.circle.id,
+              channel: id,
+            });
           });
 
           break;
         case "amendments":
           setActiveCircle(item.circle.id);
           setActiveAmendment(id, () => {
-            RootNavigation.navigate("constitution");
+            RootNavigation.navigate("constitution", { circle: item.circle.id });
           });
 
           break;
         case "revisions":
           setActiveCircle(item.circle.id);
           setActiveRevision(id, () => {
-            RootNavigation.navigate("viewRevision");
+            RootNavigation.navigate("viewRevision", {
+              circle: item.circle.id,
+              revision: id,
+            });
           });
 
           break;
         case "users":
           setActiveViewUser(id, () => {
-            RootNavigation.navigate("viewOtherUser");
+            RootNavigation.navigate("viewOtherUser", { user: id });
           });
 
           break;

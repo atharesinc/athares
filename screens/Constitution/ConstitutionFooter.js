@@ -30,7 +30,7 @@ export default function ConstitutionFooter() {
   }
 
   const goToCreateRevision = () => {
-    RootNavigation.navigate("createRevision");
+    RootNavigation.navigate("createRevision", { circle: activeCircle });
   };
 
   // user is not logged in

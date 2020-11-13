@@ -1,4 +1,4 @@
-import React, { useGlobal, useEffect } from "reactn";
+import React, { useGlobal } from "reactn";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import RevisionCategory from "../../components/RevisionCategory";
 import * as RootNavigation from "../../navigation/RootNavigation";
@@ -18,17 +18,23 @@ const RevisionCard = ({
     repeal = false,
   },
 }) => {
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
+  const [, setActiveRevision] = useGlobal("activeRevision");
+  const [activeCircle] = useGlobal("activeCircle");
 
   const goToRevision = () => {
-    setActiveRevision(id);
+    setActiveRevision(id, () => {
+      RootNavigation.navigate("viewRevision", {
+        circle: activeCircle,
+        revision: id,
+      });
+    });
   };
 
-  useEffect(() => {
-    if (activeRevision) {
-      RootNavigation.navigate("viewRevision");
-    }
-  }, [activeRevision]);
+  // useEffect(() => {
+  //   if (activeRevision) {
+  //     RootNavigation.navigate("viewRevision", {circle: activeCircle, revision: activeRevision});
+  //   }
+  // }, [activeRevision]);
 
   const support = votes.items.filter(({ support }) => support).length;
   const img = backer

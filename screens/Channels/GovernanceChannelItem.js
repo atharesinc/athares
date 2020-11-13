@@ -1,10 +1,12 @@
-import React from "reactn";
+import React, { useGlobal } from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
 const GovernanceChannelItem = ({ link, title }) => {
+  const [activeCircle] = useGlobal("activeCircle");
+
   const nav = () => {
-    RootNavigation.navigate(link);
+    RootNavigation.navigate(link, { circle: activeCircle });
   };
   return (
     <TouchableOpacity style={styles.row} onPress={nav}>

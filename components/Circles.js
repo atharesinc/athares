@@ -24,14 +24,14 @@ const Circles = ({ loggedIn = false }) => {
   const [, setActiveChannel] = useGlobal("activeChannel");
 
   const selectCircle = (id = null) => {
-    setActiveCircle(id);
-
     // deselect if different from current
     if (id !== activeCircle) {
       setActiveRevision(null);
       setActiveChannel(null);
     }
-    RootNavigation.navigate("app");
+    setActiveCircle(id, () => {
+      RootNavigation.navigate("app");
+    });
   };
 
   const goToCreateCircle = () => {
@@ -72,7 +72,9 @@ const Circles = ({ loggedIn = false }) => {
   // set the first result to active
   useEffect(() => {
     if (circles.length > 0) {
-      setActiveCircle(circles[0].id);
+      setActiveCircle(circles[0].id, () => {
+        RootNavigation.navigate("app");
+      });
     }
   }, [circles]);
 

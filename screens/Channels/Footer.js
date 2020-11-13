@@ -8,7 +8,7 @@ const Footer = ({ loggedIn = false, belongsToCircle = false }) => {
   const [activeCircle] = useGlobal("activeCircle");
 
   const goToAddUser = () => {
-    RootNavigation.navigate("addUser");
+    RootNavigation.navigate("addUser", { circle: activeCircle });
   };
 
   const goToLogin = () => {

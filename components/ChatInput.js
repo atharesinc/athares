@@ -309,7 +309,7 @@ function CrossAutoGrow({ onChangeText, value, isFocused = false, ...props }) {
       style={[
         styles.composerInput,
         isFocused ? styles.focus : {},
-        { maxHeight: 200, paddingHorizontal: 15 },
+        { maxHeight: 150, paddingHorizontal: 15 },
       ]}
       placeholderTextColor={"#FFFFFFb7"}
       onSubmitEditing={Keyboard.dismiss}

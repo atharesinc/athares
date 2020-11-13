@@ -53,7 +53,7 @@ export default function Revisions(props) {
   }
 
   const goToSettings = () => {
-    props.navigation.navigate("circleSettings");
+    props.navigation.navigate("circleSettings", { circle: activeCircle });
   };
 
   let allRevisions = [];

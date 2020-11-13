@@ -49,7 +49,7 @@ export default function ViewRevision(props) {
 
   useEffect(() => {
     if (activeViewUser) {
-      props.navigation.navigate("viewOtherUser");
+      props.navigation.navigate("viewOtherUser", { user: activeViewUser });
     }
   }, [activeViewUser]);
 
