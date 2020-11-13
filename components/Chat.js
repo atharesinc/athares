@@ -1,16 +1,12 @@
-import React, { useRef, useEffect } from "reactn";
+import React, { useRef, memo } from "reactn";
 import { FlatList } from "react-native";
 import Message from "./Message";
 import CenteredLoaderWithText from "./CenteredLoaderWithText";
 
 // import { insertBreaks } from "../utils/transform";
 
-export default function Chat({ messages, getMoreMessages, ...props }) {
+export default memo(function Chat({ messages, getMoreMessages, ...props }) {
   const scrollRef = useRef();
-
-  useEffect(() => {
-    console.log(scrollRef.current);
-  }, []);
 
   const _renderItem = ({ item, index }) => {
     const isSameDay =
@@ -43,6 +39,7 @@ export default function Chat({ messages, getMoreMessages, ...props }) {
 
   return (
     <FlatList
+      onLayout={console.log}
       ListHeaderComponent={shouldDisplayLoadingOlderMessages}
       onEndReachedThreshold={0.5}
       onEndReached={getMoreMessages}
@@ -57,4 +54,4 @@ export default function Chat({ messages, getMoreMessages, ...props }) {
       ref={scrollRef}
     />
   );
-}
+});

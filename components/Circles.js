@@ -73,7 +73,7 @@ const Circles = ({ loggedIn = false }) => {
   useEffect(() => {
     if (circles.length > 0) {
       setActiveCircle(circles[0].id, () => {
-        RootNavigation.navigate("news", { circle: circles[0].id });
+        RootNavigation.navigate("app");
       });
     }
   }, [circles]);

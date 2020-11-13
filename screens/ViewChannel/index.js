@@ -1,12 +1,6 @@
 import React, { useState, useGlobal, memo, useEffect, useRef } from "reactn";
 
-import {
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  View,
-} from "react-native";
+import { StyleSheet, Alert, KeyboardAvoidingView, View } from "react-native";
 
 import Chat from "../../components/Chat";
 import ChatInput from "../../components/ChatInput";
@@ -20,7 +14,6 @@ import {
 import { GET_MESSAGES_FROM_CHANNEL_ID } from "../../graphql/queries";
 import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../graphql/subscriptions";
 import { useQuery, useMutation, useSubscription } from "@apollo/client";
-import KeyboardSpacer from "react-native-keyboard-spacer";
 import { uploadToAWS } from "../../utils/upload";
 import useImperativeQuery from "../../utils/useImperativeQuery";
 
@@ -32,8 +25,6 @@ export default memo(function ViewChannel() {
   const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
   const [scrollUps, setScrollUps] = useState(1);
   const hasOlderMessages = useRef(true);
-
-  console.log("activeChannel", activeChannel);
 
   // remove this channel from unread channels list on mount
   const { loading, error, data } = useQuery(GET_MESSAGES_FROM_CHANNEL_ID, {
@@ -136,13 +127,6 @@ export default memo(function ViewChannel() {
   useEffect(() => {
     if (data && data.channel) {
       setMessages(data.channel.messages.items);
-      console.log(
-        data.channel.messages.items.length,
-        {
-          hasOlderMessages: hasOlderMessages.current,
-        },
-        data.channel.messages.items.length === 20
-      );
 
       // don't let the user scroll back futher if the number of inital messages is less than 20
       hasOlderMessages.current = data.channel.messages.items.length === 20;
@@ -154,24 +138,17 @@ export default memo(function ViewChannel() {
     setIsLoadingOlderMessages(false);
   }, [messages]);
 
-  const getMoreMessages = async (num) => {
-    console.log("at the end", num);
-    console.log("should I try to get more messages?");
+  const getMoreMessages = async () => {
     // don't let the user scroll back futher if the number of inital messages is less than 20
     if (!hasOlderMessages.current) {
-      console.log("dont make call!");
       return;
     }
 
     setIsLoadingOlderMessages(true);
-    console.log("getting the 20 messages before message #" + 20 * scrollUps);
     let olderMessages = await getMoreMessagesQuery({
       id: activeChannel,
       skip: 20 * scrollUps,
     });
-
-    console.log("olderMessages ", olderMessages.data.channel.messages.items);
-    console.log([...olderMessages.data.channel.messages.items, ...messages]);
 
     // if we've reached the end of the list, don't keep trying to update
     if (olderMessages.data.channel.messages.items.length < 20) {
@@ -204,14 +181,12 @@ export default memo(function ViewChannel() {
         messages={messages}
         getMoreMessages={getMoreMessages}
       />
-      <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
-      <KeyboardAvoidingView behavior="padding" />
-      {Platform.OS === "android" ? <KeyboardSpacer topSpacing={-130} /> : null}
+      <KeyboardAvoidingView>
+        <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
+      </KeyboardAvoidingView>
+      {/* {Platform.OS === "android" ? <KeyboardSpacer topSpacing={-130} /> : null} */}
     </View>
   );
-  // } else {
-  //   return <CenteredLoaderWithText text={"Getting Messages"} />;
-  // }
 });
 
 const styles = StyleSheet.create({

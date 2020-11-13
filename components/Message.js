@@ -42,14 +42,15 @@ export default memo(function Message({
             isSameUser ? styles.collapseAvatarWrapper : {},
           ]}
         >
-          <AsyncImage
-            source={{ uri: msg.user.icon }}
-            style={[
-              styles.messageAvatar,
-              isSameUser ? styles.collapseAvatarWrapper : {},
-            ]}
-            placeholderColor={"#3a3e52"}
-          />
+          {isSameUser ? (
+            <View style={{ width: 30 }} />
+          ) : (
+            <AsyncImage
+              source={{ uri: msg.user.icon }}
+              style={[styles.messageAvatar]}
+              placeholderColor={"#3a3e52"}
+            />
+          )}
         </View>
 
         <View style={styles.nameAndContentColumn}>
