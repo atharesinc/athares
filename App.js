@@ -146,7 +146,10 @@ export default function App(props) {
       <ApolloProvider client={client}>
         <ImageBackground
           source={require("./assets/images/iss-master.jpg")}
-          style={[styles.container, { width: dimensions.width }]}
+          style={[
+            styles.container,
+            { width: dimensions.width, overflow: "hidden" },
+          ]}
           progressiveRenderingEnabled
           onLayout={onRotate}
         >
