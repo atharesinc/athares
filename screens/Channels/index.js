@@ -24,7 +24,7 @@ function Dashboard({ renderAsSidebar = false }) {
   const [user] = useGlobal("user");
   const [unreadChannels] = useGlobal("unreadChannels");
   const [showSearch] = useGlobal("showSearch");
-
+  const [, setActiveChannel] = useGlobal("activeChannel");
   let circle = null;
   let channels = [];
   let belongsToCircle = false;
@@ -47,8 +47,11 @@ function Dashboard({ renderAsSidebar = false }) {
   });
 
   const goToCreateChannel = () => {
-    RootNavigation.navigate("createChannel", { circle: activeCircle });
+    setActiveChannel(null, () => {
+      RootNavigation.navigate("createChannel", { circle: activeCircle });
+    });
   };
+
   function onSubscriptionData({ subscriptionData }) {
     if (subscriptionData.data) {
       // fire off query again  vs. just add the new value to candidates

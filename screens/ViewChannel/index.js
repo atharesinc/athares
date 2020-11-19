@@ -27,9 +27,12 @@ export default memo(function ViewChannel(props) {
   const [activeChannel] = useGlobal("activeChannel");
   const [user] = useGlobal("user");
   const [messages, setMessages] = useState([]);
-  const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
-  const [scrollUps, setScrollUps] = useState(1);
   const hasOlderMessages = useRef(true);
+
+  const [scrollState, setScrollState] = useState({
+    isLoadingOlderMessages: false,
+    scrollUps: 1,
+  });
 
   // remove this channel from unread channels list on mount
   const { loading, error, data } = useQuery(GET_MESSAGES_FROM_CHANNEL_ID, {
@@ -138,36 +141,52 @@ export default memo(function ViewChannel(props) {
     }
   }, [data]);
 
-  // after we get the older messages, get rid of the older messages loader
-  useEffect(() => {
-    setIsLoadingOlderMessages(false);
-  }, [messages]);
-
   const getMoreMessages = async () => {
-    // don't let the user scroll back futher if the number of inital messages is less than 20
-    if (!hasOlderMessages.current) {
+    // prevent subsequent fetch is in progress
+    if (scrollState.isLoadingOlderMessages) {
       return;
     }
 
-    setIsLoadingOlderMessages(true);
-    let olderMessages = await getMoreMessagesQuery({
-      id: activeChannel,
-      skip: 20 * scrollUps,
-    });
+    try {
+      // don't let the user scroll back futher if the number of inital messages is less than 20
+      if (!hasOlderMessages.current) {
+        return;
+      }
 
-    // if we've reached the end of the list, don't keep trying to update
-    if (olderMessages.data.channel.messages.items.length < 20) {
-      hasOlderMessages.current = false;
+      setScrollState((prevScrollState) => ({
+        ...prevScrollState,
+        isLoadingOlderMessages: true,
+      }));
+
+      let olderMessages = await getMoreMessagesQuery({
+        id: activeChannel,
+        skip: 20 * scrollState.scrollUps,
+      });
+
+      // if we've reached the end of the list, don't keep trying to update
+      if (olderMessages.data.channel.messages.items.length < 20) {
+        hasOlderMessages.current = false;
+      }
+
+      // update our cursor for getting new messages
+      setScrollState((prevScrollState) => ({
+        ...prevScrollState,
+        isLoadingOlderMessages: false,
+        scrollUps: prevScrollState.scrollUps + 1,
+      }));
+
+      // finally prepend our older messages to the end of the list
+      setMessages((msgs) => [
+        ...olderMessages.data.channel.messages.items,
+        ...msgs,
+      ]);
+    } catch (e) {
+      console.error(new Error(e));
+      setScrollState((prevScrollState) => ({
+        ...prevScrollState,
+        isLoadingOlderMessages: false,
+      }));
     }
-
-    // update our cursor for getting new messages
-    setScrollUps((num) => num + 1);
-
-    // finally prepend our older messages to the end of the list
-    setMessages((msgs) => [
-      ...olderMessages.data.channel.messages.items,
-      ...msgs,
-    ]);
   };
 
   if (error) {
@@ -188,7 +207,7 @@ export default memo(function ViewChannel(props) {
       keyboardVerticalOffset={offset}
     >
       <Chat
-        isLoadingOlderMessages={isLoadingOlderMessages}
+        isLoadingOlderMessages={scrollState.isLoadingOlderMessages}
         user={user}
         messages={messages}
         getMoreMessages={getMoreMessages}

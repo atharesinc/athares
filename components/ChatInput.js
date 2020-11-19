@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Keyboard,
   Platform,
   TextInput,
 } from "react-native";
@@ -216,6 +215,7 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceGrotesk",
   },
   composerInput: {
+    minHeight: 35,
     padding: 10,
     color: "#FFFFFF",
     fontFamily: "SpaceGrotesk",
@@ -312,7 +312,7 @@ function CrossAutoGrow({ onChangeText, value, isFocused = false, ...props }) {
         { maxHeight: 150, paddingHorizontal: 15 },
       ]}
       placeholderTextColor={"#FFFFFFb7"}
-      onSubmitEditing={Keyboard.dismiss}
+      // onSubmitEditing={Keyboard.dismiss}
       {...props}
     />
   );
