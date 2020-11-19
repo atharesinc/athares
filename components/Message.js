@@ -11,6 +11,7 @@ export default memo(function Message({
   message: msg,
   isSameUser,
   isSameDay,
+  onLayout = null,
   ...props
 }) {
   const timestamp = parseDate(props.timestamp, "h:mm bbbb");
@@ -29,8 +30,16 @@ export default memo(function Message({
     }
   };
 
+  const _onLayout = (e) => {
+    // Inject the id into the nativeEvent
+    e.id = msg.id;
+    e.index = props.index;
+    return onLayout(e);
+  };
+
+  const source = { uri: msg.user.icon };
   return (
-    <View>
+    <View onLayout={_onLayout}>
       {isSameDay && (
         <MessageDivider date={parseDate(msg.createdAt, "cccc, LLLL do")} />
       )}
@@ -43,10 +52,10 @@ export default memo(function Message({
           ]}
         >
           {isSameUser ? (
-            <View style={{ width: 30 }} />
+            <View style={styles.blankWidth} />
           ) : (
             <AsyncImage
-              source={{ uri: msg.user.icon }}
+              source={source}
               style={[styles.messageAvatar]}
               placeholderColor={"#3a3e52"}
             />
@@ -101,12 +110,8 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginBottom: 10,
   },
-  // me: {
-  //   backgroundColor: "#2f3242",
-  // },
-  // otherUser: {
-  //   backgroundColor: "#3a3e52",
-  // },
+  blankWidth: { width: 30 },
+
   messageUserText: {
     color: "#FFFFFF",
     fontSize: 18,

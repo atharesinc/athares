@@ -15,7 +15,6 @@ import { GET_CIRCLES_BY_USER_ID } from "../graphql/queries";
 import { SUB_TO_USERS_CIRCLES } from "../graphql/subscriptions";
 
 import { useQuery, useSubscription } from "@apollo/client";
-import AsyncImage from "./AsyncImage";
 
 const Circles = ({ loggedIn = false }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
@@ -99,18 +98,10 @@ const Circles = ({ loggedIn = false }) => {
         {loading ? (
           <>
             <View style={[styles.placeholderCircleWrapper, { borderWidth: 4 }]}>
-              <AsyncImage
-                source={{ uri: "" }}
-                style={styles.placeholderCircle}
-                placeholderColor={"#3a3e52"}
-              />
+              <View style={styles.placeholderCircle} />
             </View>
             <View style={[styles.placeholderCircleWrapper]}>
-              <AsyncImage
-                source={{ uri: "" }}
-                style={styles.placeholderCircle}
-                placeholderColor={"#3a3e52"}
-              />
+              <View style={styles.placeholderCircle} />
             </View>
           </>
         ) : (
@@ -165,6 +156,7 @@ const styles = StyleSheet.create({
   placeholderCircle: {
     height: 60,
     width: 60,
+    backgroundColor: "#3a3e52",
   },
   placeholderCircleWrapper: {
     width: 60,
