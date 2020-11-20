@@ -10,7 +10,6 @@ import Register from "./Register";
 const Stack = createStackNavigator();
 
 export default function Portal(props) {
-  const [isMobile] = useGlobal("isMobile");
   const [, setActiveChannel] = useGlobal("activeChannel");
   const [, setActiveCircle] = useGlobal("activeCircle");
   const [, setActiveRevision] = useGlobal("activeRevision");
@@ -32,9 +31,7 @@ export default function Portal(props) {
   };
 
   return (
-    <View
-      style={[styles.wrapper, !isMobile ? { paddingHorizontal: "20%" } : {}]}
-    >
+    <View style={styles.wrapper}>
       <Image
         style={{ height: 30, width: 180, marginTop: 60, marginBottom: 25 }}
         source={require("../../assets/images/Athares-type-small-white.png")}

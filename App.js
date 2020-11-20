@@ -151,19 +151,19 @@ export default function App(props) {
               progressiveRenderingEnabled
               onLayout={onRotate}
             >
-              <View style={styles.container} onLayout={onRotate}>
-                <StatusBar barStyle="light-content" />
-                <NavigationContainer
-                  ref={navigationRef}
-                  initialState={initialNavigationState}
-                  linking={linkingConfig}
-                >
-                  <Drawer>
+              <StatusBar barStyle="light-content" />
+              <NavigationContainer
+                ref={navigationRef}
+                initialState={initialNavigationState}
+                linking={linkingConfig}
+              >
+                <Drawer>
+                  <View style={styles.container} onLayout={onRotate}>
                     {shouldRenderSideBar}
                     <RootStack />
-                  </Drawer>
-                </NavigationContainer>
-              </View>
+                  </View>
+                </Drawer>
+              </NavigationContainer>
             </ImageBackground>
             {/* Put non-rendering components here so they mount after other components*/}
             <AutoLoginHandler />

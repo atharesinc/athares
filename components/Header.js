@@ -75,6 +75,7 @@ function Header({
     "createRevision",
     "editAmendment",
     "viewInvites",
+    "news",
   ];
 
   const simpleChannelsObj = {
@@ -87,6 +88,7 @@ function Header({
     createRevision: "Create Revision",
     editAmendment: "Edit Amendment",
     viewInvites: "Invites",
+    news: "News",
   };
   // render screen name and back
   if (simpleChannelsArr.indexOf(name) !== -1) {
@@ -222,6 +224,25 @@ function Header({
     );
   }
 
+  // Render Portal
+  // render channelName and back
+  if (["portal"].indexOf(name) !== -1) {
+    return (
+      <View style={[styles.header, styles.bgTransparent]}>
+        <TouchableOpacity onPress={back}>
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
+        </TouchableOpacity>
+        {/* {data && data.channel && (
+          <Text style={styles.headerText} numberOfLines={1}>
+            {loading ? "" : data.channel.name}
+          </Text>
+        )} */}
+
+        <Feather name="more-vertical" size={30} color={"transparent"} />
+      </View>
+    );
+  }
+
   // render dashboard with user drawer
 
   let img = require("../assets/images/user-default.png");
@@ -290,6 +311,9 @@ const styles = StyleSheet.create({
   },
   headerThemeLighter: {
     backgroundColor: "#3a3e52",
+  },
+  bgTransparent: {
+    backgroundColor: "transparent",
   },
   headerText: {
     color: "#FFFFFF",
