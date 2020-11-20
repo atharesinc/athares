@@ -49,7 +49,7 @@ export default function RootStack() {
       <Stack.Screen
         name="portal"
         component={Portal}
-        options={{ headerShown: false }}
+        // options={{ headerShown: false }}
       />
       <Stack.Screen name="createRevision" component={CreateRevision} />
       <Stack.Screen name="viewRevision" component={ViewRevision} />
