@@ -1,5 +1,5 @@
-import React, { useRef, memo } from "reactn";
-import { FlatList, StyleSheet, View } from "react-native";
+import React, { useRef, memo, useState, useEffect } from "reactn";
+import { FlatList, StyleSheet, View, Keyboard } from "react-native";
 import Message from "./Message";
 import Loader from "./Loader";
 import DisclaimerText from "./DisclaimerText";
@@ -12,6 +12,27 @@ export default memo(function Chat({
 }) {
   const scrollRef = useRef();
   const heights = useRef([]);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const _renderItem = ({ item, index }) => {
     const isSameDay =
@@ -109,6 +130,10 @@ export default memo(function Chat({
       ref={scrollRef}
       getItemLayout={getItemLayout}
       scrollEventThrottle={1000}
+      // This is deprecated so it'll have to be fixed
+      // (the issue of not all elements being visible when keybaord is up and message view is more than 3 lines)
+      // https://github.com/atharesinc/athares/pull/13
+      disableVirtualization={isKeyboardVisible}
       // initialScrollIndex={messages.length > 1 ? messages.length - 1 : 0}
       // onScrollToIndexFailed={scrollFailed}
     />
