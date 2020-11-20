@@ -27,11 +27,7 @@ import MeshStore from "./utils/meshStore";
 // theming
 import { themes } from "./constants/themes";
 
-import {
-  SafeAreaProvider,
-  initialWindowSafeAreaInsets,
-  SafeAreaView,
-} from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 // screens that can appear outside of the stack
 import Channels from "./screens/Channels";
@@ -144,41 +140,39 @@ export default function App(props) {
   } else {
     return (
       <ApolloProvider client={client}>
-        <ImageBackground
-          source={require("./assets/images/iss-master.jpg")}
-          style={[
-            styles.container,
-            { width: dimensions.width, overflow: "hidden" },
-          ]}
-          progressiveRenderingEnabled
-          onLayout={onRotate}
-        >
-          <View style={styles.container} onLayout={onRotate}>
-            <StatusBar barStyle="light-content" />
-            <SafeAreaProvider
-              initialSafeAreaInsets={initialWindowSafeAreaInsets}
+        <SafeAreaProvider>
+          <SafeAreaView style={[styles.container, styles.safeAreaContainer]}>
+            <ImageBackground
+              source={require("./assets/images/iss-master.jpg")}
+              style={[
+                styles.container,
+                { width: dimensions.width, overflow: "hidden" },
+              ]}
+              progressiveRenderingEnabled
+              onLayout={onRotate}
             >
-              <NavigationContainer
-                ref={navigationRef}
-                initialState={initialNavigationState}
-                linking={linkingConfig}
-              >
-                <Drawer>
-                  <SafeAreaView style={styles.container}>
+              <View style={styles.container} onLayout={onRotate}>
+                <StatusBar barStyle="light-content" />
+                <NavigationContainer
+                  ref={navigationRef}
+                  initialState={initialNavigationState}
+                  linking={linkingConfig}
+                >
+                  <Drawer>
                     {shouldRenderSideBar}
                     <RootStack />
-                  </SafeAreaView>
-                </Drawer>
-              </NavigationContainer>
-            </SafeAreaProvider>
-          </View>
-        </ImageBackground>
-        {/* Put non-rendering components here so they mount after other components*/}
-        <AutoLoginHandler />
-        <OnlineMonitor />
-        <RevisionMonitor />
-        <ChannelUpdateMonitor />
-        <InviteMonitor />
+                  </Drawer>
+                </NavigationContainer>
+              </View>
+            </ImageBackground>
+            {/* Put non-rendering components here so they mount after other components*/}
+            <AutoLoginHandler />
+            <OnlineMonitor />
+            <RevisionMonitor />
+            <ChannelUpdateMonitor />
+            <InviteMonitor />
+          </SafeAreaView>
+        </SafeAreaProvider>
       </ApolloProvider>
     );
   }
@@ -193,6 +187,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
+  },
+  safeAreaContainer: {
+    backgroundColor: "#282a38",
   },
   // imageContainer: {
   //   flex: 1,
