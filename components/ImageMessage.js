@@ -6,9 +6,10 @@ import {
   // Image,
   TouchableOpacity,
   Alert,
-  CameraRoll,
+  Platform,
 } from "react-native";
 import AsyncImage from "./AsyncImage";
+import CameraRoll from "@react-native-community/cameraroll";
 // import Lightbox from "react-native-lightbox";
 // import { Feather } from "@expo/vector-icons";
 
@@ -30,6 +31,16 @@ const ImageMessage = ({ file }) => {
     );
   };
   const download = async () => {
+    if (Platform.OS === "web") {
+      let a = document.createElement("a");
+      a.href = file;
+      a.download = file;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      return;
+    }
+
     try {
       let local = await FileSystem.downloadAsync(
         file,
