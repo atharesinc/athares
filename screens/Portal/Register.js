@@ -148,9 +148,9 @@ export default function Register() {
 
       RootNavigation.navigate("app");
     } catch (err) {
-      // console.log(err.message, err.details);
       setLoading(false);
       console.error(new Error(err));
+
       if (err.message.indexOf("The user already exists") !== -1) {
         MeshAlert({
           title: "Error",

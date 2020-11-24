@@ -40,7 +40,6 @@ export default function AutoLoginHandler() {
 
           const [res1, res2] = await Promise.all([prom3, prom4]);
 
-          // console.log(res1, res2);
           const {
             data: {
               user: { id },
@@ -58,7 +57,6 @@ export default function AutoLoginHandler() {
 
           //store locally
           await MeshStore.setItem("ATHARES_TOKEN", idToken);
-          // console.log("token after auto-login", idToken);
           setUser(id);
         }
       } catch (err) {

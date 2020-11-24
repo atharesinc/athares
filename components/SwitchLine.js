@@ -2,7 +2,7 @@ import React, { useGlobal } from "reactn";
 import { View, StyleSheet, Text } from "react-native";
 import Switch from "react-native-switch-pro";
 
-const SwitchLine = ({ label, value = false, onPress = console.log }) => {
+const SwitchLine = ({ label, value = false, onPress = () => {} }) => {
   const [activeTheme] = useGlobal("activeTheme");
 
   return (

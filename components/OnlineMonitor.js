@@ -27,7 +27,6 @@ export default class OnlineMonitor extends Component {
         const connected = isConnected && isInternetReachable;
         // only update if different and after the initial load
         if (this.global.isOnline !== connected) {
-          // console.log("Network connection changed");
           this.setGlobal({ isOnline: connected });
         }
       } catch (e) {

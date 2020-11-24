@@ -25,7 +25,7 @@ const wsLink = new SubscriptionLink({
     };
   },
   onAuthError: (error) => {
-    console.log("log", "[Subscription error]:", error);
+    console.error("log", "[Subscription error]:", error);
   },
 });
 
@@ -33,12 +33,7 @@ const wsLink = new SubscriptionLink({
 const cache = new InMemoryCache();
 
 const withToken = setContext(async () => {
-  // console.log("does token exist before setting context?", token);
-
-  // if (!token) {
   const token = await MeshStore.getItem("ATHARES_TOKEN");
-  // console.log("token about to set context", token);
-  // }
 
   return {
     headers: {

@@ -22,7 +22,6 @@ export default function Diff({
   removedColor = "salmon",
   unchangedColor = "transparent",
 }) {
-  console.log({ inputA });
   var diff = fnMap[type](inputA, inputB);
   var result = diff.map(function (part, index) {
     var spanStyle = part.added
