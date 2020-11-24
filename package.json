@@ -76,6 +76,7 @@
     "reactn": "^2.2.7",
     "simple-crypto-js": "^2.5.0",
     "subscriptions-transport-ws": "^0.9.16",
+    "sweetalert": "^2.1.2",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {

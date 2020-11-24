@@ -8,7 +8,7 @@ const MeshAlert = async ({
   title,
   text = "",
   onSubmit = null,
-  okayButtonName = null,
+  submitText = null,
   icon = null,
 }) => {
   if (shouldUseSweet) {
@@ -16,7 +16,7 @@ const MeshAlert = async ({
       title,
       text,
       icon,
-      buttons: [true, okayButtonName || "OK"],
+      buttons: [true, submitText || "OK"],
     });
 
     if (res && onSubmit) {
@@ -33,7 +33,7 @@ const MeshAlert = async ({
         style: "cancel",
       },
       {
-        text: okayButtonName || "OK",
+        text: submitText || "OK",
         onPress: onSubmit ? () => onSubmit(true) : null,
       },
     ],
@@ -69,6 +69,6 @@ export default MeshAlert;
 //   onSubmit: (val) => {
 //     console.log('hellor', val);
 //   },
-//   okayButtonName: 'wowowo',
+//   submitText: 'wowowo',
 //   icon: 'success',
 // });

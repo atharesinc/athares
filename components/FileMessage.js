@@ -1,23 +1,19 @@
 import React from "reactn";
 import { Feather } from "@expo/vector-icons";
 
-import { StyleSheet, Alert, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { FileSystem } from "expo";
+import MeshAlert from "../utils/meshAlert";
 
 const FileMessage = ({ file, fileName }) => {
   const requestDownload = () => {
-    Alert.alert(
-      "Save File",
-      "Do you want to save this file?",
-      [
-        {
-          text: "Save",
-          onPress: () => download(),
-        },
-        { text: "Cancel", onPress: () => {}, style: "cancel" },
-      ],
-      { cancelable: true }
-    );
+    MeshAlert({
+      title: "Save Image",
+      text: "Do you want to save this file?",
+      submitText: "Save",
+      onSubmit: download,
+      icon: "info",
+    });
   };
   const download = async () => {
     try {

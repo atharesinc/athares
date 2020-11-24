@@ -5,10 +5,11 @@ import {
   Text,
   // Image,
   TouchableOpacity,
-  Alert,
   Platform,
 } from "react-native";
 import AsyncImage from "./AsyncImage";
+import MeshAlert from "../utils/meshAlert";
+
 let CameraRoll = null;
 
 if (Platform.OS !== "web") {
@@ -21,18 +22,13 @@ import { FileSystem } from "expo";
 
 const ImageMessage = ({ file }) => {
   const requestDownload = () => {
-    Alert.alert(
-      "Save Image",
-      "Do you want to save this file?",
-      [
-        {
-          text: "Save",
-          onPress: () => download(),
-        },
-        { text: "Cancel", onPress: () => {}, style: "cancel" },
-      ],
-      { cancelable: true }
-    );
+    MeshAlert({
+      title: "Save Image",
+      text: "Do you want to save this file?",
+      submitText: "Save",
+      onSubmit: download,
+      icon: "info",
+    });
   };
   const download = async () => {
     if (Platform.OS === "web") {

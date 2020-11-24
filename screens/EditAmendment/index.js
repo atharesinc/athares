@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Alert,
   View,
 } from "react-native";
 
@@ -14,6 +13,7 @@ import { GET_AMENDMENT_BY_ID } from "../../graphql/queries";
 
 import { sha } from "../../utils/crypto";
 import { validateUpdatedRevision } from "../../utils/validators";
+import MeshAlert from "../../utils/meshAlert";
 
 import { parseDate } from "../../utils/transform";
 import { addSeconds } from "date-fns";
@@ -47,20 +47,16 @@ export default function EditAmendment(props) {
     }
   }, [data]);
 
-  // const confirmRepeal = () => {
-  //     Alert.alert(
-  //         "Confirm Repeal?",
-  //         "Are you sure you'd like to repeal this amendment?\n\nBy starting the repeal process, you will create a revision with the intention of permanently deleting this amendment.",
-  //         [
-  //             {
-  //                 text: "Yes, Repeal",
-  //                 onPress: () => repeal(),
-  //             },
-  //             { text: "Cancel", onPress: () => {}, style: "cancel" },
-  //         ],
-  //         { cancelable: true }
-  //     );
-  // };
+  const confirmRepeal = () => {
+    MeshAlert({
+      title: "Confirm Repeal?",
+      text:
+        "Are you sure you'd like to repeal this amendment?\n\nBy starting the repeal process, you will create a revision with the intention of permanently deleting this amendment.",
+      submitText: "Yes, Repeal",
+      onSubmit: repeal,
+      icon: "warning",
+    });
+  };
 
   useEffect(() => {
     if (activeRevision) {
@@ -95,7 +91,11 @@ export default function EditAmendment(props) {
       createRevision(newRevision);
     } catch (err) {
       console.error(new Error(err));
-      // swal("Error", "There was an error in the repeal process", "error");
+      MeshAlert({
+        title: "Error",
+        text: "There was an error in the repeal process",
+        icon: "error",
+      });
     }
   };
 
@@ -123,7 +123,7 @@ export default function EditAmendment(props) {
 
     if (isValid !== undefined) {
       console.error("Error", isValid[Object.keys(isValid)[0]][0]);
-      throw new Error("Sorry, Amendments must have text.");
+      throw new Error("Amendments must have text.");
     }
 
     let numUsers = data.amendment.circle.users.items.length;
@@ -170,7 +170,7 @@ export default function EditAmendment(props) {
       setActiveRevision(newRevision.id);
     } catch (err) {
       console.error(err);
-      Alert.alert("Error", err.message);
+      MeshAlert({ title: "Error", text: err.message, icon: "error" });
     } finally {
       setLoading(false);
     }
@@ -210,7 +210,7 @@ export default function EditAmendment(props) {
           />
           <GlowButton
             text="Repeal Amendment"
-            onPress={repeal}
+            onPress={confirmRepeal}
             red
             style={styles.voteButtons}
           />

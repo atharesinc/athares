@@ -4,25 +4,21 @@ import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 // import Constants from "expo-constants";
 
-import { Alert, Linking, Platform } from "react-native";
+import { Linking, Platform } from "react-native";
+import MeshAlert from "./meshAlert";
 
 export default async function getPermissionAsync(permission) {
   const { status } = await Permissions.askAsync(permission);
   if (status !== "granted") {
     // const { name } = Constants.manifest;
     const permissionName = permission.toLowerCase().replace("_", " ");
-    Alert.alert(
-      "Cannot be done 😞",
-      `If you would like to use this feature, you'll need to enable the ${permissionName} permission in your phone settings.`,
-      [
-        {
-          text: "Let's go!",
-          onPress: () => Linking.openURL("app-settings:"),
-        },
-        { text: "Nevermind", onPress: () => {}, style: "cancel" },
-      ],
-      { cancelable: true }
-    );
+    MeshAlert({
+      title: "Cannot be done 😞",
+      text: `If you would like to use this feature, you'll need to enable the ${permissionName} permission in your phone settings.`,
+      submitText: "Let's go!",
+      onSubmit: () => Linking.openURL("app-settings:"),
+      icon: "warning",
+    });
 
     return false;
   }

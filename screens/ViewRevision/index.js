@@ -1,15 +1,16 @@
-import React, { useEffect, useGlobal } from "reactn";
+import React, { useEffect, useGlobal, useRef } from "reactn";
 import {
   View,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
 } from "react-native";
 import Statistic from "../../components/Statistic";
 import DiffSection from "./DiffSection";
 import { unixTime } from "../../utils/transform";
+import MeshAlert from "../../utils/meshAlert";
+
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import Title from "../../components/Title";
 import DisclaimerText from "../../components/DisclaimerText";
@@ -30,14 +31,14 @@ export default function ViewRevision(props) {
   const [user] = useGlobal("user");
   const [activeCircle] = useGlobal("activeCircle");
   const [activeViewUser, setActiveViewUser] = useGlobal("activeViewUser");
-  let belongsToCircle = false;
+  let belongsToCircle = useRef(false);
 
   const { data: isUserInCircle, loading } = useQuery(IS_USER_IN_CIRCLE, {
     variables: { circle: activeCircle || "", user: user || "" },
   });
 
   const { data, loading: loading2 } = useQuery(GET_REVISION_BY_ID, {
-    variables: { id: activeRevision || "" },
+    variables: { id: props.route.params.revision },
   });
 
   const [createVote] = useMutation(CREATE_VOTE);
@@ -47,14 +48,12 @@ export default function ViewRevision(props) {
     setActiveChannel(null);
   }, []);
 
-  useEffect(() => {
-    if (activeViewUser) {
-      props.navigation.navigate("viewOtherUser", { user: activeViewUser });
-    }
-  }, [activeViewUser]);
-
   const goToUser = () => {
-    setActiveViewUser(data.revision.backer.id);
+    setActiveViewUser(data.revision.backer.id, () => {
+      props.navigation.navigate("viewOtherUser", {
+        user: activeViewUser,
+      });
+    });
   };
 
   const renderHasVoted = ({ updatedAt = new Date(), support = true }) => {
@@ -126,7 +125,11 @@ export default function ViewRevision(props) {
         }
       } catch (err) {
         console.error(new Error(err));
-        Alert.alert("Error", "Unable to cast vote. Please try again later");
+        MeshAlert({
+          title: "Error",
+          text: "Unable to cast vote. Please try again later",
+          icon: "error",
+        });
       }
     }
   };
@@ -137,10 +140,10 @@ export default function ViewRevision(props) {
     isUserInCircle.circlesList.items.length !== 0 &&
     isUserInCircle.circlesList.items[0].id === activeCircle
   ) {
-    belongsToCircle = true;
+    belongsToCircle.current = true;
   }
 
-  if (loading || loading2) {
+  if (loading || loading2 || !data) {
     return <CenteredLoaderWithText />;
   }
 
@@ -215,7 +218,7 @@ export default function ViewRevision(props) {
           </View>
         </TouchableOpacity>
       </View>
-      {user && !hasExpired && belongsToCircle && (
+      {user && !hasExpired && belongsToCircle.current && (
         <View style={styles.voteSectionWrapper}>
           <GlowButton
             green

@@ -4,11 +4,11 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Alert,
   View,
 } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
 import AvatarPicker from "../../components/AvatarPicker";
+import MeshAlert from "../../utils/meshAlert";
 
 import {
   CREATE_CIRCLE,
@@ -106,17 +106,22 @@ function CreateCircle(props) {
       newCircle.id = newCircleRes.data.circleCreate.id;
 
       // set activeCircle as this one
-      setActiveCircle(newCircle.id);
       setName("");
       setPreamble("");
       setUri(null);
 
-      Alert.alert("Circle Created", `${name} has been created successfully.`);
-      // props.navigation.goBack(null);
-      props.navigation.navigate("constitution", { circle: newCircle.id });
+      MeshAlert({
+        title: "Circle Created",
+        text: `${name} has been created successfully.`,
+        icon: "success",
+      });
+
+      setActiveCircle(newCircle.id, () => {
+        props.navigation.navigate("constitution", { circle: newCircle.id });
+      });
     } catch (err) {
       console.error(new Error(err));
-      Alert.alert("Error", err.message);
+      MeshAlert({ title: "Error", text: err.message, icon: "error" });
     } finally {
       setLoading(false);
     }
