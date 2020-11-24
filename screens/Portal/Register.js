@@ -1,12 +1,14 @@
 import React, { useState, useGlobal, useRef, useEffect } from "reactn";
 
-import { TouchableOpacity, Linking, View, Alert, Text } from "react-native";
+import { TouchableOpacity, Linking, View, Text } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import MeshStore from "../../utils/meshStore";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
 import { validateRegister } from "../../utils/validators";
+import MeshAlert from "../../utils/meshAlert";
+
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
@@ -60,17 +62,23 @@ export default function Register() {
     });
 
     if (isValid !== undefined) {
-      Alert.alert("Error", isValid[Object.keys(isValid)[0]][0]);
+      MeshAlert({
+        title: "Error",
+        text: isValid[Object.keys(isValid)[0]][0],
+        icon: "error",
+      });
       setLoading(false);
       return false;
     }
 
     // Auth0's arbitrary stupid auth requirements
     if (/(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])/.test(password) === false) {
-      Alert.alert(
-        "Error",
-        "Password must contain a capital letter, a lowercase letter, and a number."
-      );
+      MeshAlert({
+        title: "Error",
+        text:
+          "Password must contain a capital letter, a lowercase letter, and a number.",
+        icon: "error",
+      });
       setLoading(false);
       return false;
     }
@@ -140,13 +148,17 @@ export default function Register() {
 
       RootNavigation.navigate("app");
     } catch (err) {
-      // console.log(err.message, err.details);
       setLoading(false);
       console.error(new Error(err));
+
       if (err.message.indexOf("The user already exists") !== -1) {
-        Alert.alert("Error", "A user already exists with this email address.");
+        MeshAlert({
+          title: "Error",
+          text: "A user already exists with this email address.",
+          icon: "error",
+        });
       } else {
-        Alert.alert("Error", err.message);
+        MeshAlert({ title: "Error", text: err.message, icon: "error" });
       }
     }
   };

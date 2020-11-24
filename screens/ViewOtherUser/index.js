@@ -56,13 +56,13 @@ export default function ViewOtherUser() {
           text={user.firstName + " " + user.lastName}
           textStyle={{ marginBottom: 0 }}
         />
-        {user.uname && (
+        {user.uname ? (
           <DisclaimerText
             grey
             text={"@" + user.uname}
             style={styles.disclaimer}
           />
-        )}
+        ) : null}
         <Statistic header="Circles" text={stats.circleCount} />
         <Statistic header="Revisions Proposed" text={stats.revisionCount} />
         <Statistic

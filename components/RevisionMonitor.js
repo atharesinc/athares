@@ -91,7 +91,6 @@ export default function RevisionMonitor() {
     }
 
     let revisions = candidates;
-    // console.log("we got these many to go through", revisions.length);
 
     let items = revisions.sort(
       (a, b) => unixTime(a.expires) - unixTime(b.expires)

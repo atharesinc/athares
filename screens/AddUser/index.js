@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
-  Alert,
 } from "react-native";
 // import InviteUser from "../../components/InviteUser";
 import DisclaimerText from "../../components/DisclaimerText";
@@ -16,6 +15,7 @@ import GlowButton from "../../components/GlowButton";
 import Loader from "../../components/Loader";
 import { Feather } from "@expo/vector-icons";
 import Suggestions from "./Suggestions";
+import MeshAlert from "../../utils/meshAlert";
 
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
@@ -115,14 +115,21 @@ export default function AddUser(props) {
         }
       }
 
-      Alert.alert(
-        `${tags.length > 1 ? "Users Added" : "User Added"}`,
-        `${tags.length > 1 ? "These users have" : "This user has"} been added.`
-      );
+      MeshAlert({
+        title: `${tags.length > 1 ? "Users Added" : "User Added"}`,
+        text: `${
+          tags.length > 1 ? "These users have" : "This user has"
+        } been added.`,
+        icon: "success",
+      });
       props.navigation.goBack(null);
     } catch (err) {
       console.error(new Error(err));
-      //     Alert.alert("Error", "There was an error inviting users.");
+      MeshAlert({
+        title: "Error",
+        text: "There was an error inviting users.",
+        icon: "error",
+      });
     } finally {
       setLoadingInvites(false);
     }

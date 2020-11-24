@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import * as ImageManipulator from "expo-image-manipulator";
 import debounce from "lodash.debounce";
+import MeshAlert from "../../utils/meshAlert";
 
 import AvatarPicker from "../../components/AvatarPicker";
 import InfoLine from "../../components/InfoLine";
@@ -205,7 +206,11 @@ export default function Me() {
       });
     } catch (err) {
       console.error(err.message);
-      // Alert.alert("Error", "There was an error updating your profile.");
+      MeshAlert({
+        title: "Error",
+        text: "There was an error updating your profile.",
+        icon: "error",
+      });
     } finally {
       setUpdating(false);
     }

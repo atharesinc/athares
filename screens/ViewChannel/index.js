@@ -1,11 +1,6 @@
 import React, { useState, useGlobal, memo, useEffect, useRef } from "reactn";
 
-import {
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 
 import Chat from "../../components/Chat";
 import ChatInput from "../../components/ChatInput";
@@ -20,6 +15,7 @@ import { GET_MESSAGES_FROM_CHANNEL_ID } from "../../graphql/queries";
 import { SUB_TO_MESSAGES_BY_CHANNEL_ID } from "../../graphql/subscriptions";
 import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import { uploadToAWS } from "../../utils/upload";
+import MeshAlert from "../../utils/meshAlert";
 import useImperativeQuery from "../../utils/useImperativeQuery";
 
 export default memo(function ViewChannel(props) {
@@ -123,10 +119,11 @@ export default memo(function ViewChannel(props) {
       });
     } catch (err) {
       console.error(new Error(err));
-      Alert.alert(
-        "Error",
-        "We were unable to send your message, please try again later"
-      );
+      MeshAlert({
+        title: "Error",
+        text: "We were unable to send your message, please try again later",
+        icon: "error",
+      });
     } finally {
       setUploadInProgress(false);
     }

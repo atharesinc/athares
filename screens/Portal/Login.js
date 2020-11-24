@@ -1,7 +1,9 @@
 import React, { useRef, useEffect, useState, useGlobal } from "reactn";
-import { View, TouchableOpacity, Linking, Alert } from "react-native";
+import { View, TouchableOpacity, Linking } from "react-native";
 
 import MeshStore from "../../utils/meshStore";
+import MeshAlert from "../../utils/meshAlert";
+
 import * as RootNavigation from "../../navigation/RootNavigation";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { validateLogin } from "../../utils/validators";
@@ -56,7 +58,11 @@ export default function Login() {
     setLoading(true);
     const isValid = validateLogin({ password, email });
     if (isValid !== undefined) {
-      Alert.alert("Error", isValid[Object.keys(isValid)[0]][0]);
+      MeshAlert({
+        title: "Error",
+        text: isValid[Object.keys(isValid)[0]][0],
+        icon: "error",
+      });
       setLoading(false);
       return false;
     }
@@ -107,13 +113,17 @@ export default function Login() {
     } catch (err) {
       console.error(err);
       if (err.message.indexOf("Invalid Credentials") !== -1) {
-        Alert.alert("Error", "Invalid Credentials");
+        MeshAlert({
+          title: "Error",
+          text: "Invalid Credentials",
+          icon: "error",
+        });
       } else if (err.message.indexOf("Token expired") !== -1) {
         refreshToken();
         // await MeshStore.clear();
         // tryLogin();
       } else {
-        Alert.alert("Error", err.message);
+        MeshAlert({ title: "Error", text: err.message, icon: "error" });
       }
       setLoading(false);
     }

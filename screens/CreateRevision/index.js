@@ -1,10 +1,5 @@
 import React, { useState, useGlobal } from "reactn";
-import {
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Alert,
-} from "react-native";
+import { ScrollView, StyleSheet, KeyboardAvoidingView } from "react-native";
 
 import DisclaimerText from "../../components/DisclaimerText";
 import Input from "../../components/Input";
@@ -12,6 +7,7 @@ import GlowButton from "../../components/GlowButton";
 
 import { sha } from "../../utils/crypto";
 import { validateNewRevision } from "../../utils/validators";
+import MeshAlert from "../../utils/meshAlert";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
@@ -110,15 +106,21 @@ export default function CreateRevision(props) {
       });
     } catch (err) {
       if (
-        !err.message.includes("unique constraint would be violated") ||
-        !err.message.includes("hash")
+        err.message?.includes("unique constraint would be violated") ||
+        err.message?.includes("hash")
       ) {
-        console.error(err);
-        Alert.alert(
-          "Error",
-          "There was an error connecting to the Athares network. Please try again later."
-        );
+        MeshAlert({
+          title: "Error",
+          text:
+            "There was an error connecting to the Athares network. Please try again later.",
+          icon: "error",
+        });
       }
+      MeshAlert({
+        title: "Error",
+        text: err,
+        icon: "error",
+      });
       console.error(err);
     } finally {
       setLoading(false);

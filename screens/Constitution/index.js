@@ -25,7 +25,7 @@ import ConstitutionFooter from "./ConstitutionFooter";
 import Input from "../../components/Input";
 import { useEffect } from "react";
 
-export default function Constitution() {
+export default function Constitution({ route }) {
   // const [activeTheme] = useGlobal("activeTheme");
   const [activeCircle] = useGlobal("activeCircle");
   const [showConstSearch] = useGlobal("showConstSearch");
@@ -40,7 +40,7 @@ export default function Constitution() {
     GET_AMENDMENTS_FROM_CIRCLE_ID,
     {
       variables: {
-        id: activeCircle || "",
+        id: route.params.circle,
       },
       fetchPolicy: "cache-and-network",
     }
@@ -51,7 +51,7 @@ export default function Constitution() {
     IS_USER_IN_CIRCLE,
     {
       variables: {
-        circle: activeCircle || "",
+        circle: route.params.circle,
         user: user || "",
       },
     }
@@ -59,21 +59,21 @@ export default function Constitution() {
 
   // listen for changes to amendments
   useSubscription(SUB_TO_CIRCLES_AMENDMENTS, {
-    variables: { id: activeCircle || "" },
+    variables: { id: route.params.circle },
     onSubscriptionData,
   });
 
   function onSubscriptionData({ subscriptionData }) {
     if (subscriptionData.data) {
       refetch({
-        id: activeCircle,
+        id: route.params.circle,
       });
     }
   }
 
   // listen to changes on amendments (specifically to see if amendment has outstanding revision)
   useSubscription(SUB_TO_AMENDMENTS_REVISONS, {
-    variables: { id: activeCircle || "" },
+    variables: { id: route.params.circle },
     onSubscriptionData: onSubscriptionData2,
   });
 

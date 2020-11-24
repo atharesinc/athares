@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Alert,
   View,
 } from "react-native";
 
@@ -12,6 +11,7 @@ import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import { CREATE_CHANNEL } from "../../graphql/mutations";
 import { GET_CIRCLE_NAME_BY_ID } from "../../graphql/queries";
 import { validateChannel } from "../../utils/validators";
+import MeshAlert from "../../utils/meshAlert";
 
 import { useMutation, useQuery } from "@apollo/client";
 
@@ -79,13 +79,14 @@ export default function CreateChannel(props) {
 
       // set activeChannel as this one
       setActiveChannel(newChannel.id);
-      Alert.alert(
-        "Channel Created",
-        `${name} has been created in the Circle ${data.circle.name}.`
-      );
+      MeshAlert({
+        title: "Channel Created",
+        text: `${name} has been created in the Circle ${data.circle.name}.`,
+        icon: "success",
+      });
     } catch (err) {
       console.error(new Error(err));
-      Alert.alert("Error", err.message);
+      MeshAlert({ title: "Error", text: err.message, icon: "error" });
     } finally {
       setLoading(false);
     }
