@@ -1,6 +1,6 @@
 import React, { useGlobal } from "reactn";
 import { Animated } from "react-native";
-import SideMenu from "react-native-side-menu";
+import SideMenu from "react-native-side-menu-updated";
 
 import Menu from "./Menu";
 

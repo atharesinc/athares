@@ -9,7 +9,11 @@ import {
   Platform,
 } from "react-native";
 import AsyncImage from "./AsyncImage";
-import CameraRoll from "@react-native-community/cameraroll";
+let CameraRoll = null;
+
+if (Platform.OS !== "web") {
+  CameraRoll = require("@react-native-community/cameraroll");
+}
 // import Lightbox from "react-native-lightbox";
 // import { Feather } from "@expo/vector-icons";
 
