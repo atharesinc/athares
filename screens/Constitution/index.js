@@ -167,7 +167,11 @@ export default function Constitution({ route }) {
 
     return (
       <View style={[styles.wrapper]}>
-        <View>
+        <View
+          style={{
+            flex: 0.95,
+          }}
+        >
           {showConstSearch && (
             <Input
               placeholder={"Search Amendments"}
