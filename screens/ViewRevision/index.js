@@ -170,7 +170,7 @@ export default function ViewRevision(props) {
         </View>
         {hasVoted && renderHasVoted(hasVoted)}
         {/* card */}
-        {revision.amendment ? (
+        {revision.amendment && !revision.repeal ? (
           <DiffSection {...revision} />
         ) : (
           <Card style={{ minHeight: "20%" }}>
