@@ -2,7 +2,13 @@ import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
 import { fromNow } from "../../utils/transform";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+  Keyboard,
+} from "react-native";
 import AsyncImage from "../../components/AsyncImage";
 // import MeshStore from "../../utils/meshStore";
 
@@ -59,6 +65,7 @@ const SingleSearchItem = ({ item, category, ...props }) => {
     const { id } = item;
 
     if (item) {
+      Keyboard.dismiss();
       switch (category) {
         case "circles":
           setActiveCircle(id);
@@ -145,8 +152,6 @@ const styles = StyleSheet.create({
   suggestionItem: {
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: "#FFFFFFb7",
     flexDirection: "row",
   },
   suggestionItemUser: {
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
   },
   suggestionText: {
     fontSize: 16,
-    color: "#FFFFFFb7",
+    color: "#FFFFFF",
     fontFamily: "SpaceGrotesk",
   },
   smaller: {

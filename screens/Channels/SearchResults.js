@@ -1,4 +1,5 @@
-import React, { Fragment } from "reactn";
+import React from "reactn";
+import { ScrollView, Keyboard } from "react-native";
 import SearchSection from "./SearchSection";
 
 export default function SearchResults({
@@ -16,7 +17,10 @@ export default function SearchResults({
   users = users ? users.items : [];
 
   return (
-    <Fragment>
+    <ScrollView
+      onScrollBeginDrag={Keyboard.dismiss}
+      keyboardShouldPersistTaps={"awlays"}
+    >
       {circles.length > 0 && (
         <SearchSection
           search={searchParams}
@@ -57,6 +61,6 @@ export default function SearchResults({
           title="users"
         />
       )}
-    </Fragment>
+    </ScrollView>
   );
 }

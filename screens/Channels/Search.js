@@ -66,7 +66,9 @@ export const Search = () => {
       </View>
       {/* results */}
       {searchParams.length > 2 && (
-        <SearchResults {...data} searchParams={searchParams} />
+        <View style={{ maxHeight: "50%", width: "100%" }}>
+          <SearchResults {...data} searchParams={searchParams} />
+        </View>
       )}
     </Fragment>
   );

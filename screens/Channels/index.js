@@ -160,9 +160,9 @@ const styles = StyleSheet.create({
   desktopSidebar: {
     flex: 0,
     flexGrow: 1 / 3,
-    backgroundColor: "#fff",
     flexDirection: "column",
     minWidth: 300,
+    backgroundColor: "#282a38",
   },
   mobileSidebar: {
     alignItems: "stretch",

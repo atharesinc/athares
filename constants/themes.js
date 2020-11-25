@@ -22,6 +22,8 @@ const baseTheme = {
   },
 };
 
+// background: linear-gradient(39deg, #282a3890, #3a3e52);
+// backdrop-filter: blur(9px);
 export const themes = {
   light: {
     ...baseTheme,
