@@ -40,10 +40,12 @@ export default function Amendment({
     if (hasOutstandingRevision) {
       return false;
     }
-    setActiveAmendment(amendment.id);
-    RootNavigation.navigate("editAmendment", {
-      amendment: amendment.id,
-      circle: activeCircle,
+
+    setActiveAmendment(amendment.id, () => {
+      RootNavigation.navigate("editAmendment", {
+        amendment: amendment.id,
+        circle: activeCircle,
+      });
     });
   };
 

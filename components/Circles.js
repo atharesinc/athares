@@ -69,11 +69,20 @@ const Circles = ({ loggedIn = false }) => {
 
   // this may come back to haunt me
   // set the first result to active
+  // UPDATE: This was super great and worked real well
+  // BUT it' breaks the ability to put navigate to a page via link
+  // So if any params are set, we'll let the router use those, otherwise
+  // give the user something to look at
   useEffect(() => {
+    // console.log(RootNavigation.getRoute());
+    // const route = RootNavigation.getRoute();
+    // http://localhost:19006/ckhy6dkc101oa07mfewj16ulj/settings
+    // if (route?.params) {
+    //   return;
+    // }
+
     if (circles.length > 0) {
-      setActiveCircle(circles[0].id, () => {
-        RootNavigation.navigate("app");
-      });
+      setActiveCircle(circles[0].id);
     }
   }, [circles]);
 
