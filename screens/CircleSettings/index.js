@@ -52,7 +52,7 @@ function CircleSettings(props) {
     GET_CIRCLE_PREFS_FOR_USER,
     {
       variables: {
-        circle: activeCircle || "",
+        circle: props.route?.params?.circle,
         user: user || "",
       },
     }
@@ -60,7 +60,8 @@ function CircleSettings(props) {
 
   //  de/restructure circle permisssion
   let permissions = null;
-  if (data && data.circlePermissionsList) {
+
+  if (data?.circlePermissionsList) {
     permissions = data.circlePermissionsList.items[0];
   }
 
@@ -92,10 +93,10 @@ function CircleSettings(props) {
   };
 
   useEffect(() => {
-    if (!activeCircle) {
-      props.navigation.navigate("app");
+    if (!activeCircle && permissions) {
+      setActiveCircle(props.route.params.circle);
     }
-  }, [activeCircle]);
+  }, []);
 
   const leaveCircle = async () => {
     setLoading(true);
@@ -130,6 +131,14 @@ function CircleSettings(props) {
     return <CenteredErrorLoader text={"Error Getting Settings"} />;
   }
 
+  console.log(data, permissions);
+
+  if (!permissions) {
+    return (
+      <CenteredErrorLoader text={"You Don't Have Access to this Circle"} />
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.wrapper}>
       <Title text={"Notification Preferences"} />
@@ -152,7 +161,7 @@ function CircleSettings(props) {
           />
           <SwitchLine
             label={"Notify on New Amendment"}
-            value={permissions.amendment}
+            value={permissions.amendments}
             onPress={updateAmendmentPref}
           />
         </View>
