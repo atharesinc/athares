@@ -9,16 +9,17 @@ export default function ChannelItem({
   showUnread = false,
 }) {
   const [, setActiveChannel] = useGlobal("activeChannel");
+  const [activeCircle] = useGlobal("activeCircle");
 
   const nav = () => {
-    setActiveChannel(channel.id);
-
-    // if (channel.channelType === "dm") {
-    //   RootNavigation.navigate("DMChannel");
-    // } else
-    if (channel.channelType === "group") {
-      RootNavigation.navigate("channel", { channel: channel.id });
-    }
+    setActiveChannel(channel.id, () => {
+      if (channel.channelType === "group") {
+        RootNavigation.navigate("channel", {
+          channel: channel.id,
+          circle: activeCircle,
+        });
+      }
+    });
   };
   return (
     <TouchableOpacity style={styles.row} onPress={nav}>

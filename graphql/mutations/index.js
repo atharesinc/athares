@@ -253,10 +253,18 @@ export const CREATE_REVISION = gql`
       }
     ) {
       id
+      title
+      circle {
+        id
+        name
+      }
       passed
       amendment {
         id
       }
+      createdAt
+      repeal
+      newText
     }
   }
 `;
@@ -291,10 +299,18 @@ export const CREATE_REVISION_FROM_AMENDMENT = gql`
       }
     ) {
       id
+      title
+      circle {
+        id
+        name
+      }
       passed
       amendment {
         id
       }
+      createdAt
+      repeal
+      newText
     }
   }
 `;
@@ -331,8 +347,19 @@ export const CREATE_AMENDMENT_FROM_REVISION = gql`
     $hash: String!
   ) {
     revisionUpdate(data: { id: $revision, passed: true }) {
-      passed
       id
+      title
+      circle {
+        id
+        name
+      }
+      passed
+      amendment {
+        id
+      }
+      createdAt
+      repeal
+      newText
     }
     amendmentCreate(
       data: {
@@ -357,8 +384,19 @@ export const UPDATE_AMENDMENT_FROM_REVISION = gql`
     $hash: String!
   ) {
     revisionUpdate(data: { id: $revision, passed: true }) {
-      passed
       id
+      title
+      circle {
+        id
+        name
+      }
+      passed
+      amendment {
+        id
+      }
+      createdAt
+      repeal
+      newText
     }
     amendmentUpdate(
       data: { text: $text, title: $title, id: $amendment, hash: $hash }
@@ -372,8 +410,19 @@ export const UPDATE_AMENDMENT_FROM_REVISION = gql`
 export const UPDATE_AMENDMENT_FROM_REVISION_AND_DELETE = gql`
   mutation createAmendmentFromRevsion($revision: ID!, $amendment: ID!) {
     revisionUpdate(data: { id: $revision, passed: true }) {
-      passed
       id
+      title
+      circle {
+        id
+        name
+      }
+      passed
+      amendment {
+        id
+      }
+      createdAt
+      repeal
+      newText
     }
     amendmentDelete(data: { id: $amendment }) {
       success
@@ -384,8 +433,19 @@ export const UPDATE_AMENDMENT_FROM_REVISION_AND_DELETE = gql`
 export const DENY_REVISION = gql`
   mutation denyRevision($id: ID!) {
     revisionUpdate(data: { id: $id, passed: false }) {
-      passed
       id
+      title
+      circle {
+        id
+        name
+      }
+      passed
+      amendment {
+        id
+      }
+      createdAt
+      repeal
+      newText
     }
   }
 `;

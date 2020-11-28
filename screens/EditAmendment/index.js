@@ -30,7 +30,7 @@ export default function EditAmendment(props) {
   const [text, setText] = useState("");
   const [activeCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
-  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
+  const [, setActiveRevision] = useGlobal("activeRevision");
   const [loading, setLoading] = useState(false);
   const [createRevisionMutation] = useMutation(CREATE_REVISION_FROM_AMENDMENT);
   const [activeAmendment] = useGlobal("activeAmendment");
@@ -57,15 +57,6 @@ export default function EditAmendment(props) {
       icon: "warning",
     });
   };
-
-  useEffect(() => {
-    if (activeRevision) {
-      props.navigation.navigate("viewRevision", {
-        revision: activeRevision,
-        circle: activeCircle,
-      });
-    }
-  }, [activeRevision]);
 
   const repeal = () => {
     setLoading(true);
@@ -167,7 +158,12 @@ export default function EditAmendment(props) {
 
       newRevision.id = newRevisionRes.data.revisionCreate.id;
 
-      setActiveRevision(newRevision.id);
+      setActiveRevision(newRevision.id, () => {
+        props.navigation.navigate("viewRevision", {
+          revision: newRevision.id,
+          circle: activeCircle,
+        });
+      });
     } catch (err) {
       console.error(err);
       MeshAlert({ title: "Error", text: err.message, icon: "error" });
