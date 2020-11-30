@@ -37,6 +37,9 @@ import Drawer from "./components/Drawer";
 import { ApolloProvider, ApolloClient } from "@apollo/client";
 import { link, cache } from "./graphql";
 
+// Expo notifications
+import NotificationListener from "./components/NotificationListener";
+
 // initialize storage
 MeshStore.init();
 
@@ -165,6 +168,7 @@ export default function App(props) {
             <RevisionMonitor />
             <ChannelUpdateMonitor />
             <InviteMonitor />
+            <NotificationListener />
           </SafeAreaView>
         </SafeAreaProvider>
       </ApolloProvider>

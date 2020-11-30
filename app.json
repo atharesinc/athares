@@ -18,6 +18,16 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
+    },
+    "web": {
+      "name": "Athares"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json"
+    },
+    "notification": {
+      "serviceWorkerPath": "./expo-service-worker.js",
+      "vapidPublicKey": "BNk5QgYihE55jsQzccJ976PyURgRIdpreZXVVkwTcq-PEcNv6y4sjTxNyyihobIA18SufQfu5nLO6cw7KNZNDzI"
     }
   }
 }
