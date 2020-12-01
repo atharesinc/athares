@@ -428,12 +428,12 @@ export const GET_DMS_BY_USER = gql`
 `;
 
 export const GET_RESET_REQUEST = gql`
-  query($id: ID!) {
-    ResetRequest(id: $id) {
-      id
-      token
-      email
-      createdAt
+  query($token: String!) {
+    resetRequestsList(last: 1, filter: { token: { equals: $token } }) {
+      items {
+        id
+        email
+      }
     }
   }
 `;

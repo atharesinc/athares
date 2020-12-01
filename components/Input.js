@@ -13,6 +13,7 @@ export default function Input({
   label = null,
   description = null,
   textStyle = {},
+  nextSibling = null,
   ...props
 }) {
   const inputEl = useRef();
@@ -50,6 +51,7 @@ export default function Input({
       {description && (
         <HelperText text={description} style={{ marginBottom: 0 }} />
       )}
+      {nextSibling || null}
     </TouchableOpacity>
   );
 }

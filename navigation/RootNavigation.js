@@ -15,3 +15,5 @@ export function getRoute() {
 export function goBack() {
   navigationRef.current.goBack();
 }
+
+window.navRef = navigationRef;

@@ -8,7 +8,9 @@ export default function DisclaimerText({
   grey = false,
   spaced = false,
   blue = false,
+  noMargin = false,
   style = {},
+  text,
   ...props
 }) {
   const [activeTheme] = useGlobal("activeTheme");
@@ -21,12 +23,12 @@ export default function DisclaimerText({
     red ? { color: activeTheme.COLORS.RED } : {},
     green ? { color: activeTheme.COLORS.GREEN } : {},
     blue ? { color: activeTheme.COLORS.BLUE1 } : {},
-
+    noMargin ? styles.noMargin : {},
     style,
   ];
   return (
     <Text style={computedStyles} {...props}>
-      {props.text}
+      {props.children || text}
     </Text>
   );
 }
@@ -46,5 +48,8 @@ const styles = StyleSheet.create({
   },
   spaced: {
     letterSpacing: 2,
+  },
+  noMargin: {
+    marginBottom: 0,
   },
 });

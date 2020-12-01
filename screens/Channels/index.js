@@ -132,6 +132,17 @@ function Dashboard({ renderAsSidebar = false }) {
               <ChannelItem key={ch.id} showUnread={ch.unread} channel={ch} />
             ))}
           </Fragment>
+        ) : !activeCircle ? (
+          <View style={{ marginTop: 20 }}>
+            <CircleTitle title={"Welcome to Athares"} />
+            <DisclaimerText
+              grey
+              text={
+                "You have no circle selected, try creating a new one or search for an existing one."
+              }
+              style={{ marginHorizontal: 15 }}
+            />
+          </View>
         ) : (
           <View style={{ marginTop: 20 }}>
             <CircleTitle title={"Welcome to Athares"} />

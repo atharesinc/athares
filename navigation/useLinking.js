@@ -2,13 +2,21 @@
 // import { Linking } from "expo";
 
 export const linkingConfig = {
-  prefixes: ["https://athar.es", "athares://", "http:localhost:19006"],
+  prefixes: ["https://athar.es", "athares://", "http://localhost:19006"],
   config: {
     screens: {
       // GOOD
       app: "",
       // GOOD
-      portal: "portal",
+      portal: {
+        screens: {
+          login: "login",
+          register: "register",
+          forgot: "forgot",
+          resetConfirm: "reset",
+          reset: "reset/:hashedCode",
+        },
+      },
       // GOOD
       createRevision: ":circle/revisions/create",
       // GOOD
