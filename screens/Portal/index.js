@@ -6,6 +6,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Login from "./Login";
 import Register from "./Register";
+import Reset from "./Reset";
+import ResetConfirm from "./ResetConfirm";
+
+import Forgot from "./Forgot";
 
 const Stack = createStackNavigator();
 
@@ -14,7 +18,9 @@ export default function Portal(props) {
   const [, setActiveCircle] = useGlobal("activeCircle");
   const [, setActiveRevision] = useGlobal("activeRevision");
 
-  const [screen, setScreen] = useState("login");
+  const [screen, setScreen] = useState(
+    props.route?.state?.routes[0]?.name || "login"
+  );
 
   useEffect(() => {
     setActiveChannel(null);
@@ -23,11 +29,13 @@ export default function Portal(props) {
   }, []);
 
   useEffect(() => {
-    props.navigation.navigate("portal", { screen });
-  }, [screen]);
+    setScreen(
+      props.route.params?.screen || props.route?.state?.routes[0]?.name
+    );
+  }, [props.route]);
 
   const onUpdateTab = (tab) => {
-    setScreen(tab);
+    props.navigation.navigate("portal", { screen: tab });
   };
 
   return (
@@ -36,6 +44,7 @@ export default function Portal(props) {
         style={{ height: 30, width: 180, marginTop: 60, marginBottom: 25 }}
         source={require("../../assets/images/Athares-type-small-white.png")}
       />
+
       <TitleTabs
         activeTab={screen}
         tabs={["login", "register"]}
@@ -56,6 +65,21 @@ export default function Portal(props) {
         <Stack.Screen
           name="login"
           component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="forgot"
+          component={Forgot}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="resetConfirm"
+          component={ResetConfirm}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="reset"
+          component={Reset}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

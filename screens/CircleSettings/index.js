@@ -131,8 +131,6 @@ function CircleSettings(props) {
     return <CenteredErrorLoader text={"Error Getting Settings"} />;
   }
 
-  console.log(data, permissions);
-
   if (!permissions) {
     return (
       <CenteredErrorLoader text={"You Don't Have Access to this Circle"} />

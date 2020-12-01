@@ -1,6 +1,12 @@
 import React, { useState, useGlobal, useRef, useEffect } from "reactn";
 
-import { TouchableOpacity, Linking, View, Text } from "react-native";
+import {
+  TouchableOpacity,
+  Linking,
+  View,
+  Text,
+  StyleSheet,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import MeshStore from "../../utils/meshStore";
@@ -51,6 +57,10 @@ export default function Register() {
     Linking.openURL("https://www.athares.us/policy");
   };
 
+  const goToForgot = () => {
+    RootNavigation.navigate("portal", { screen: "forgot" });
+  };
+
   const tryRegister = async () => {
     setLoading(true);
 
@@ -72,16 +82,16 @@ export default function Register() {
     }
 
     // Auth0's arbitrary stupid auth requirements
-    if (/(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])/.test(password) === false) {
-      MeshAlert({
-        title: "Error",
-        text:
-          "Password must contain a capital letter, a lowercase letter, and a number.",
-        icon: "error",
-      });
-      setLoading(false);
-      return false;
-    }
+    // if (/(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])/.test(password) === false) {
+    //   MeshAlert({
+    //     title: "Error",
+    //     text:
+    //       "Password must contain a capital letter, a lowercase letter, and a number.",
+    //     icon: "error",
+    //   });
+    //   setLoading(false);
+    //   return false;
+    // }
 
     try {
       // // Encrypt the user's private key in the database with the password
@@ -168,8 +178,8 @@ export default function Register() {
   }
 
   return (
-    <KeyboardAwareScrollView>
-      <View>
+    <View style={styles.justifyBetween}>
+      <KeyboardAwareScrollView>
         <Input
           label="First Name"
           onChangeText={setFirstName}
@@ -182,18 +192,38 @@ export default function Register() {
           secureTextEntry
           onChangeText={setPassword}
           value={password}
+          nextSibling={
+            <TouchableOpacity onPress={goToForgot}>
+              <DisclaimerText blue text={"Forgot Password?"} />
+            </TouchableOpacity>
+          }
         />
         {error !== "" && <Text style={{ color: "#FF0000" }}>{error}</Text>}
 
         <GlowButton text={"Register"} onPress={tryRegister} />
-      </View>
-      <TouchableOpacity onPress={goToPolicy}>
-        <DisclaimerText
-          text={
-            "By registering you acknowledge that you agree to the Terms of Use and Privacy Policy."
-          }
-        />
-      </TouchableOpacity>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+      <DisclaimerText style={styles.center}>
+        By registering you acknowledge that you agree to the{" "}
+        <TouchableOpacity onPress={goToPolicy}>
+          <DisclaimerText blue noMargin>
+            Terms of Use
+          </DisclaimerText>
+        </TouchableOpacity>{" "}
+        and{" "}
+        <TouchableOpacity onPress={goToPolicy}>
+          <DisclaimerText blue noMargin>
+            Privacy Policy
+          </DisclaimerText>
+        </TouchableOpacity>
+        .
+      </DisclaimerText>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  justifyBetween: { justifyContent: "space-between", flex: 1 },
+  center: {
+    textAlign: "center",
+  },
+});

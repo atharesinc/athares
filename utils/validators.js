@@ -109,3 +109,18 @@ export const validateEmailAddress = ({ email }) => {
     }
   );
 };
+
+export const validatePassword = ({ password }) => {
+  return validate(
+    { password },
+    {
+      password: {
+        presence: { allowEmpty: false },
+        length: {
+          minimum: 6,
+          tooShort: "must be at least 8 characters.",
+        },
+      },
+    }
+  );
+};

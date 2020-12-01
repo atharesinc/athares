@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useGlobal } from "reactn";
-import { View, TouchableOpacity, Linking } from "react-native";
+import { View, TouchableOpacity, Linking, StyleSheet } from "react-native";
 
 import MeshStore from "../../utils/meshStore";
 import MeshAlert from "../../utils/meshAlert";
@@ -52,6 +52,10 @@ export default function Login() {
 
   const goToPolicy = () => {
     Linking.openURL("https://www.athar.es/policy");
+  };
+
+  const goToForgot = () => {
+    RootNavigation.navigate("portal", { screen: "forgot" });
   };
 
   const tryLogin = async () => {
@@ -112,7 +116,13 @@ export default function Login() {
       RootNavigation.navigate("app");
     } catch (err) {
       console.error(err);
-      if (err.message.indexOf("Invalid Credentials") !== -1) {
+      if (err.message.indexOf("The request is invalid") !== -1) {
+        MeshAlert({
+          title: "Error",
+          text: "Incorrect username or password",
+          icon: "error",
+        });
+      } else if (err.message.indexOf("Invalid Credentials") !== -1) {
         MeshAlert({
           title: "Error",
           text: "Invalid Credentials",
@@ -120,8 +130,6 @@ export default function Login() {
         });
       } else if (err.message.indexOf("Token expired") !== -1) {
         refreshToken();
-        // await MeshStore.clear();
-        // tryLogin();
       } else {
         MeshAlert({ title: "Error", text: err.message, icon: "error" });
       }
@@ -154,24 +162,44 @@ export default function Login() {
   }
 
   return (
-    <KeyboardAwareScrollView>
-      <View>
+    <View style={styles.justifyBetween}>
+      <KeyboardAwareScrollView>
         <Input onChangeText={updateEmail} value={email} label={"Email"} />
         <Input
           secureTextEntry
           onChangeText={updatePassword}
           value={password}
           label={"Password"}
-        />
-        <GlowButton text={"Login"} onPress={tryLogin} />
-      </View>
-      <TouchableOpacity onPress={goToPolicy}>
-        <DisclaimerText
-          text={
-            "By logging in you acknowledge that you agree to the Terms of Use and Privacy Policy."
+          nextSibling={
+            <TouchableOpacity onPress={goToForgot}>
+              <DisclaimerText blue text={"Forgot Password?"} />
+            </TouchableOpacity>
           }
         />
-      </TouchableOpacity>
-    </KeyboardAwareScrollView>
+        <GlowButton text={"Login"} onPress={tryLogin} />
+      </KeyboardAwareScrollView>
+      <DisclaimerText style={styles.center}>
+        By logging in you acknowledge that you agree to the{" "}
+        <TouchableOpacity onPress={goToPolicy}>
+          <DisclaimerText blue noMargin>
+            Terms of Use
+          </DisclaimerText>
+        </TouchableOpacity>{" "}
+        and{" "}
+        <TouchableOpacity onPress={goToPolicy}>
+          <DisclaimerText blue noMargin>
+            Privacy Policy
+          </DisclaimerText>
+        </TouchableOpacity>
+        .
+      </DisclaimerText>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  justifyBetween: { justifyContent: "space-between", flex: 1 },
+  center: {
+    textAlign: "center",
+  },
+});

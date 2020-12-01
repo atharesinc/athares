@@ -657,18 +657,26 @@ export const CREATE_USER = gql`
     }
   }
 `;
+// DEPRECATED - not in use since GraphCool
+// export const CREATE_RESET_REQUEST = gql`
+//   mutation($token: String!, $email: String!) {
+//     createResetRequest(token: $token, email: $email) {
+//       id
+//     }
+//   }
+// `;
 export const CREATE_RESET_REQUEST = gql`
-  mutation($token: String!, $email: String!) {
-    createResetRequest(token: $token, email: $email) {
-      id
+  mutation($email: String!) {
+    forgotPassword(email: $email) {
+      success
     }
   }
 `;
 
-export const UPDATE_USER_PASSWORD = gql`
-  mutation($user: ID!, $password: String!) {
-    updateUser(id: $user, password: $password) {
-      id
+export const UPDATE_PASSWORD = gql`
+  mutation($token: String!, $password: String!) {
+    resetPassword(token: $token, password: $password) {
+      success
     }
   }
 `;
