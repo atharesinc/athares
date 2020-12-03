@@ -1,12 +1,13 @@
-// import { useLinking } from "@react-navigation/native";
-// import { Linking } from "expo";
-
 export const linkingConfig = {
   prefixes: ["https://athar.es", "athares://", "http://localhost:19006"],
   config: {
     screens: {
+      splash: "",
+      about: "about",
+      roadmap: "roadmap",
+      privacy: "privacy",
       // GOOD
-      app: "",
+      app: "/app",
       // GOOD
       portal: {
         screens: {
@@ -45,6 +46,7 @@ export const linkingConfig = {
       viewUser: "profile",
       // GOOD
       viewOtherUser: "user/:user",
+      notFound: "*",
     },
   },
 };

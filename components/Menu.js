@@ -1,7 +1,6 @@
 import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Linking } from "expo";
 import { useQuery, useApolloClient } from "@apollo/client";
 import UserLink from "./UserLink";
 import NoUserLink from "./NoUserLink";
@@ -69,11 +68,11 @@ function SideMenu() {
   };
 
   const goToAbout = () => {
-    Linking.openURL("https://www.athar.es/about");
+    RootNavigation.navigate("about");
   };
 
   const goToPolicy = () => {
-    Linking.openURL("https://www.athar.es/policy");
+    RootNavigation.navigate("privacy");
   };
 
   const { data } = useQuery(GET_USER_BY_ID, {

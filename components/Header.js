@@ -1,6 +1,6 @@
 import React, { useGlobal } from "reactn";
 
-import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import { Text, TouchableOpacity, StyleSheet, View, Image } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 import {
@@ -11,6 +11,7 @@ import {
 import { useQuery } from "@apollo/client";
 import RevisionCategory from "./RevisionCategory";
 import WithBadge from "./WithBadge";
+import LinkButton from "./LinkButton";
 
 import AsyncImage from "./AsyncImage";
 
@@ -18,11 +19,11 @@ function Header({
   // loggedIn = false,
   // belongsToCircle = false,
   scene,
-  ...props
+  // ...props
 }) {
   const [showSearch, setShowSearch] = useGlobal("showSearch");
   const [dmSettings, setDMSettings] = useGlobal("dmSettings");
-  // const [user] = useGlobal("user");
+  const [user] = useGlobal("user");
   const [activeChannel] = useGlobal("activeChannel");
   const [activeRevision] = useGlobal("activeRevision");
   const [activeViewUser] = useGlobal("activeViewUser");
@@ -41,11 +42,20 @@ function Header({
     setShowSearch(!showSearch);
   };
 
+  const goToLogin = () => {
+    RootNavigation.navigate("portal", { screen: "login" });
+  };
+
+  const goToApp = () => {
+    RootNavigation.navigate("app");
+  };
+
   const back = () => {
-    if (!props.previous) {
-      RootNavigation.navigate("app");
-    }
-    props.navigation.goBack(null);
+    // if (!props.previous) {
+    RootNavigation.navigate("app");
+    //   return;
+    // }
+    // props.navigation.goBack(null);
   };
 
   const more = () => {
@@ -243,6 +253,34 @@ function Header({
     );
   }
 
+  if (["splash", "privacy", "about"].indexOf(name) !== -1) {
+    return (
+      <View style={styles.transparentHeader}>
+        {/* <Image
+          source={require("../assets/images/Athares-owl-logo-large-white.png")}
+          style={styles.userIcon}
+        /> */}
+        <Image
+          source={require("../assets/images/Athares-type-large-white.png")}
+          style={styles.logoType}
+        />
+        {user ? (
+          <LinkButton onPress={goToApp} text={"App"} style={{ margin: 0 }} />
+        ) : (
+          <LinkButton
+            onPress={goToLogin}
+            text={"Login"}
+            style={{ margin: 0 }}
+          />
+        )}
+      </View>
+    );
+  }
+
+  if (name === "notFound") {
+    return null;
+  }
+
   // render dashboard with user drawer
 
   let img = require("../assets/images/user-default.png");
@@ -250,7 +288,6 @@ function Header({
   if (data && data.user) {
     img = { uri: data.user.icon };
   }
-
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>
@@ -288,8 +325,6 @@ function Header({
       )}
     </View>
   );
-  // }
-  // return <View style={styles.header} />;
 }
 
 const styles = StyleSheet.create({
@@ -325,6 +360,10 @@ const styles = StyleSheet.create({
     height: 35,
     width: 35,
   },
+  logoType: {
+    height: 20,
+    width: 125,
+  },
   userIconWrapper: {
     borderRadius: 9999,
     borderColor: "#FFFFFF",
@@ -334,6 +373,16 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
+  },
+  transparentHeader: {
+    backgroundColor: "transparent",
+    height: 60,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    width: "100%",
+    zIndex: 0,
   },
 });
 
