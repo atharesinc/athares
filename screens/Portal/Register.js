@@ -1,12 +1,6 @@
 import React, { useState, useGlobal, useRef, useEffect } from "reactn";
 
-import {
-  TouchableOpacity,
-  Linking,
-  View,
-  Text,
-  StyleSheet,
-} from "react-native";
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import MeshStore from "../../utils/meshStore";
@@ -54,7 +48,7 @@ export default function Register() {
   };
 
   const goToPolicy = () => {
-    Linking.openURL("https://www.athares.us/policy");
+    RootNavigation.navigate("privacy");
   };
 
   const goToForgot = () => {

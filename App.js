@@ -63,16 +63,11 @@ export default function App(props) {
   const [isMobile, setIsMobile] = useGlobal("isMobile");
   const [, setSearchedCircles] = useGlobal("searchedCircles");
 
-  // const { getInitialState } = useLinking(navigationRef);
-
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync();
-
-        // Load our initial navigation state
-        // setInitialNavigationState(await getInitialState());
 
         // Load fonts
         await Font.loadAsync({
@@ -133,7 +128,6 @@ export default function App(props) {
   }, [dimensions]);
 
   const shouldRenderSideBar = isMobile ? null : <Channels renderAsSidebar />;
-  // isMenuOpen ? { overflow: "hidden" } : {};
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useGlobal } from "reactn";
-import { View, TouchableOpacity, Linking, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 
 import MeshStore from "../../utils/meshStore";
 import MeshAlert from "../../utils/meshAlert";
@@ -51,7 +51,7 @@ export default function Login() {
   };
 
   const goToPolicy = () => {
-    Linking.openURL("https://www.athar.es/policy");
+    RootNavigation.navigate("privacy");
   };
 
   const goToForgot = () => {

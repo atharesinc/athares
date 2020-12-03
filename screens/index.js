@@ -1,5 +1,5 @@
 import React, { useGlobal } from "reactn";
-
+import { Platform } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Channels from "./Channels";
@@ -18,6 +18,12 @@ import AddUser from "./AddUser";
 import ViewInvites from "./ViewInvites";
 import ViewUser from "./Me";
 import ViewOtherUser from "./ViewOtherUser";
+
+import Splash from "./Splash";
+import About from "./About";
+// import Roadmap from "./Roadmap";
+import Privacy from "./Privacy";
+import NotFound from "./NotFound";
 
 import Header from "../components/Header";
 import { pushTransition } from "../navigation/transitionConfigs";
@@ -41,6 +47,14 @@ export default function RootStack() {
       }}
     >
       {/* This is where all the screens go */}
+      {Platform.OS === "web" && (
+        <>
+          <Stack.Screen name="splash" component={Splash} />
+          <Stack.Screen name="about" component={About} />
+          {/* <Stack.Screen name="roadmap" component={Roadmap} /> */}
+          <Stack.Screen name="privacy" component={Privacy} />
+        </>
+      )}
       <Stack.Screen
         name="app"
         component={shouldDisplayNewsAsApp}
@@ -51,6 +65,7 @@ export default function RootStack() {
         component={Portal}
         // options={{ headerShown: false }}
       />
+
       <Stack.Screen name="createRevision" component={CreateRevision} />
       <Stack.Screen name="viewRevision" component={ViewRevision} />
 
@@ -67,6 +82,7 @@ export default function RootStack() {
       <Stack.Screen name="viewInvites" component={ViewInvites} />
       <Stack.Screen name="viewUser" component={ViewUser} />
       <Stack.Screen name="viewOtherUser" component={ViewOtherUser} />
+      <Stack.Screen name="notFound" component={NotFound} />
     </Stack.Navigator>
   );
 }
