@@ -50,9 +50,7 @@ export default function RootStack() {
       {Platform.OS === "web" && (
         <>
           <Stack.Screen name="splash" component={Splash} />
-          <Stack.Screen name="about" component={About} />
           {/* <Stack.Screen name="roadmap" component={Roadmap} /> */}
-          <Stack.Screen name="privacy" component={Privacy} />
         </>
       )}
       <Stack.Screen
@@ -82,7 +80,9 @@ export default function RootStack() {
       <Stack.Screen name="viewInvites" component={ViewInvites} />
       <Stack.Screen name="viewUser" component={ViewUser} />
       <Stack.Screen name="viewOtherUser" component={ViewOtherUser} />
+      <Stack.Screen name="privacy" component={Privacy} />
       <Stack.Screen name="notFound" component={NotFound} />
+      <Stack.Screen name="about" component={About} />
     </Stack.Navigator>
   );
 }

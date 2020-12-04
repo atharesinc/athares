@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useGlobal } from "reactn";
 import { View, Image, StyleSheet } from "react-native";
-import TitleTabs from "../../components/TitleTabs";
+import TitleTabs from "./TitleTabs";
 import { noTransition } from "../../navigation/transitionConfigs";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -17,7 +17,6 @@ export default function Portal(props) {
   const [, setActiveChannel] = useGlobal("activeChannel");
   const [, setActiveCircle] = useGlobal("activeCircle");
   const [, setActiveRevision] = useGlobal("activeRevision");
-
   const [screen, setScreen] = useState(
     props.route?.state?.routes[0]?.name || "login"
   );
@@ -29,8 +28,13 @@ export default function Portal(props) {
   }, []);
 
   useEffect(() => {
+    console.log(props.route);
+
+    // This is to account for screen changes not handled by button presses (hardware back on android)
+    //  or a default route given by navigating here directly
     setScreen(
-      props.route.params?.screen || props.route?.state?.routes[0]?.name
+      props.route?.state?.routes[props.route?.state?.routes.length - 1 || 0]
+        ?.name || props.route.params?.screen
     );
   }, [props.route]);
 

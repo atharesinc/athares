@@ -51,10 +51,6 @@ export default function Register() {
     RootNavigation.navigate("privacy");
   };
 
-  const goToForgot = () => {
-    RootNavigation.navigate("portal", { screen: "forgot" });
-  };
-
   const tryRegister = async () => {
     setLoading(true);
 
@@ -186,31 +182,17 @@ export default function Register() {
           secureTextEntry
           onChangeText={setPassword}
           value={password}
-          nextSibling={
-            <TouchableOpacity onPress={goToForgot}>
-              <DisclaimerText blue text={"Forgot Password?"} />
-            </TouchableOpacity>
-          }
         />
         {error !== "" && <Text style={{ color: "#FF0000" }}>{error}</Text>}
 
         <GlowButton text={"Register"} onPress={tryRegister} />
       </KeyboardAwareScrollView>
-      <DisclaimerText style={styles.center}>
-        By registering you acknowledge that you agree to the{" "}
-        <TouchableOpacity onPress={goToPolicy}>
-          <DisclaimerText blue noMargin>
-            Terms of Use
-          </DisclaimerText>
-        </TouchableOpacity>{" "}
-        and{" "}
-        <TouchableOpacity onPress={goToPolicy}>
-          <DisclaimerText blue noMargin>
-            Privacy Policy
-          </DisclaimerText>
-        </TouchableOpacity>
-        .
-      </DisclaimerText>
+      <TouchableOpacity onPress={goToPolicy} style={styles.center}>
+        <DisclaimerText style={styles.center}>
+          By registering you acknowledge that you agree to the{" "}
+          <DisclaimerText blue>Terms of Use and Privacy Policy.</DisclaimerText>
+        </DisclaimerText>
+      </TouchableOpacity>
     </View>
   );
 }

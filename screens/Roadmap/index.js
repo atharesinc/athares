@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import GhostButton from "../../components/GhostButton";
 import GlowButton from "../../components/GlowButton";
 
-export default function ViewOtherUser() {
+export default function RoadMap() {
   // const [isMobile] = useGlobal("isMobile");
 
   return (

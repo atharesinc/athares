@@ -20,10 +20,6 @@ export default function NotFound() {
       text: "About",
       route: "about",
     },
-    {
-      text: "Privacy",
-      route: "privacy",
-    },
   ];
 
   const nav = (route) => {
