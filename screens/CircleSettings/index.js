@@ -58,6 +58,19 @@ function CircleSettings(props) {
     }
   );
 
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (
+      data?.circlePermissionsList?.items[0]?.circle?.name &&
+      !props.route.params.name
+    ) {
+      const thisCircleName =
+        data?.circlePermissionsList?.items[0]?.circle?.name;
+
+      props.navigation.setParams({ name: thisCircleName });
+    }
+  }, [data]);
+
   //  de/restructure circle permisssion
   let permissions = null;
 

@@ -72,14 +72,14 @@ export default function RootStack() {
         name="createRevision"
         component={CreateRevision}
         options={({ route }) => ({
-          title: "Create Revision in " + (route.params.name || "Circle"),
+          title: "Create Revision in " + (route?.params?.name || "Circle"),
         })}
       />
       <Stack.Screen
         name="viewRevision"
         component={ViewRevision}
         options={({ route }) => ({
-          title: "Viewing " + (route.params.name || "Revision"),
+          title: "Viewing " + (route?.params?.name || "Revision"),
         })}
       />
 
@@ -94,7 +94,7 @@ export default function RootStack() {
         name="circleSettings"
         component={CircleSettings}
         options={({ route }) => ({
-          title: "Settings for " + (route.params.name || "Circle"),
+          title: "Settings for " + (route?.params?.name || "Circle"),
         })}
       />
 
@@ -102,21 +102,21 @@ export default function RootStack() {
         name="constitution"
         component={Constitution}
         options={({ route }) => ({
-          title: (route.params.name || "") + " Constitution",
+          title: (route?.params?.name || "") + " Constitution",
         })}
       />
       <Stack.Screen
         name="createChannel"
         component={CreateChannel}
         options={({ route }) => ({
-          title: "Create Channel in " + (route.params.name || "Circle"),
+          title: "Create Channel in " + (route?.params?.name || "Circle"),
         })}
       />
       <Stack.Screen
         name="channel"
         component={ViewChannel}
         options={({ route }) => ({
-          title: route.params.name || "Channel",
+          title: route?.params?.name || "Channel",
         })}
       />
       <Stack.Screen
@@ -124,28 +124,28 @@ export default function RootStack() {
         component={News}
         options={({ route }) => ({
           ...newsOptions,
-          title: (route.params.name || "Circle") + " News",
+          title: (route?.params?.name || "Circle") + " News",
         })}
       />
       <Stack.Screen
         name="revisions"
         component={Revisions}
         options={({ route }) => ({
-          title: route.params.name || "Revisions",
+          title: (route?.params?.name || "") + " Revisions",
         })}
       />
       <Stack.Screen
         name="editAmendment"
         component={EditAmendment}
         options={({ route }) => ({
-          title: "Editing " + (route.params.name || "Amendment"),
+          title: "Editing " + (route?.params?.name || "Amendment"),
         })}
       />
       <Stack.Screen
         name="addUser"
         component={AddUser}
         options={({ route }) => ({
-          title: "Invite to " + (route.params.name || "Circle"),
+          title: "Invite to " + (route?.params?.name || "Circle"),
         })}
       />
       <Stack.Screen
@@ -161,7 +161,9 @@ export default function RootStack() {
       <Stack.Screen
         name="viewOtherUser"
         component={ViewOtherUser}
-        options={({ route }) => ({ title: route.params.name || "Other User" })}
+        options={({ route }) => ({
+          title: route?.params?.name || "Other User",
+        })}
       />
       <Stack.Screen
         name="privacy"

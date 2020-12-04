@@ -25,7 +25,7 @@ import ConstitutionFooter from "./ConstitutionFooter";
 import Input from "../../components/Input";
 import { useEffect } from "react";
 
-export default function Constitution({ route }) {
+export default function Constitution({ route, navigation }) {
   // const [activeTheme] = useGlobal("activeTheme");
   const [activeCircle] = useGlobal("activeCircle");
   const [showConstSearch] = useGlobal("showConstSearch");
@@ -85,12 +85,20 @@ export default function Constitution({ route }) {
     }
   }
 
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (data && data.circle && !route.params.name) {
+      const {
+        circle: { name },
+      } = data;
+      navigation.setParams({ name });
+    }
+  }, [data]);
+
   let belongsToCircle = false;
 
   if (
-    belongsToCircleData &&
-    belongsToCircleData.circlesList &&
-    belongsToCircleData.circlesList.items.length !== 0 &&
+    belongsToCircleData?.circlesList.items?.length > 0 &&
     belongsToCircleData.circlesList.items[0].id === activeCircle
   ) {
     belongsToCircle = true;
@@ -103,45 +111,6 @@ export default function Constitution({ route }) {
   const selectAmendment = (id) => {
     setSelectedAmendment(id);
   };
-  // _subToMore = (subscribeToMore) => {
-  //   subscribeToMore({
-  //     document: SUB_TO_CIRCLES_AMENDMENTS,
-  //     variables: { id: activeCircle || "" },
-  //     updateQuery: (prev, { subscriptionData }) => {
-  //       let {
-  //         previousValues,
-  //         mutation,
-  //         node: amendment,
-  //       } = subscriptionData.data.Amendment;
-  //       switch (mutation) {
-  //         case "CREATED":
-  //           let ind = prev.Circle.amendments.findIndex(
-  //             (a) => a.id === amendment.id
-  //           );
-  //           // if the new node isn't in the data set
-  //           if (ind === -1) {
-  //             prev.Circle.amendments = [...prev.Circle.amendments, amendment];
-  //           }
-  //           break;
-  //         case "UPDATED":
-  //           let index = prev.Circle.amendments.findIndex(
-  //             (a) => a.id === amendment.id
-  //           );
-  //           prev.Circle.amendments[index] = amendment;
-  //           break;
-  //         case "DELETED":
-  //           let i = prev.Circle.amendments.findIndex(
-  //             (a) => a.id === previousValues.id
-  //           );
-  //           prev.Circle.amendments.splice(i, 1);
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //       return prev;
-  //     },
-  //   });
-  // };
 
   let circle = null;
   let amendments = [];

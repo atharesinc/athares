@@ -6,7 +6,7 @@ import Svg, { G, Path, Circle } from "react-native-svg";
 
 const AnimatedG = Animated.createAnimatedComponent(G);
 
-export default function SvgComponent({ size = 150, ...props }) {
+export default function Loader({ size = 150, ...props }) {
   const rotation = useRef(new Animated.Value(0));
   const [offset] = useState(0);
   const anim = useRef(
@@ -44,6 +44,7 @@ export default function SvgComponent({ size = 150, ...props }) {
         stroke="#282a38"
         strokeWidth={8}
         strokeMiterlimit={10}
+        collapsable={undefined}
       >
         <Path
           id="prefix__ekhk77smbmil3"
@@ -54,7 +55,7 @@ export default function SvgComponent({ size = 150, ...props }) {
           d="M297.238 304.022l17.077 35.797h41.051l-18.39-35.797z"
         />
       </G>
-      <G id="prefix__ekhk77smbmil5">
+      <G id="prefix__ekhk77smbmil5" collapsable={undefined}>
         <Path
           id="prefix__ekhk77smbmil6"
           d="M250 51.667C140.463 51.667 51.667 140.463 51.667 250c0 109.536 88.796 198.333 198.333 198.333 109.536 0 198.333-88.797 198.333-198.333 0-109.537-88.797-198.333-198.333-198.333zM250 429c-98.859 0-179-80.143-179-179 0-98.859 80.141-179 179-179 98.857 0 179 80.141 179 179 0 98.857-80.143 179-179 179z"
@@ -63,8 +64,9 @@ export default function SvgComponent({ size = 150, ...props }) {
           strokeWidth={8}
           strokeMiterlimit={10}
         />
-        <G transform={`translate(${pivotX}, ${pivotY})`}>
+        <G transform={`translate(${pivotX}, ${pivotY})`} collapsable="false">
           <AnimatedG
+            collapsable={undefined}
             style={{
               transform: [
                 {

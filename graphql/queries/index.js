@@ -619,6 +619,10 @@ export const GET_CIRCLE_PREFS_FOR_USER = gql`
         amendments
         revisions
         useEmail
+        circle {
+          id
+          name
+        }
       }
     }
   }
