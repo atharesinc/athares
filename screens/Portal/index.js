@@ -28,8 +28,6 @@ export default function Portal(props) {
   }, []);
 
   useEffect(() => {
-    console.log(props.route);
-
     // This is to account for screen changes not handled by button presses (hardware back on android)
     //  or a default route given by navigating here directly
     setScreen(
@@ -64,27 +62,27 @@ export default function Portal(props) {
         <Stack.Screen
           name="register"
           component={Register}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Register" }}
         />
         <Stack.Screen
           name="login"
           component={Login}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Login" }}
         />
         <Stack.Screen
           name="forgot"
           component={Forgot}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Forgot Password" }}
         />
         <Stack.Screen
           name="resetConfirm"
           component={ResetConfirm}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Confirm Reset" }}
         />
         <Stack.Screen
           name="reset"
           component={Reset}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: "Reset" }}
         />
       </Stack.Navigator>
     </View>

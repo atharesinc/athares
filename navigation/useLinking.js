@@ -45,7 +45,17 @@ export const linkingConfig = {
       // GOOD
       viewUser: "profile",
       // GOOD
-      viewOtherUser: "user/:user",
+      viewOtherUser: {
+        path: "user/:user/:name?",
+        parse: {
+          user: (user) => user,
+          name: (name) => name,
+        },
+        stringify: {
+          user: (user) => user,
+          name: () => "",
+        },
+      },
       notFound: "*",
     },
   },

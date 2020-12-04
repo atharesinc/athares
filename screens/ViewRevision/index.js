@@ -30,7 +30,7 @@ export default function ViewRevision(props) {
   const [activeRevision] = useGlobal("activeRevision");
   const [user] = useGlobal("user");
   const [activeCircle] = useGlobal("activeCircle");
-  const [activeViewUser, setActiveViewUser] = useGlobal("activeViewUser");
+  const [, setActiveViewUser] = useGlobal("activeViewUser");
   let belongsToCircle = useRef(false);
 
   const { data: isUserInCircle, loading } = useQuery(IS_USER_IN_CIRCLE, {
@@ -51,7 +51,9 @@ export default function ViewRevision(props) {
   const goToUser = () => {
     setActiveViewUser(data.revision.backer.id, () => {
       props.navigation.navigate("viewOtherUser", {
-        user: activeViewUser,
+        user: data.revision.backer.id,
+        name:
+          data.revision.backer.firstName + " " + data.revision.backer.lastName,
       });
     });
   };
