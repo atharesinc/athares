@@ -52,6 +52,16 @@ export default function Revisions(props) {
     belongsToCircle = true;
   }
 
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (data && data.circle && !props.route.params.name) {
+      const {
+        circle: { name },
+      } = data;
+      props.navigation.setParams({ name });
+    }
+  }, [data]);
+
   const goToSettings = () => {
     props.navigation.navigate("circleSettings", { circle: activeCircle });
   };

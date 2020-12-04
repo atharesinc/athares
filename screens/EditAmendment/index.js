@@ -28,24 +28,41 @@ import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 export default function EditAmendment(props) {
   const [text, setText] = useState("");
-  const [activeCircle] = useGlobal("activeCircle");
+  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
   const [, setActiveRevision] = useGlobal("activeRevision");
   const [loading, setLoading] = useState(false);
   const [createRevisionMutation] = useMutation(CREATE_REVISION_FROM_AMENDMENT);
-  const [activeAmendment] = useGlobal("activeAmendment");
+  const [activeAmendment, setActiveAmendment] = useGlobal("activeAmendment");
 
   const { data, loading: loadingQuery, error } = useQuery(GET_AMENDMENT_BY_ID, {
     variables: {
-      id: activeAmendment || "",
+      id: props.route.params.amendment,
     },
   });
 
   useEffect(() => {
-    if (data && data.amendment) {
+    if (data?.amendment) {
       setText(data.amendment.text);
     }
+
+    // Update Title after loading data if we don't already have it
+    if (data && data.amendment && !props.route.params.name) {
+      const {
+        amendment: { title },
+      } = data;
+      props.navigation.setParams({ name: title });
+    }
   }, [data]);
+
+  useEffect(() => {
+    if (!activeCircle) {
+      setActiveCircle(props.route.params.circle);
+    }
+    if (!activeAmendment) {
+      setActiveAmendment(props.route.params.amendment);
+    }
+  }, []);
 
   const confirmRepeal = () => {
     MeshAlert({

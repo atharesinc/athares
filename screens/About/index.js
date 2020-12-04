@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function About() {
   return (
-    <ScrollView contentContainerStyle={[styles.wrapper]}>
+    <ScrollView>
       <View style={styles.hero}>
         <DisclaimerText grey spaced>
           What is Athares?
@@ -34,9 +34,9 @@ export default function About() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    alignItems: "stretch",
-    justifyContent: "flex-start",
-    width: "100%",
+    // alignItems: "stretch",
+    // justifyContent: "flex-start",
+    // width: "100%",
     flex: 1,
   },
   hero: {

@@ -20,7 +20,9 @@ import useImperativeQuery from "../../utils/useImperativeQuery";
 
 export default memo(function ViewChannel(props) {
   const [uploadInProgress, setUploadInProgress] = useState(false);
-  const [activeChannel] = useGlobal("activeChannel");
+  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
+  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
+
   const [user] = useGlobal("user");
   const [messages, setMessages] = useState([]);
   const hasOlderMessages = useRef(true);
@@ -54,6 +56,24 @@ export default memo(function ViewChannel(props) {
       setMessages([...messages, subscriptionData.data.Messages.node]);
     }
   }
+
+  useEffect(() => {
+    if (!activeCircle) {
+      setActiveCircle(props.route.params.circle);
+    }
+    if (!activeChannel) {
+      setActiveChannel(props.route.params.channel);
+    }
+  });
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (data && data.channel && !props.route.params.name) {
+      const {
+        channel: { name },
+      } = data;
+      props.navigation.setParams({ name });
+    }
+  }, [data]);
 
   //   removeUnreadChannel(chan) {
   //     let { unreadChannels } = this.global;

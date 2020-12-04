@@ -178,21 +178,31 @@ export default function Login() {
         />
         <GlowButton text={"Login"} onPress={tryLogin} />
       </KeyboardAwareScrollView>
-      <DisclaimerText style={styles.center}>
-        By logging in you acknowledge that you agree to the{" "}
-        <TouchableOpacity onPress={goToPolicy}>
-          <DisclaimerText blue noMargin>
-            Terms of Use
+
+      <TouchableOpacity
+        onPress={goToPolicy}
+        style={styles.center}
+        // style={
+        //   {
+        //     // justifyContent: "flex-end",
+        //     // alignItems: "flex-end",
+        //     // height: 5,
+        //     // margin: 0,
+        //     // padding: 0,
+        //   }
+        // }
+      >
+        <DisclaimerText style={styles.center}>
+          By logging in you acknowledge that you agree to the{" "}
+          <DisclaimerText
+            blue
+            // noMargin
+            // style={{ marginBottom: -5 }}
+          >
+            Terms of Use and Privacy Policy.
           </DisclaimerText>
-        </TouchableOpacity>{" "}
-        and{" "}
-        <TouchableOpacity onPress={goToPolicy}>
-          <DisclaimerText blue noMargin>
-            Privacy Policy
-          </DisclaimerText>
-        </TouchableOpacity>
-        .
-      </DisclaimerText>
+        </DisclaimerText>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -201,5 +211,8 @@ const styles = StyleSheet.create({
   justifyBetween: { justifyContent: "space-between", flex: 1 },
   center: {
     textAlign: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
   },
 });

@@ -18,6 +18,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 export default function CreateChannel(props) {
   const [name, setName] = useState("");
@@ -25,25 +26,25 @@ export default function CreateChannel(props) {
   const [loading, setLoading] = useState(false);
 
   const [activeCircle] = useGlobal("activeCircle");
-  const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
+  const [, setActiveChannel] = useGlobal("activeChannel");
 
   const [user] = useGlobal("user");
   const [createChannel] = useMutation(CREATE_CHANNEL);
   const { data, loading: loadingQuery } = useQuery(GET_CIRCLE_NAME_BY_ID, {
     variables: {
-      id: activeCircle || "",
+      id: props.route.params.circle,
     },
   });
 
+  // Update Title after loading data if we don't already have it
   useEffect(() => {
-    // navigate away after we've updated active channel to view
-    if (activeChannel) {
-      props.navigation.navigate("channel", {
-        circle: activeCircle,
-        channel: activeChannel,
-      });
+    if (data && data.circle && !props.route.params.name) {
+      const {
+        circle: { name },
+      } = data;
+      props.navigation.setParams({ name });
     }
-  }, [activeChannel]);
+  }, [data]);
 
   const submit = async () => {
     setLoading(true);
@@ -77,12 +78,19 @@ export default function CreateChannel(props) {
 
       newChannel.id = newChannelRes.data.channelCreate.id;
 
-      // set activeChannel as this one
-      setActiveChannel(newChannel.id);
       MeshAlert({
         title: "Channel Created",
         text: `${name} has been created in the Circle ${data.circle.name}.`,
         icon: "success",
+      });
+
+      // set activeChannel as this one and nav to it
+      setActiveChannel(newChannel.id, () => {
+        props.navigation.navigate("channel", {
+          circle: activeCircle,
+          channel: newChannel.id,
+          name: newChannel.name,
+        });
       });
     } catch (err) {
       console.error(new Error(err));
@@ -92,8 +100,12 @@ export default function CreateChannel(props) {
     }
   };
 
-  if (loading || loadingQuery) {
+  if (loading || loadingQuery || !data) {
     return <CenteredLoaderWithText />;
+  }
+
+  if (!data.circle) {
+    return <CenteredErrorLoader text={"Error Creating Channel"} />;
   }
 
   return (

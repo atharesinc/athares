@@ -19,18 +19,21 @@ import MeshAlert from "../../utils/meshAlert";
 
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import {
   //  ADD_USER_TO_CIRCLE,
   CREATE_INVITE,
 } from "../../graphql/mutations";
-import { SEARCH_FOR_USER_NOT_IN_CIRCLE } from "../../graphql/queries";
+import {
+  GET_CIRCLE_NAME_BY_ID,
+  SEARCH_FOR_USER_NOT_IN_CIRCLE,
+} from "../../graphql/queries";
 import { sha } from "../../utils/crypto";
 
-export default function AddUser(props) {
+export default function AddUser({ navigation, route }) {
   const [tags, setTags] = useState([]);
   const [input, setInput] = useState("");
-  const [activeCircle] = useGlobal("activeCircle");
+  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const inputRef = useRef();
   const [loadingInvites, setLoadingInvites] = useState(false);
   const [user] = useGlobal("user");
@@ -38,12 +41,31 @@ export default function AddUser(props) {
   const [search, { loading, data }] = useLazyQuery(
     SEARCH_FOR_USER_NOT_IN_CIRCLE
   );
+
+  const { data: circleData } = useQuery(GET_CIRCLE_NAME_BY_ID, {
+    variables: {
+      id: route.params.circle,
+    },
+  });
   // const [addUserToCircle] = useMutation(ADD_USER_TO_CIRCLE);
   const [inviteUser] = useMutation(CREATE_INVITE);
 
   useEffect(() => {
     inputRef.current.focus();
+    if (!activeCircle) {
+      setActiveCircle(route.params.circle);
+    }
   }, []);
+
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (circleData && circleData.circle && !route.params.name) {
+      const {
+        circle: { name },
+      } = circleData;
+      navigation.setParams({ name: name });
+    }
+  }, [circleData]);
 
   useEffect(() => {
     // don't re-search if they've only just started typing
@@ -122,7 +144,7 @@ export default function AddUser(props) {
         } been added.`,
         icon: "success",
       });
-      props.navigation.goBack(null);
+      navigation.goBack(null);
     } catch (err) {
       console.error(new Error(err));
       MeshAlert({
@@ -203,7 +225,9 @@ export default function AddUser(props) {
       <View style={{ padding: 15 }}>
         <DisclaimerText
           grey
-          text={`After pressing "Invite Users", the recipient(s) will be added automatically to this circle.\nInvitations are not subject to democratic process.`}
+          text={`After pressing "Invite Users", the recipient(s) will be invited to ${
+            circleData?.circle?.name || "this circle"
+          }.\nInvitations are not subject to democratic process.`}
         />
         <GlowButton
           text="Invite Users"

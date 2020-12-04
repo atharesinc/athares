@@ -49,16 +49,18 @@ export default function RootStack() {
       {/* This is where all the screens go */}
       {Platform.OS === "web" && (
         <>
-          <Stack.Screen name="splash" component={Splash} />
-          <Stack.Screen name="about" component={About} />
+          <Stack.Screen
+            name="splash"
+            component={Splash}
+            options={{ title: "Athares" }}
+          />
           {/* <Stack.Screen name="roadmap" component={Roadmap} /> */}
-          <Stack.Screen name="privacy" component={Privacy} />
         </>
       )}
       <Stack.Screen
         name="app"
         component={shouldDisplayNewsAsApp}
-        options={appOptions}
+        options={{ ...appOptions, title: "Athares" }}
       />
       <Stack.Screen
         name="portal"
@@ -66,23 +68,118 @@ export default function RootStack() {
         // options={{ headerShown: false }}
       />
 
-      <Stack.Screen name="createRevision" component={CreateRevision} />
-      <Stack.Screen name="viewRevision" component={ViewRevision} />
+      <Stack.Screen
+        name="createRevision"
+        component={CreateRevision}
+        options={({ route }) => ({
+          title: "Create Revision in " + (route?.params?.name || "Circle"),
+        })}
+      />
+      <Stack.Screen
+        name="viewRevision"
+        component={ViewRevision}
+        options={({ route }) => ({
+          title: "Viewing " + (route?.params?.name || "Revision"),
+        })}
+      />
 
-      <Stack.Screen name="createCircle" component={CreateCircle} />
-      <Stack.Screen name="circleSettings" component={CircleSettings} />
+      <Stack.Screen
+        name="createCircle"
+        component={CreateCircle}
+        options={{
+          title: "Create New Circle",
+        }}
+      />
+      <Stack.Screen
+        name="circleSettings"
+        component={CircleSettings}
+        options={({ route }) => ({
+          title: "Settings for " + (route?.params?.name || "Circle"),
+        })}
+      />
 
-      <Stack.Screen name="constitution" component={Constitution} />
-      <Stack.Screen name="createChannel" component={CreateChannel} />
-      <Stack.Screen name="channel" component={ViewChannel} />
-      <Stack.Screen name="news" component={News} options={newsOptions} />
-      <Stack.Screen name="revisions" component={Revisions} />
-      <Stack.Screen name="editAmendment" component={EditAmendment} />
-      <Stack.Screen name="addUser" component={AddUser} />
-      <Stack.Screen name="viewInvites" component={ViewInvites} />
-      <Stack.Screen name="viewUser" component={ViewUser} />
-      <Stack.Screen name="viewOtherUser" component={ViewOtherUser} />
-      <Stack.Screen name="notFound" component={NotFound} />
+      <Stack.Screen
+        name="constitution"
+        component={Constitution}
+        options={({ route }) => ({
+          title: (route?.params?.name || "") + " Constitution",
+        })}
+      />
+      <Stack.Screen
+        name="createChannel"
+        component={CreateChannel}
+        options={({ route }) => ({
+          title: "Create Channel in " + (route?.params?.name || "Circle"),
+        })}
+      />
+      <Stack.Screen
+        name="channel"
+        component={ViewChannel}
+        options={({ route }) => ({
+          title: route?.params?.name || "Channel",
+        })}
+      />
+      <Stack.Screen
+        name="news"
+        component={News}
+        options={({ route }) => ({
+          ...newsOptions,
+          title: (route?.params?.name || "Circle") + " News",
+        })}
+      />
+      <Stack.Screen
+        name="revisions"
+        component={Revisions}
+        options={({ route }) => ({
+          title: (route?.params?.name || "") + " Revisions",
+        })}
+      />
+      <Stack.Screen
+        name="editAmendment"
+        component={EditAmendment}
+        options={({ route }) => ({
+          title: "Editing " + (route?.params?.name || "Amendment"),
+        })}
+      />
+      <Stack.Screen
+        name="addUser"
+        component={AddUser}
+        options={({ route }) => ({
+          title: "Invite to " + (route?.params?.name || "Circle"),
+        })}
+      />
+      <Stack.Screen
+        name="viewInvites"
+        component={ViewInvites}
+        options={{ title: "My Invites" }}
+      />
+      <Stack.Screen
+        name="viewUser"
+        component={ViewUser}
+        options={{ title: "My Profile" }}
+      />
+      <Stack.Screen
+        name="viewOtherUser"
+        component={ViewOtherUser}
+        options={({ route }) => ({
+          title: route?.params?.name || "Other User",
+        })}
+      />
+      <Stack.Screen
+        name="privacy"
+        component={Privacy}
+        options={{ title: "Privacy Policy" }}
+      />
+      <Stack.Screen
+        name="notFound"
+        component={NotFound}
+        options={{ title: "404" }}
+      />
+      <Stack.Screen
+        name="about"
+        component={About}
+        options={{ title: "About Athares" }}
+      />
     </Stack.Navigator>
   );
 }

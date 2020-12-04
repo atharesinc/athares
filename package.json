@@ -53,7 +53,7 @@
     "expo-secure-store": "~9.2.0",
     "expo-splash-screen": "^0.6.1",
     "expo-web-browser": "~8.5.0",
-    "graphql": "^15.0.0",
+    "graphql": "^15.4.0",
     "hash.js": "^1.1.7",
     "hybrid-crypto-js": "^0.2.2",
     "localforage": "^1.7.3",

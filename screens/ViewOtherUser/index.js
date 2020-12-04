@@ -1,4 +1,4 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, useEffect } from "reactn";
 import { useQuery } from "@apollo/client";
 
 import Statistic from "../../components/Statistic";
@@ -12,7 +12,7 @@ import { View, ScrollView, StyleSheet, Image } from "react-native";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
-export default function ViewOtherUser() {
+export default function ViewOtherUser(props) {
   const [activeViewUser] = useGlobal("activeViewUser");
 
   let user,
@@ -20,9 +20,19 @@ export default function ViewOtherUser() {
 
   const { data, loading, error } = useQuery(GET_USER_BY_ID_ALL, {
     variables: {
-      id: activeViewUser || "",
+      id: props.route.params.user || activeViewUser,
     },
   });
+
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (data && data.user && !props.route.params.name) {
+      const {
+        user: { firstName, lastName },
+      } = data;
+      props.navigation.setParams({ name: firstName + " " + lastName });
+    }
+  }, [data]);
 
   if (loading) {
     return <CenteredLoaderWithText text={"Loading User Info"} />;

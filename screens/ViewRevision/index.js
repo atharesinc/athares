@@ -27,10 +27,10 @@ import { useQuery, useMutation } from "@apollo/client";
 
 export default function ViewRevision(props) {
   const [, setActiveChannel] = useGlobal("activeChannel");
-  const [activeRevision] = useGlobal("activeRevision");
+  const [activeRevision, setActiveRevision] = useGlobal("activeRevision");
   const [user] = useGlobal("user");
-  const [activeCircle] = useGlobal("activeCircle");
-  const [activeViewUser, setActiveViewUser] = useGlobal("activeViewUser");
+  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
+  const [, setActiveViewUser] = useGlobal("activeViewUser");
   let belongsToCircle = useRef(false);
 
   const { data: isUserInCircle, loading } = useQuery(IS_USER_IN_CIRCLE, {
@@ -46,12 +46,30 @@ export default function ViewRevision(props) {
 
   useEffect(() => {
     setActiveChannel(null);
+    if (!activeRevision) {
+      setActiveRevision(props.route.params.revision);
+    }
+    if (!activeCircle) {
+      setActiveCircle(props.route.params.circle);
+    }
   }, []);
+
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (data && data.revision && !props.route.params.name) {
+      const {
+        revision: { title },
+      } = data;
+      props.navigation.setParams({ name: title });
+    }
+  }, [data]);
 
   const goToUser = () => {
     setActiveViewUser(data.revision.backer.id, () => {
       props.navigation.navigate("viewOtherUser", {
-        user: activeViewUser,
+        user: data.revision.backer.id,
+        name:
+          data.revision.backer.firstName + " " + data.revision.backer.lastName,
       });
     });
   };

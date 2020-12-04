@@ -1,4 +1,4 @@
-import React, { useState, useGlobal } from "reactn";
+import React, { useState, useGlobal, useEffect } from "reactn";
 import { ScrollView, StyleSheet, KeyboardAvoidingView } from "react-native";
 
 import DisclaimerText from "../../components/DisclaimerText";
@@ -29,10 +29,20 @@ export default function CreateRevision(props) {
     GET_AMENDMENTS_FROM_CIRCLE_ID,
     {
       variables: {
-        id: activeCircle,
+        id: props.route.params.circle,
       },
     }
   );
+
+  // Update Title after loading data if we don't already have it
+  useEffect(() => {
+    if (data && data.circle && !props.route.params.name) {
+      const {
+        circle: { name },
+      } = data;
+      props.navigation.setParams({ name });
+    }
+  }, [data]);
 
   // the longest a revision must persist before votes are counted is 7 days ( many users), the shortest is about 60 seconds (1 user)
   // add this number of seconds to the createdAt time to determine when a revision should expire, where x is the number of users
