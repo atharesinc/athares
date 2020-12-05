@@ -49,7 +49,7 @@ export default function ViewRevision(props) {
     if (!activeRevision) {
       setActiveRevision(props.route.params.revision);
     }
-    if (!activeCircle) {
+    if (activeCircle !== props.route.params.circle) {
       setActiveCircle(props.route.params.circle);
     }
   }, []);

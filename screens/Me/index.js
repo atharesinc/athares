@@ -216,12 +216,16 @@ export default function Me() {
     }
   };
 
-  if (loading) {
+  if (loading || !data) {
     return <CenteredLoaderWithText text={"Loading Profile"} />;
   }
 
   if (error) {
     return <CenteredErrorLoader text={"Error Retrieving Profile"} />;
+  }
+
+  if (!data.user) {
+    return <CenteredErrorLoader text={"You must be logged in"} />;
   }
 
   const userObj = data.user;

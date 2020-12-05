@@ -26,12 +26,6 @@ export default function Amendment({
     });
   };
 
-  // useEffect(() => {
-  //   if (activeRevision) {
-  //     RootNavigation.navigate("viewRevision", { revision: activeRevision });
-  //   }
-  // }, [activeRevision]);
-
   const selectThisAmendment = () => {
     onPress(amendment.id);
   };

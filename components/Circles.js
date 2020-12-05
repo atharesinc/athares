@@ -73,6 +73,9 @@ const Circles = ({ loggedIn = false }) => {
   // BUT it' breaks the ability to put navigate to a page via link
   // So if any params are set, we'll let the router use those, otherwise
   // give the user something to look at
+  // UPDATE THE SECOND: since params are available first,
+  // the screen should always set the activeCircle before login is complete,
+  // So we only need to set te circle if a param hasn't done it already
   useEffect(() => {
     // console.log(RootNavigation.getRoute());
     // const route = RootNavigation.getRoute();
@@ -81,7 +84,7 @@ const Circles = ({ loggedIn = false }) => {
     //   return;
     // }
 
-    if (circles.length > 0) {
+    if (circles.length > 0 && !activeCircle) {
       setActiveCircle(circles[0].id);
     }
   }, [circles]);

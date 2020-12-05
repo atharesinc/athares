@@ -56,7 +56,7 @@ export default function EditAmendment(props) {
   }, [data]);
 
   useEffect(() => {
-    if (!activeCircle) {
+    if (activeCircle !== props.route.params.circle) {
       setActiveCircle(props.route.params.circle);
     }
     if (!activeAmendment) {

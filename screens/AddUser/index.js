@@ -52,7 +52,7 @@ export default function AddUser({ navigation, route }) {
 
   useEffect(() => {
     inputRef.current.focus();
-    if (!activeCircle) {
+    if (activeCircle !== route.params.circle) {
       setActiveCircle(route.params.circle);
     }
   }, []);

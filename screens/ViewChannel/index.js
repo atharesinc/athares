@@ -1,6 +1,6 @@
 import React, { useState, useGlobal, memo, useEffect, useRef } from "reactn";
 
-import { StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Platform, View } from "react-native";
 
 import Chat from "../../components/Chat";
 import ChatInput from "../../components/ChatInput";
@@ -17,6 +17,8 @@ import { useQuery, useMutation, useSubscription } from "@apollo/client";
 import { uploadToAWS } from "../../utils/upload";
 import MeshAlert from "../../utils/meshAlert";
 import useImperativeQuery from "../../utils/useImperativeQuery";
+import DisclaimerText from "../../components/DisclaimerText";
+import useBelongsInCircle from "../../utils/useBelongsInCircle";
 
 export default memo(function ViewChannel(props) {
   const [uploadInProgress, setUploadInProgress] = useState(false);
@@ -40,6 +42,11 @@ export default memo(function ViewChannel(props) {
     },
   });
 
+  const belongsToCircle = useBelongsInCircle({
+    user: user || "",
+    circle: activeCircle || "",
+  });
+
   const getMoreMessagesQuery = useImperativeQuery(GET_MESSAGES_FROM_CHANNEL_ID);
 
   const [createMessage] = useMutation(CREATE_MESSAGE);
@@ -58,13 +65,14 @@ export default memo(function ViewChannel(props) {
   }
 
   useEffect(() => {
-    if (!activeCircle) {
+    if (activeCircle !== props.route.params.circle) {
       setActiveCircle(props.route.params.circle);
     }
     if (!activeChannel) {
       setActiveChannel(props.route.params.channel);
     }
-  });
+  }, []);
+
   // Update Title after loading data if we don't already have it
   useEffect(() => {
     if (data && data.channel && !props.route.params.name) {
@@ -230,7 +238,15 @@ export default memo(function ViewChannel(props) {
         getMoreMessages={getMoreMessages}
         channelName={data.channel.name}
       />
-      <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
+      {belongsToCircle ? (
+        <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
+      ) : (
+        <View style={styles.notLoggedInWrapper}>
+          <DisclaimerText>
+            You are not a member of this Circle. Messages are not enabled.
+          </DisclaimerText>
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 });
@@ -242,5 +258,21 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     padding: 15,
+  },
+  notLoggedInWrapper: {
+    backgroundColor: "#2f3242",
+    minHeight: 50,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+    borderRadius: 3,
   },
 });
