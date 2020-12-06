@@ -4,30 +4,9 @@ import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
 import { Feather } from "@expo/vector-icons";
 
-import { IS_USER_IN_CIRCLE } from "../../graphql/queries";
-import { useQuery } from "@apollo/client";
-
-export default function ConstitutionFooter() {
+export default function ConstitutionFooter({ belongsToCircle }) {
   const [activeCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
-
-  let belongsToCircle = false;
-  // see if the user actually belongs to this circle
-  const { data: belongsToCircleData } = useQuery(IS_USER_IN_CIRCLE, {
-    variables: {
-      circle: activeCircle || "",
-      user: user || "",
-    },
-  });
-
-  if (
-    belongsToCircleData &&
-    belongsToCircleData.circlesList &&
-    belongsToCircleData.circlesList.items.length !== 0 &&
-    belongsToCircleData.circlesList.items[0].id === activeCircle
-  ) {
-    belongsToCircle = true;
-  }
 
   const goToCreateRevision = () => {
     RootNavigation.navigate("createRevision", { circle: activeCircle });

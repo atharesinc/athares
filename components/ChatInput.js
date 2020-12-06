@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     elevation: 7,
     borderRadius: 3,
     overflow: "hidden",
+    marginTop: 15,
   },
   filePreviewWrapper: {
     backgroundColor: "#2f3242",

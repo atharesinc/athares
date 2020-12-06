@@ -8,7 +8,7 @@ export default function CenteredErrorLoader({ size = 25, text = null }) {
   return (
     <View style={styles.view}>
       <Feather name={"alert-circle"} size={size} color={"#FFFFFF"} />
-      {text && <Title center text={text} />}
+      {text && <Title center text={text} style={styles.centerText} />}
     </View>
   );
 }
@@ -20,5 +20,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "transparent",
+  },
+  centerText: {
+    padding: 15,
+    textAlign: "center",
   },
 });

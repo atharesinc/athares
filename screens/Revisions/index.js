@@ -3,10 +3,7 @@ import React, { useEffect, useGlobal } from "reactn";
 import { ScrollView, StyleSheet } from "react-native";
 
 import RevisionBoard from "./RevisionBoard";
-import {
-  GET_REVISIONS_FROM_CIRCLE_ID,
-  IS_USER_IN_CIRCLE,
-} from "../../graphql/queries";
+import { GET_REVISIONS_FROM_CIRCLE_ID } from "../../graphql/queries";
 import { useQuery } from "@apollo/client";
 
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
@@ -14,43 +11,32 @@ import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 import GhostButton from "../../components/GhostButton";
 import DisclaimerText from "../../components/DisclaimerText";
 
+import useBelongsInCircle from "../../utils/useBelongsInCircle";
+
 import { unixTime } from "../../utils/transform";
 
 export default function Revisions(props) {
   const [, setActiveChannel] = useGlobal("activeChannel");
-  const [activeCircle] = useGlobal("activeCircle");
+  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
 
   useEffect(() => {
     setActiveChannel(null);
+    if (activeCircle !== props.route.params.circle) {
+      setActiveCircle(props.route.params.circle);
+    }
   }, []);
 
-  let belongsToCircle = false;
-  // see if the user actually belongs to this circle
-  const { loading: loading, error: e2, data: belongsToCircleData } = useQuery(
-    IS_USER_IN_CIRCLE,
-    {
-      variables: {
-        circle: activeCircle || "",
-        user: user || "",
-      },
-    }
-  );
-
-  const { data, loading: loading2 } = useQuery(GET_REVISIONS_FROM_CIRCLE_ID, {
-    variables: {
-      id: activeCircle || "",
-    },
+  const belongsToCircle = useBelongsInCircle({
+    user: user || "",
+    circle: props.route.params.circle,
   });
 
-  if (
-    belongsToCircleData &&
-    belongsToCircleData.circlesList &&
-    belongsToCircleData.circlesList.items.length !== 0 &&
-    belongsToCircleData.circlesList.items[0].id === activeCircle
-  ) {
-    belongsToCircle = true;
-  }
+  const { data, loading, error } = useQuery(GET_REVISIONS_FROM_CIRCLE_ID, {
+    variables: {
+      id: props.route.params.circle,
+    },
+  });
 
   // Update Title after loading data if we don't already have it
   useEffect(() => {
@@ -71,12 +57,12 @@ export default function Revisions(props) {
   // if (data && data.circle) {
   // }
 
-  if (loading || loading2) {
+  if (loading) {
     return <CenteredLoaderWithText />;
   }
 
   // Network Error
-  if (!data || e2) {
+  if (!data || error) {
     return <CenteredErrorLoader text={"Unable to connect to network"} />;
   }
 

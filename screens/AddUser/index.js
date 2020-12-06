@@ -16,19 +16,19 @@ import Loader from "../../components/Loader";
 import { Feather } from "@expo/vector-icons";
 import Suggestions from "./Suggestions";
 import MeshAlert from "../../utils/meshAlert";
+import useBelongsInCircle from "../../utils/useBelongsInCircle";
 
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import {
-  //  ADD_USER_TO_CIRCLE,
-  CREATE_INVITE,
-} from "../../graphql/mutations";
+import { CREATE_INVITE } from "../../graphql/mutations";
+
 import {
   GET_CIRCLE_NAME_BY_ID,
   SEARCH_FOR_USER_NOT_IN_CIRCLE,
 } from "../../graphql/queries";
 import { sha } from "../../utils/crypto";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 export default function AddUser({ navigation, route }) {
   const [tags, setTags] = useState([]);
@@ -47,12 +47,18 @@ export default function AddUser({ navigation, route }) {
       id: route.params.circle,
     },
   });
-  // const [addUserToCircle] = useMutation(ADD_USER_TO_CIRCLE);
+
   const [inviteUser] = useMutation(CREATE_INVITE);
 
+  const belongsToCircle = useBelongsInCircle({
+    user: user || "",
+    circle: route.params.circle,
+  });
+
   useEffect(() => {
-    inputRef.current.focus();
-    if (!activeCircle) {
+    // if the input doesn't load, don't try to focus
+    inputRef.current && inputRef.current.focus();
+    if (activeCircle !== route.params.circle) {
       setActiveCircle(route.params.circle);
     }
   }, []);
@@ -98,7 +104,6 @@ export default function AddUser({ navigation, route }) {
     setLoadingInvites(true);
 
     // add each user to circle
-
     if (tags.length === 0) {
       return;
     }
@@ -159,6 +164,14 @@ export default function AddUser({ navigation, route }) {
 
   if (loadingInvites) {
     return <CenteredLoaderWithText />;
+  }
+
+  if (!belongsToCircle) {
+    return (
+      <CenteredErrorLoader
+        text={"You must be a member of the Circle to invite Users"}
+      />
+    );
   }
 
   let suggestions = [];

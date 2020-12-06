@@ -1,4 +1,4 @@
-import React, { useEffect, useGlobal, useRef } from "reactn";
+import React, { useEffect, useGlobal } from "reactn";
 import {
   View,
   StyleSheet,
@@ -12,6 +12,7 @@ import { unixTime } from "../../utils/transform";
 import MeshAlert from "../../utils/meshAlert";
 
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 import Title from "../../components/Title";
 import DisclaimerText from "../../components/DisclaimerText";
 import Card from "../../components/Card";
@@ -19,9 +20,10 @@ import VotesCounter from "../../components/VotesCounter";
 import GlowButton from "../../components/GlowButton";
 
 import { CREATE_VOTE, UPDATE_VOTE } from "../../graphql/mutations";
-import { GET_REVISION_BY_ID, IS_USER_IN_CIRCLE } from "../../graphql/queries";
+import { GET_REVISION_BY_ID } from "../../graphql/queries";
 
 import { useQuery, useMutation } from "@apollo/client";
+import useBelongsInCircle from "../../utils/useBelongsInCircle";
 
 // import * as RootNavigation from "../../navigation/RootNavigation";
 
@@ -31,13 +33,13 @@ export default function ViewRevision(props) {
   const [user] = useGlobal("user");
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [, setActiveViewUser] = useGlobal("activeViewUser");
-  let belongsToCircle = useRef(false);
 
-  const { data: isUserInCircle, loading } = useQuery(IS_USER_IN_CIRCLE, {
-    variables: { circle: activeCircle || "", user: user || "" },
+  const belongsToCircle = useBelongsInCircle({
+    user: user || "",
+    circle: props.route.params.circle,
   });
 
-  const { data, loading: loading2 } = useQuery(GET_REVISION_BY_ID, {
+  const { data, loading, error } = useQuery(GET_REVISION_BY_ID, {
     variables: { id: props.route.params.revision },
   });
 
@@ -49,7 +51,7 @@ export default function ViewRevision(props) {
     if (!activeRevision) {
       setActiveRevision(props.route.params.revision);
     }
-    if (!activeCircle) {
+    if (activeCircle !== props.route.params.circle) {
       setActiveCircle(props.route.params.circle);
     }
   }, []);
@@ -101,11 +103,7 @@ export default function ViewRevision(props) {
 
   const vote = async (support) => {
     // make sure the user belongs to this circle
-    if (
-      !isUserInCircle ||
-      !isUserInCircle.circlesList ||
-      isUserInCircle.circlesList.items[0].id !== activeCircle
-    ) {
+    if (belongsToCircle) {
       return false;
     }
 
@@ -152,17 +150,12 @@ export default function ViewRevision(props) {
     }
   };
 
-  if (
-    isUserInCircle &&
-    isUserInCircle.circlesList &&
-    isUserInCircle.circlesList.items.length !== 0 &&
-    isUserInCircle.circlesList.items[0].id === activeCircle
-  ) {
-    belongsToCircle.current = true;
+  if (loading || !data) {
+    return <CenteredLoaderWithText />;
   }
 
-  if (loading || loading2 || !data) {
-    return <CenteredLoaderWithText />;
+  if (error) {
+    return <CenteredErrorLoader text={"Unable to find Revision"} />;
   }
 
   const revision = data.revision;
@@ -194,7 +187,7 @@ export default function ViewRevision(props) {
           <Card style={{ minHeight: "20%" }}>
             <DisclaimerText
               text={revision.newText}
-              style={styles.marginBottomZero}
+              style={[styles.marginBottomZero, styles.fontSize14]}
             />
           </Card>
         )}
@@ -236,7 +229,7 @@ export default function ViewRevision(props) {
           </View>
         </TouchableOpacity>
       </View>
-      {user && !hasExpired && belongsToCircle.current && (
+      {user && !hasExpired && belongsToCircle && (
         <View style={styles.voteSectionWrapper}>
           <GlowButton
             green
@@ -384,5 +377,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  fontSize14: {
+    fontSize: 14,
   },
 });

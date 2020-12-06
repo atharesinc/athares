@@ -30,9 +30,6 @@ export default function SearchSection(props) {
   );
 }
 
-// 282a38
-// 2f3242
-// 3a3e52
 const styles = StyleSheet.create({
   suggestionItemsWrapper: {
     backgroundColor: "#282a38",

@@ -14,39 +14,65 @@ export default function Diff({
   type = "chars",
   textStyle = {},
   viewStyle = {},
-  addedText = {},
-  removedText = {},
   unchangedText = {},
   containerStyle = {},
   addedColor = "lightgreen",
   removedColor = "salmon",
   unchangedColor = "transparent",
 }) {
-  var diff = fnMap[type](inputA, inputB);
-  var result = diff.map(function (part, index) {
-    var spanStyle = part.added
-      ? { ...styles.addedText, ...addedText }
-      : part.removed
-        ? { ...styles.removedText, ...removedText }
-        : { ...styles.defaultText, ...unchangedText };
+  const diff = fnMap[type](inputA, inputB);
 
-    var computedViewStyle = {
-      ...viewStyle,
-      backgroundColor: part.added
-        ? addedColor
-        : part.removed
-          ? removedColor
-          : unchangedColor,
-    };
+  const result = diff.map((part, index) => {
+    // const spanStyle = part.added
+    //   ? styles.addedText
+    //   : part.removed
+    //   ? styles.removedText
+    //   : { ...styles.defaultText, ...unchangedText };
+
+    // var computedViewStyle = {
+    //   ...viewStyle,
+    //   backgroundColor: part.added
+    //     ? addedColor
+    //     : part.removed
+    //     ? removedColor
+    //     : unchangedColor,
+    // };
+
+    if (part.added) {
+      return (
+        <View key={index} style={[viewStyle, { backgroundColor: addedColor }]}>
+          <Text style={[styles.defaultText, styles.addedText, textStyle]}>
+            {part.value}
+          </Text>
+        </View>
+      );
+    }
+
+    if (part.removed) {
+      return (
+        <View
+          key={index}
+          style={[viewStyle, { backgroundColor: removedColor }]}
+        >
+          <Text style={[styles.defaultText, styles.removedText, textStyle]}>
+            {part.value}
+          </Text>
+        </View>
+      );
+    }
 
     return (
-      <View key={index} style={computedViewStyle}>
-        <Text style={[styles.defaultText, spanStyle, textStyle]}>
+      <View
+        key={index}
+        style={[viewStyle, { backgroundColor: unchangedColor }]}
+      >
+        <Text style={[styles.defaultText, unchangedText, textStyle]}>
           {part.value}
         </Text>
       </View>
     );
   });
+
   return (
     <View style={[styles.defaultContainerStyle, containerStyle]}>{result}</View>
   );
@@ -55,6 +81,8 @@ export default function Diff({
 var styles = StyleSheet.create({
   defaultText: {
     fontFamily: "SpaceGrotesk",
+    color: "#FFFFFF",
+    fontSize: 14,
   },
   addedText: {
     color: "#000000",
@@ -65,7 +93,7 @@ var styles = StyleSheet.create({
     color: "#000000",
   },
   defaultContainerStyle: {
-    flexDirection: "row",
+    flexDirection: "column",
     flexWrap: "wrap",
     alignItems: "flex-end",
   },

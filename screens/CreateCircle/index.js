@@ -41,7 +41,22 @@ function CreateCircle(props) {
   const [createCircle] = useMutation(CREATE_CIRCLE);
   const [getSignedUrl] = useMutation(CREATE_SIGNED_UPLOAD_LINK);
 
+  const notLoggedInError = () => {
+    MeshAlert({
+      title: "Whoa There!",
+      text: `You can only create a new Circle if you're logged in. Would you like to be taken to the login page?`,
+      icon: "error",
+      onSubmit: () => {
+        props.navigation.navigate("portal", { screen: "login" });
+      },
+    });
+  };
   const submit = async () => {
+    if (!user) {
+      notLoggedInError();
+      return;
+    }
+
     setLoading(true);
 
     let finalImage;

@@ -1,9 +1,6 @@
-import React, { useGlobal, useState } from "reactn";
+import React, { useGlobal, useEffect, useState } from "reactn";
 import Amendment from "../../components/Amendment";
-import {
-  GET_AMENDMENTS_FROM_CIRCLE_ID,
-  IS_USER_IN_CIRCLE,
-} from "../../graphql/queries";
+import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
 
 import {
   SUB_TO_CIRCLES_AMENDMENTS,
@@ -23,11 +20,11 @@ import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 import ConstitutionFooter from "./ConstitutionFooter";
 import Input from "../../components/Input";
-import { useEffect } from "react";
+import useBelongsInCircle from "../../utils/useBelongsInCircle";
 
 export default function Constitution({ route, navigation }) {
   // const [activeTheme] = useGlobal("activeTheme");
-  const [activeCircle] = useGlobal("activeCircle");
+  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [showConstSearch] = useGlobal("showConstSearch");
   const [, setActiveRevision] = useGlobal("activeRevision");
   const [user] = useGlobal("user");
@@ -43,17 +40,6 @@ export default function Constitution({ route, navigation }) {
         id: route.params.circle,
       },
       fetchPolicy: "cache-and-network",
-    }
-  );
-
-  // see if the user actually belongs to this circle
-  const { loading: loading2, error: e2, data: belongsToCircleData } = useQuery(
-    IS_USER_IN_CIRCLE,
-    {
-      variables: {
-        circle: route.params.circle,
-        user: user || "",
-      },
     }
   );
 
@@ -95,16 +81,16 @@ export default function Constitution({ route, navigation }) {
     }
   }, [data]);
 
-  let belongsToCircle = false;
-
-  if (
-    belongsToCircleData?.circlesList.items?.length > 0 &&
-    belongsToCircleData.circlesList.items[0].id === activeCircle
-  ) {
-    belongsToCircle = true;
-  }
+  const belongsToCircle = useBelongsInCircle({
+    user: user || "",
+    circle: route.params.circle,
+  });
 
   useEffect(() => {
+    if (activeCircle !== route.params.circle) {
+      setActiveCircle(route.params.activeCircle);
+    }
+
     setActiveRevision(null);
   }, []);
 
@@ -115,14 +101,15 @@ export default function Constitution({ route, navigation }) {
   let circle = null;
   let amendments = [];
 
-  if (loading || loading2) {
+  if (loading) {
     <CenteredLoaderWithText text={"Getting Constitution"} />;
   }
 
   // Network Error
-  if (e2 || error) {
+  if (error) {
     return <CenteredErrorLoader text={"Unable to connect to network"} />;
   }
+
   if (data && data.circle) {
     circle = data.circle;
     amendments = circle.amendments.items;
@@ -167,7 +154,7 @@ export default function Constitution({ route, navigation }) {
           </ScrollView>
         </View>
 
-        <ConstitutionFooter />
+        <ConstitutionFooter belongsToCircle={belongsToCircle} />
       </View>
     );
   } else {

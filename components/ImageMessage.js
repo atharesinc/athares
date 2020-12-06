@@ -15,8 +15,6 @@ let CameraRoll = null;
 if (Platform.OS !== "web") {
   CameraRoll = require("@react-native-community/cameraroll");
 }
-// import Lightbox from "react-native-lightbox";
-// import { Feather } from "@expo/vector-icons";
 
 import { FileSystem } from "expo";
 

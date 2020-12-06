@@ -36,31 +36,6 @@ const SingleSearchItem = ({ item, category, ...props }) => {
   // }
   // }, [activeCircle]);
 
-  // useEffect(() => {
-  //   if (activeChannel) {
-  //     RootNavigation.navigate("channel");
-  //   }
-  // }, [activeChannel]);
-
-  // useEffect(() => {
-  //   if (activeRevision) {
-  //     console.log("update to active revision", activeRevision);
-  //     RootNavigation.navigate("viewRevision");
-  //   }
-  // }, [activeRevision]);
-
-  // useEffect(() => {
-  //   if (activeAmendment) {
-  //     RootNavigation.navigate("constitution");
-  //   }
-  // }, [activeAmendment]);
-
-  // useEffect(() => {
-  //   if (activeViewUser) {
-  //     RootNavigation.navigate("viewOtherUser");
-  //   }
-  // }, [activeViewUser]);
-
   const navigate = () => {
     const { id } = item;
 

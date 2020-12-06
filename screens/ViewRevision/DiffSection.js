@@ -19,7 +19,7 @@ function DiffSection({ oldText = "", newText = "" }) {
         return (
           <ScrollView containerStyle={styles.textContainerStyle}>
             <Diff
-              unchagedText={styles.unchangedText}
+              unchangedText={styles.unchangedText}
               inputA={oldText}
               inputB={newText}
               textStyle={styles.sideBySideText}
@@ -33,17 +33,15 @@ function DiffSection({ oldText = "", newText = "" }) {
           <ScrollView containerStyle={styles.textContainerStyle}>
             <View style={styles.sideBySideWrapper}>
               <Diff
-                unchagedText={styles.unchangedText}
+                unchangedText={styles.unchangedText}
                 inputA={oldText}
                 inputB={""}
                 type="words"
-                textStyle={styles.sideBySideText}
                 containerStyle={styles.sideBySide}
               />
               <Diff
                 containerStyle={styles.sideBySide}
-                textStyle={styles.sideBySideText}
-                unchagedText={styles.unchangedText}
+                unchangedText={styles.unchangedText}
                 inputA={""}
                 inputB={newText}
                 type="words"
@@ -167,11 +165,10 @@ const styles = StyleSheet.create({
   },
   sideBySide: {
     alignItems: "flex-start",
-    padding: 5,
+    // padding: 5,
     flex: 1,
   },
   sideBySideText: {
-    fontSize: 12,
     fontFamily: "SpaceGrotesk",
   },
   textContainerStyle: {

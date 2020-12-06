@@ -34,9 +34,6 @@ export default function About() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    // alignItems: "stretch",
-    // justifyContent: "flex-start",
-    // width: "100%",
     flex: 1,
   },
   hero: {
@@ -44,7 +41,6 @@ const styles = StyleSheet.create({
   },
   QAWrapper: {
     width: "100%",
-    // flex: 1,
     backgroundColor: "#282a38",
     padding: 15,
   },

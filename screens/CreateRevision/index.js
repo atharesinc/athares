@@ -1,6 +1,8 @@
 import React, { useState, useGlobal, useEffect } from "reactn";
 import { ScrollView, StyleSheet, KeyboardAvoidingView } from "react-native";
 
+import CrossAutoGrow from "../../components/CrossAutoGrow";
+
 import DisclaimerText from "../../components/DisclaimerText";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
@@ -8,12 +10,14 @@ import GlowButton from "../../components/GlowButton";
 import { sha } from "../../utils/crypto";
 import { validateNewRevision } from "../../utils/validators";
 import MeshAlert from "../../utils/meshAlert";
+import useBelongsInCircle from "../../utils/useBelongsInCircle";
 
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
 
 import { CREATE_REVISION } from "../../graphql/mutations";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
+import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
 export default function CreateRevision(props) {
   const [title, setTitle] = useState("");
@@ -21,11 +25,11 @@ export default function CreateRevision(props) {
   const [loading, setLoading] = useState(false);
 
   const [, setActiveRevision] = useGlobal("activeRevision");
-  const [activeCircle] = useGlobal("activeCircle");
+  const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
 
   const [createRevision] = useMutation(CREATE_REVISION);
-  const { data, loading: loadingQuery } = useQuery(
+  const { data, loading: loadingQuery, error } = useQuery(
     GET_AMENDMENTS_FROM_CIRCLE_ID,
     {
       variables: {
@@ -33,6 +37,17 @@ export default function CreateRevision(props) {
       },
     }
   );
+
+  let belongsToCircle = useBelongsInCircle({
+    circle: activeCircle || "",
+    user: user || "",
+  });
+
+  useEffect(() => {
+    if (activeCircle !== props.route.params.circle) {
+      setActiveCircle(props.route.params.circle);
+    }
+  }, []);
 
   // Update Title after loading data if we don't already have it
   useEffect(() => {
@@ -137,8 +152,32 @@ export default function CreateRevision(props) {
     }
   };
 
-  if (loading || loadingQuery || !activeCircle || !data.circle) {
+  if (loading || loadingQuery || !activeCircle) {
     return <CenteredLoaderWithText />;
+  }
+
+  if (error) {
+    return <CenteredErrorLoader text={"Unable to Draft an Amendment"} />;
+  }
+
+  if (!data.circle) {
+    return <CenteredErrorLoader text={"Circle Does Not Exist"} />;
+  }
+
+  if (!user) {
+    return (
+      <CenteredErrorLoader
+        text={"You must be logged in to create an amendment"}
+      />
+    );
+  }
+
+  if (!belongsToCircle) {
+    return (
+      <CenteredErrorLoader
+        text={"Only memebers of the Circle can create an amendment"}
+      />
+    );
   }
 
   return (
@@ -154,7 +193,7 @@ export default function CreateRevision(props) {
           onChangeText={setTitle}
           value={title}
         />
-        <Input
+        {/* <Input
           value={text}
           onChangeText={setText}
           label={"Amendment Body"}
@@ -162,7 +201,19 @@ export default function CreateRevision(props) {
             "Draft your amendment. What do you want to add to this organization?"
           }
           multiline={true}
+        /> */}
+        <CrossAutoGrow
+          value={text}
+          onChangeText={setText}
+          label={"Amendment Body"}
+          // onBlur={focusOff}
+          autoFocus={true}
+          // isFocused={isFocused}
+          description={
+            "Draft your amendment. What do you want to add to this organization?"
+          }
         />
+
         <DisclaimerText
           text={
             "Pressing 'Draft Amendment' will create a new revision for this amendment. Drafts must first be ratified by a minimum electorate of Circle members, and then must be approved with a majority of votes. Amendment drafts are publicly accessible."

@@ -10,12 +10,9 @@ import CircleTitle from "./CircleTitle";
 import DisclaimerText from "../../components/DisclaimerText";
 import Header from "../../components/Header";
 import { Search } from "./Search";
-import {
-  IS_USER_IN_CIRCLE,
-  GET_CHANNELS_BY_CIRCLE_ID,
-} from "../../graphql/queries";
+import { GET_CHANNELS_BY_CIRCLE_ID } from "../../graphql/queries";
 import { SUB_TO_CIRCLES_CHANNELS } from "../../graphql/subscriptions";
-
+import useBelongsInCircle from "../../utils/useBelongsInCircle";
 import { useQuery, useSubscription } from "@apollo/client";
 import * as RootNavigation from "../../navigation/RootNavigation";
 
@@ -27,7 +24,11 @@ function Dashboard({ renderAsSidebar = false }) {
   const [, setActiveChannel] = useGlobal("activeChannel");
   let circle = null;
   let channels = [];
-  let belongsToCircle = false;
+
+  const belongsToCircle = useBelongsInCircle({
+    user: user || "",
+    circle: activeCircle || "",
+  });
 
   // get channel data, if any
   const {
@@ -61,35 +62,13 @@ function Dashboard({ renderAsSidebar = false }) {
     }
   }
 
-  if (channelsData) {
-    // _subToMore(subscribeToMore);
+  if (channelsData?.circle) {
     circle = channelsData.circle;
     channels = circle.channels.items;
     channels = channels.map((ch) => ({
       unread: unreadChannels.includes(ch.id),
       ...ch,
     }));
-  }
-
-  // see if the user actually belongs to this circle
-  const {
-    // loading: loading2,
-    // error: e2,
-    data: belongsToCircleData,
-  } = useQuery(IS_USER_IN_CIRCLE, {
-    variables: {
-      circle: activeCircle || "",
-      user: user || "",
-    },
-  });
-
-  if (
-    belongsToCircleData &&
-    belongsToCircleData.circlesList &&
-    belongsToCircleData.circlesList.items.length !== 0 &&
-    belongsToCircleData.circlesList.items[0].id === activeCircle
-  ) {
-    belongsToCircle = true;
   }
 
   // responsive styles for channels component, which can either render on the side or as a full-screen mobile component
