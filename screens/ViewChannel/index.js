@@ -44,7 +44,7 @@ export default memo(function ViewChannel(props) {
 
   const belongsToCircle = useBelongsInCircle({
     user: user || "",
-    circle: activeCircle || "",
+    circle: props.route.params.circle,
   });
 
   const getMoreMessagesQuery = useImperativeQuery(GET_MESSAGES_FROM_CHANNEL_ID);
@@ -242,8 +242,9 @@ export default memo(function ViewChannel(props) {
         <ChatInput onSend={submit} uploadInProgress={uploadInProgress} />
       ) : (
         <View style={styles.notLoggedInWrapper}>
-          <DisclaimerText>
-            You are not a member of this Circle. Messages are not enabled.
+          <DisclaimerText noMargin grey style={styles.center}>
+            You are not a member of this Circle. Sending messages is not
+            enabled.
           </DisclaimerText>
         </View>
       )}
@@ -263,8 +264,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#2f3242",
     minHeight: 50,
     flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -274,5 +275,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 7,
     borderRadius: 3,
+    padding: 10,
+  },
+  center: {
+    textAlign: "center",
   },
 });

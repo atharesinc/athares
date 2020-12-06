@@ -62,11 +62,7 @@ export default function RootStack() {
         component={shouldDisplayNewsAsApp}
         options={{ ...appOptions, title: "Athares" }}
       />
-      <Stack.Screen
-        name="portal"
-        component={Portal}
-        // options={{ headerShown: false }}
-      />
+      <Stack.Screen name="portal" component={Portal} />
 
       <Stack.Screen
         name="createRevision"
