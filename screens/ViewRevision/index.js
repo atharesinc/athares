@@ -187,7 +187,7 @@ export default function ViewRevision(props) {
           <Card style={{ minHeight: "20%" }}>
             <DisclaimerText
               text={revision.newText}
-              style={styles.marginBottomZero}
+              style={[styles.marginBottomZero, styles.fontSize14]}
             />
           </Card>
         )}
@@ -377,5 +377,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  fontSize14: {
+    fontSize: 14,
   },
 });

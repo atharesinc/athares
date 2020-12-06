@@ -1,6 +1,8 @@
 import React, { useState, useGlobal, useEffect } from "reactn";
 import { ScrollView, StyleSheet, KeyboardAvoidingView } from "react-native";
 
+import CrossAutoGrow from "../../components/CrossAutoGrow";
+
 import DisclaimerText from "../../components/DisclaimerText";
 import Input from "../../components/Input";
 import GlowButton from "../../components/GlowButton";
@@ -191,7 +193,7 @@ export default function CreateRevision(props) {
           onChangeText={setTitle}
           value={title}
         />
-        <Input
+        {/* <Input
           value={text}
           onChangeText={setText}
           label={"Amendment Body"}
@@ -199,7 +201,19 @@ export default function CreateRevision(props) {
             "Draft your amendment. What do you want to add to this organization?"
           }
           multiline={true}
+        /> */}
+        <CrossAutoGrow
+          value={text}
+          onChangeText={setText}
+          label={"Amendment Body"}
+          // onBlur={focusOff}
+          autoFocus={true}
+          // isFocused={isFocused}
+          description={
+            "Draft your amendment. What do you want to add to this organization?"
+          }
         />
+
         <DisclaimerText
           text={
             "Pressing 'Draft Amendment' will create a new revision for this amendment. Drafts must first be ratified by a minimum electorate of Circle members, and then must be approved with a majority of votes. Amendment drafts are publicly accessible."

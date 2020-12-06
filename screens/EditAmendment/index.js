@@ -20,7 +20,7 @@ import { addSeconds } from "date-fns";
 
 import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
-import Input from "../../components/Input";
+import CrossAutoGrow from "../../components/CrossAutoGrow";
 
 import { useQuery, useMutation } from "@apollo/client";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
@@ -201,14 +201,14 @@ export default function EditAmendment(props) {
     <ScrollView contentContainerStyle={styles.wrapper}>
       <KeyboardAvoidingView behavior="padding">
         <DisclaimerText text={"EDIT OR REPEAL THIS AMENDMENT"} />
-        <Input
+        <CrossAutoGrow
           value={text}
           onChangeText={setText}
           label={data.amendment.title}
+          autoFocus={true}
           description={
             "Here you can make changes to the existing amendment. If you'd instead like to remove the amendment altogether, select 'Repeal Amendment'."
           }
-          multiline={true}
         />
         <DisclaimerText
           text={
