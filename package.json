@@ -9,7 +9,8 @@
     "eject": "expo eject",
     "test": "jest --watchAll",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "yikes": "npx cloc . --exclude-dir=node_modules,web-build,.expo,.git,.expo-shared --exclude-ext=json"
   },
   "jest": {
     "preset": "jest-expo"
