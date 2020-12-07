@@ -1,6 +1,6 @@
 import React from "reactn";
 import { View, Text, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 const InfoLineText = ({ value = "", icon, label, style = {}, ...props }) => (
   <View style={{ ...styles.touchWrap, ...style }}>

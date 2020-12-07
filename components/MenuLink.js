@@ -1,6 +1,6 @@
 import React from "reactn";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import WithBadge from "./WithBadge";
 
 const MenuLink = ({ icon, label, details = "", badge = false, ...props }) => {

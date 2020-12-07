@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import CircleIcon from "./CircleIcon";
 
 import { GET_CIRCLES_BY_USER_ID } from "../graphql/queries";

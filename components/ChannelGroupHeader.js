@@ -1,6 +1,6 @@
 import React from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 const ChannelGroupHeader = ({
   displayPlus = false,

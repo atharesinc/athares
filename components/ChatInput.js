@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "react-native";
 import Loader from "./Loader";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import CustomActions from "./CustomActions";
 //maybe not this one
 // import { AutoGrowTextInput } from "react-native-auto-grow-textinput";

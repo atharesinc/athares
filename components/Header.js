@@ -2,7 +2,7 @@ import React, { useGlobal } from "reactn";
 
 import { Text, TouchableOpacity, StyleSheet, View, Image } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import {
   GET_CHANNEL_NAME_BY_ID,
   GET_REVISION_BY_ID,
@@ -14,6 +14,7 @@ import WithBadge from "./WithBadge";
 import LinkButton from "./LinkButton";
 
 import AsyncImage from "./AsyncImage";
+import Pill from "./Pill";
 
 function Header({
   // loggedIn = false,
@@ -242,11 +243,6 @@ function Header({
         <TouchableOpacity onPress={back}>
           <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
         </TouchableOpacity>
-        {/* {data && data.channel && (
-          <Text style={styles.headerText} numberOfLines={1}>
-            {loading ? "" : data.channel.name}
-          </Text>
-        )} */}
 
         <Feather name="more-vertical" size={30} color={"transparent"} />
       </View>
@@ -301,19 +297,7 @@ function Header({
           </View>
         </WithBadge>
       </TouchableOpacity>
-      <Text
-        style={{
-          color: "#FFF",
-          fontSize: 15,
-          letterSpacing: 2,
-          padding: 5,
-          paddingHorizontal: 10,
-        }}
-        numberOfLines={1}
-        ellipsizeMode={"middle"}
-      >
-        {name}
-      </Text>
+      <Pill text={"DEV"} />
       {!showSearch ? (
         <TouchableOpacity onPress={toggleSearch}>
           <Feather name="search" size={30} color={"#FFFFFF"} />

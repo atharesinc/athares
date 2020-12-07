@@ -1,6 +1,6 @@
 import React, { useGlobal } from "reactn";
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import { fromNow } from "../../utils/transform";
 
 export default function InviteItem({

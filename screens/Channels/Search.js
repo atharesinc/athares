@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, Platform } from "react-native";
 import Loader from "../../components/Loader";
 import { SEARCH_ALL } from "../../graphql/queries";
 import { useLazyQuery } from "@apollo/client";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 import SearchResults from "./SearchResults";
 
