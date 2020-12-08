@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Diff from "../../components/Diff";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import Card from "../../components/Card";
 
 function DiffSection({ oldText = "", newText = "" }) {

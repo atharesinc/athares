@@ -2,7 +2,7 @@ import React, { useGlobal } from "reactn";
 
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 const Footer = ({ loggedIn = false, belongsToCircle = false }) => {
   const [activeCircle] = useGlobal("activeCircle");

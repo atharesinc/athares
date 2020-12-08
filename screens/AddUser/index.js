@@ -13,7 +13,7 @@ import DisclaimerText from "../../components/DisclaimerText";
 import AddTag from "../../components/AddTag";
 import GlowButton from "../../components/GlowButton";
 import Loader from "../../components/Loader";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 import Suggestions from "./Suggestions";
 import MeshAlert from "../../utils/meshAlert";
 import useBelongsInCircle from "../../utils/useBelongsInCircle";

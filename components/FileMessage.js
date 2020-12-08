@@ -1,5 +1,5 @@
 import React from "reactn";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { FileSystem } from "expo";

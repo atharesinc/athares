@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useGlobal } from "reactn";
+import React, { lazy, useEffect, useState, useGlobal, Suspense } from "reactn";
 import { View, Image, StyleSheet } from "react-native";
 import TitleTabs from "./TitleTabs";
 import { noTransition } from "../../navigation/transitionConfigs";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 import Login from "./Login";
-import Register from "./Register";
-import Reset from "./Reset";
-import ResetConfirm from "./ResetConfirm";
+const Register = lazy(() => import("./Register"));
+const Reset = lazy(() => import("./Reset"));
+const ResetConfirm = lazy(() => import("./ResetConfirm"));
 
-import Forgot from "./Forgot";
+const Forgot = lazy(() => import("./Forgot"));
 
 const Stack = createStackNavigator();
 
@@ -60,30 +60,50 @@ export default function Portal(props) {
         }}
       >
         <Stack.Screen
-          name="register"
-          component={Register}
-          options={{ headerShown: false, title: "Register" }}
-        />
-        <Stack.Screen
           name="login"
           component={Login}
           options={{ headerShown: false, title: "Login" }}
         />
         <Stack.Screen
+          name="register"
+          options={{ headerShown: false, title: "Register" }}
+        >
+          {(props) => (
+            <Suspense fallback={<CenteredLoaderWithText />}>
+              <Register {...props} />
+            </Suspense>
+          )}
+        </Stack.Screen>
+        <Stack.Screen
           name="forgot"
-          component={Forgot}
           options={{ headerShown: false, title: "Forgot Password" }}
-        />
+        >
+          {(props) => (
+            <Suspense fallback={<CenteredLoaderWithText />}>
+              <Forgot {...props} />
+            </Suspense>
+          )}
+        </Stack.Screen>
         <Stack.Screen
           name="resetConfirm"
-          component={ResetConfirm}
           options={{ headerShown: false, title: "Confirm Reset" }}
-        />
+        >
+          {(props) => (
+            <Suspense fallback={<CenteredLoaderWithText />}>
+              <ResetConfirm {...props} />
+            </Suspense>
+          )}
+        </Stack.Screen>
         <Stack.Screen
           name="reset"
-          component={Reset}
           options={{ headerShown: false, title: "Reset" }}
-        />
+        >
+          {(props) => (
+            <Suspense fallback={<CenteredLoaderWithText />}>
+              <Reset {...props} />
+            </Suspense>
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
     </View>
   );

@@ -12,7 +12,7 @@ import {
   pickImageURIAsync,
   takePictureAsync,
 } from "../utils/mediaUtils";
-import { Feather } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
 
 export default function CustomActions({
   containerStyle = {},
