@@ -616,9 +616,12 @@ export const GET_CIRCLE_PREFS_FOR_USER = gql`
     ) {
       items {
         id
-        amendments
-        revisions
-        useEmail
+        onAmendments
+        onRevisions
+        revisionsEmail
+        revisionsPush
+        amendmentsEmail
+        amendmentsPush
         circle {
           id
           name
@@ -786,6 +789,15 @@ export const TEST_QUERY = gql`
         email
         icon
       }
+    }
+  }
+`;
+
+export const GET_USER_EXPO_TOKEN = gql`
+  query($id: ID!) {
+    user(id: $id) {
+      id
+      pushToken
     }
   }
 `;

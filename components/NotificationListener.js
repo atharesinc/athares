@@ -1,29 +1,46 @@
-import { useGlobal, useState, useEffect, useRef } from "reactn";
+import { memo, useState, useEffect, useRef } from "reactn";
 
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { Platform } from "react-native";
+import { GET_USER_EXPO_TOKEN } from "../graphql/queries";
+import { UPDATE_USER_EXPO_TOKEN } from "../graphql/mutations";
+import { useQuery, useMutation } from "@apollo/client";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
   }),
 });
 
-export default function NotificationListener() {
+export default memo(function NotificationListener({ user = "" }) {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const [isTriggered, setIsTriggered] = useGlobal("isTriggered");
+
+  const { data, loading, error } = useQuery(GET_USER_EXPO_TOKEN, {
+    variables: {
+      id: user || "",
+    },
+  });
+
+  const [updateToken] = useMutation(UPDATE_USER_EXPO_TOKEN);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
+    // If the user doesn't have a token, and not because of loading, or an error
+    // Get a new one
+    if (!data && !loading && !error) {
+      registerForPushNotificationsAsync()
+        .then(async (token) => {
+          await updateToken({ variables: { id: user, token } });
+          setExpoPushToken(token);
+        })
+        .catch(console.error);
+    }
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(
@@ -39,28 +56,11 @@ export default function NotificationListener() {
       }
     );
 
-    setTimeout(triggerMessage, 10000);
-
-    // TEMP
-    // window.triggerMessage = triggerMessage;
-
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
     };
-  }, []);
-
-  const triggerMessage = () => {
-    setIsTriggered(true);
-  };
-
-  useEffect(() => {
-    if (isTriggered) {
-      console.log("sending");
-      sendPushNotification(expoPushToken);
-      setIsTriggered(false);
-    }
-  }, [isTriggered]);
+  }, [data]);
 
   console.log(`Your expo push token: ${expoPushToken}`);
   console.log(notification && notification.request.content.title);
@@ -70,28 +70,7 @@ export default function NotificationListener() {
   );
 
   return null;
-}
-
-// Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/notifications
-async function sendPushNotification(expoPushToken) {
-  const message = {
-    to: expoPushToken,
-    sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
-    data: { data: "goes here" },
-  };
-
-  await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Accept-encoding": "gzip, deflate",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(message),
-  });
-}
+});
 
 async function registerForPushNotificationsAsync() {
   let token;

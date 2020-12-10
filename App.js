@@ -65,6 +65,7 @@ export default function App(props) {
   const [, setActiveTheme] = useGlobal("activeTheme");
   const [isMobile, setIsMobile] = useGlobal("isMobile");
   const [, setSearchedCircles] = useGlobal("searchedCircles");
+  const [user] = useGlobal("user");
 
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
@@ -168,7 +169,7 @@ export default function App(props) {
             <RevisionMonitor />
             <ChannelUpdateMonitor />
             <InviteMonitor />
-            <NotificationListener />
+            <NotificationListener user={user} />
           </SafeAreaView>
         </SafeAreaProvider>
       </ApolloProvider>
