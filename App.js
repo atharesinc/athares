@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-
+import * as Notifications from "expo-notifications";
 import { NavigationContainer } from "@react-navigation/native";
 
 import { navigationRef } from "./navigation/RootNavigation";
@@ -69,6 +69,9 @@ export default function App(props) {
 
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
+    // Clear badge count on load
+    Notifications.setBadgeCountAsync(0);
+
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync();

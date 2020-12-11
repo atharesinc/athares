@@ -49,22 +49,22 @@ export default memo(function NotificationListener({ user = "" }) {
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        console.log("pinged!");
-        console.log(notification.request.content.data);
+      async (notification) => {
         const {
           data: { path, params },
         } = notification.request.content;
         // data => {path : "viewRevision", params: {circle: "...", "revision": "..."}}
         RootNavigation.navigate(path, params);
+
+        let count = await Notifications.getBadgeCountAsync();
+
+        Notifications.setBadgeCountAsync(count + 1);
       }
     );
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        console.log("tap!");
-        console.log(response.notification.request.content.data);
         const {
           data: { path, params },
         } = response.notification.request.content;
