@@ -1,4 +1,4 @@
-import { useEffect, useGlobal } from "reactn";
+import { useEffect, useCallback, useGlobal } from "reactn";
 
 import { LOGIN } from "../graphql/mutations";
 import { GET_USER_BY_EMAIL } from "../graphql/queries";
@@ -16,8 +16,8 @@ export default function AutoLoginHandler() {
   const [login] = useMutation(LOGIN);
   const getUser = useImperativeQuery(GET_USER_BY_EMAIL);
 
-  useEffect(() => {
-    async function tryLoginOnMount() {
+  const tryLoginOnMount = useCallback(
+    async function () {
       try {
         // also see if we can login
         const prom1 = MeshStore.getItem("ATHARES_PASSWORD");
@@ -66,8 +66,13 @@ export default function AutoLoginHandler() {
         }
         console.error(new Error(err));
       }
-    }
+    },
+    [login, getUser]
+  );
+
+  useEffect(() => {
     tryLoginOnMount();
   }, []);
+
   return null;
 }

@@ -9,7 +9,7 @@ import useImperativeQuery from "../utils/useImperativeQuery";
 export default function InviteMonitor() {
   const [user] = useGlobal("user");
   const [, setInvites] = useGlobal("invites");
-  const queryRevisions = useImperativeQuery(GET_MY_INVITES);
+  const queryInvites = useImperativeQuery(GET_MY_INVITES);
 
   useSubscription(SUB_TO_INVITES, {
     variables: { user: user || "" },
@@ -24,13 +24,19 @@ export default function InviteMonitor() {
   }
 
   const getInvites = () => {
-    queryRevisions({
+    const vars = {
       id: user || "",
       minDate:
         subDays(new Date(), 1).toJSON().substring(0, 10) + "T00:00:00.000Z",
-    }).then(({ data }) => {
-      setInvites(data.invitesList.items.map((i) => i.id));
-    });
+    };
+
+    queryInvites(vars)
+      .then(({ data }) => {
+        setInvites(data.invitesList.items.map((i) => i.id));
+      })
+      .catch((error) => {
+        console.error(Error(error));
+      });
   };
 
   useEffect(() => {

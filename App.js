@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-
+import * as Notifications from "expo-notifications";
 import { NavigationContainer } from "@react-navigation/native";
 
 import { navigationRef } from "./navigation/RootNavigation";
@@ -37,6 +37,9 @@ import Drawer from "./components/Drawer";
 import { ApolloProvider, ApolloClient } from "@apollo/client";
 import { link, cache } from "./graphql";
 
+// Expo notifications
+import NotificationListener from "./components/NotificationListener";
+
 // initialize storage
 MeshStore.init();
 
@@ -62,9 +65,13 @@ export default function App(props) {
   const [, setActiveTheme] = useGlobal("activeTheme");
   const [isMobile, setIsMobile] = useGlobal("isMobile");
   const [, setSearchedCircles] = useGlobal("searchedCircles");
+  const [user] = useGlobal("user");
 
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
+    // Clear badge count on load
+    Notifications.setBadgeCountAsync(0);
+
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync();
@@ -165,6 +172,9 @@ export default function App(props) {
             <RevisionMonitor />
             <ChannelUpdateMonitor />
             <InviteMonitor />
+            {user && Platform.OS !== "web" && (
+              <NotificationListener user={user} />
+            )}
           </SafeAreaView>
         </SafeAreaProvider>
       </ApolloProvider>

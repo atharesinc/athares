@@ -1,5 +1,5 @@
 /*
-README
+READ ME
 
 Each screen in the screens property defines it's routing params & logic
 with either a express-route-like param path:

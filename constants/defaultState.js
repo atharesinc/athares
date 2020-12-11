@@ -27,4 +27,5 @@ export default {
   activeViewUser: null,
   searchedCircles: [],
   invites: [],
+  isTriggered: false,
 };

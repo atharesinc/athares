@@ -782,3 +782,43 @@ export const GET_REFRESH_TOKEN = gql`
     }
   }
 `;
+
+export const UPDATE_CIRCLE_PREF = gql`
+  mutation($data: CirclePermissionUpdateInput!) {
+    circlePermissionUpdate(data: $data) {
+      id
+      onRevisions
+      revisionsPush
+      revisionsEmail
+      onAmendments
+      amendmentsPush
+      amendmentsEmail
+    }
+  }
+`;
+
+export const UPDATE_USER_EXPO_TOKEN = gql`
+  mutation($id: ID!, $token: String!) {
+    userUpdate(
+      filter: { id: $id }
+      data: { pushTokens: { create: { token: $token } } }
+    ) {
+      id
+      email
+      pushTokens {
+        items {
+          id
+          token
+        }
+      }
+    }
+  }
+`;
+
+export const REMOVE_USER_EXPO_TOKEN = gql`
+  mutation($token: String!) {
+    pushTokenDelete(filter: { token: $token }) {
+      success
+    }
+  }
+`;

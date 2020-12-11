@@ -30,12 +30,6 @@ const RevisionCard = ({
     });
   };
 
-  // useEffect(() => {
-  //   if (activeRevision) {
-  //     RootNavigation.navigate("viewRevision", {circle: activeCircle, revision: activeRevision});
-  //   }
-  // }, [activeRevision]);
-
   const support = votes.items.filter(({ support }) => support).length;
   const img = backer
     ? { uri: backer.icon }

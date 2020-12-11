@@ -1,12 +1,7 @@
 import React, { useGlobal, useEffect, useState } from "reactn";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import {
-  UPDATE_EMAIL_PERMISSION_FOR_CIRCLE,
-  UPDATE_AMENDEMENT_PERMISSION_FOR_CIRCLE,
-  UPDATE_REVISION_PERMISSION_FOR_CIRCLE,
-  DELETE_USER_FROM_CIRCLE,
-} from "../../graphql/mutations";
+import { DELETE_USER_FROM_CIRCLE } from "../../graphql/mutations";
 
 import {
   GET_CIRCLE_PREFS_FOR_USER,
@@ -15,7 +10,7 @@ import {
 
 import { useQuery, useMutation } from "@apollo/client";
 
-import SwitchLine from "../../components/SwitchLine";
+import SwitchLineWithQuery from "./SwitchLineWithQuery";
 import Title from "../../components/Title";
 import DisclaimerText from "../../components/DisclaimerText";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
@@ -28,14 +23,6 @@ function CircleSettings(props) {
   const [user] = useGlobal("user");
 
   const [loading, setLoading] = useState(false);
-
-  const [_updateEmailPref] = useMutation(UPDATE_EMAIL_PERMISSION_FOR_CIRCLE);
-  const [_updateAmendmentPref] = useMutation(
-    UPDATE_AMENDEMENT_PERMISSION_FOR_CIRCLE
-  );
-  const [_updateRevisionPref] = useMutation(
-    UPDATE_REVISION_PERMISSION_FOR_CIRCLE
-  );
 
   const [deleteUserFromCircle] = useMutation(DELETE_USER_FROM_CIRCLE, {
     refetchQueries: [
@@ -77,33 +64,6 @@ function CircleSettings(props) {
   if (data?.circlePermissionsList) {
     permissions = data.circlePermissionsList.items[0];
   }
-
-  const updateAmendmentPref = async (checked) => {
-    await _updateAmendmentPref({
-      variables: {
-        id: permissions.id,
-        flag: checked,
-      },
-    });
-  };
-
-  const updateRevisionPref = async (checked) => {
-    await _updateRevisionPref({
-      variables: {
-        id: permissions.id,
-        flag: checked,
-      },
-    });
-  };
-
-  const updateEmailPref = async (checked) => {
-    await _updateEmailPref({
-      variables: {
-        id: permissions.id,
-        flag: checked,
-      },
-    });
-  };
 
   useEffect(() => {
     if (!activeCircle && permissions) {
@@ -158,22 +118,48 @@ function CircleSettings(props) {
           "Set your communication preferences for this Circle. By default you will receive an email notification when a new revision is created, and when a revision has passed or been rejected."
         }
       />
-      <SwitchLine
-        label={"Allow Email Notifications"}
-        value={permissions.useEmail}
-        onPress={updateEmailPref}
+      <SwitchLineWithQuery
+        label={"Notify on New Revision"}
+        id={permissions.id}
+        pref={"onRevisions"}
+        value={permissions.onRevisions}
       />
-      {permissions.useEmail && (
+      {permissions.onRevisions && (
         <View style={{ paddingLeft: 15 }}>
-          <SwitchLine
-            label={"Notify on New Revision"}
-            value={permissions.revisions}
-            onPress={updateRevisionPref}
+          <SwitchLineWithQuery
+            label={"Email"}
+            id={permissions.id}
+            pref={"revisionsEmail"}
+            value={permissions.revisionsEmail}
           />
-          <SwitchLine
-            label={"Notify on New Amendment"}
-            value={permissions.amendments}
-            onPress={updateAmendmentPref}
+          <SwitchLineWithQuery
+            label={"Push Notification"}
+            id={permissions.id}
+            pref={"revisionsPush"}
+            value={permissions.revisionsPush}
+          />
+        </View>
+      )}
+      <View style={styles.break} />
+      <SwitchLineWithQuery
+        label={"Notify on New Amendment"}
+        value={permissions.onAmendments}
+        id={permissions.id}
+        pref={"onAmendments"}
+      />
+      {permissions.onAmendments && (
+        <View style={{ paddingLeft: 15 }}>
+          <SwitchLineWithQuery
+            label={"Email"}
+            value={permissions.amendmentsEmail}
+            id={permissions.id}
+            pref={"amendmentsEmail"}
+          />
+          <SwitchLineWithQuery
+            label={"Push Notification"}
+            value={permissions.amendmentsPush}
+            id={permissions.id}
+            pref={"amendmentsPush"}
           />
         </View>
       )}
@@ -197,6 +183,9 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   marginTop: { marginTop: 20 },
+  break: {
+    height: 20,
+  },
 });
 
 export default CircleSettings;
