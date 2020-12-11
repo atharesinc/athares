@@ -1,7 +1,7 @@
 import React, { useGlobal } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useQuery, useApolloClient } from "@apollo/client";
+import { useQuery, useApolloClient, useMutation } from "@apollo/client";
 import UserLink from "./UserLink";
 import NoUserLink from "./NoUserLink";
 import MenuLink from "./MenuLink";
@@ -9,6 +9,8 @@ import MeshStore from "../utils/meshStore";
 import Title from "./Title";
 import DisclaimerText from "./DisclaimerText";
 import { GET_USER_BY_ID } from "../graphql/queries";
+import { REMOVE_USER_EXPO_TOKEN } from "../graphql/mutations";
+
 import packageJSON from "../package.json";
 
 function SideMenu() {
@@ -25,6 +27,9 @@ function SideMenu() {
   const [isMobile] = useGlobal("isMobile");
   const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
   const [invites] = useGlobal("invites");
+  const [token] = useGlobal("token");
+
+  const [removeToken] = useMutation(REMOVE_USER_EXPO_TOKEN);
 
   const navigateToScreen = (route, params = null) => {
     if (route === "login") {
@@ -38,6 +43,15 @@ function SideMenu() {
   const apolloClient = useApolloClient();
 
   const logout = async () => {
+    // remove this device/apps push token from user's list
+    try {
+      if (token) {
+        let res = await removeToken({ variables: { user, token } });
+        console.log(res);
+      }
+    } catch (err) {
+      console.error(Error(err));
+    }
     setActiveChannel(null);
     setActiveCircle(null);
     setActiveRevision(null);
@@ -48,7 +62,12 @@ function SideMenu() {
     setUnreadChannels([]);
     setDMs([]);
     setUnreadDMs([]);
-    await MeshStore.clear();
+
+    try {
+      await MeshStore.clear();
+    } catch (e) {
+      console.error(Error(e));
+    }
 
     apolloClient.clearStore();
 

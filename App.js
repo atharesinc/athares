@@ -169,7 +169,9 @@ export default function App(props) {
             <RevisionMonitor />
             <ChannelUpdateMonitor />
             <InviteMonitor />
-            <NotificationListener user={user} />
+            {user && Platform.OS !== "web" && (
+              <NotificationListener user={user} />
+            )}
           </SafeAreaView>
         </SafeAreaProvider>
       </ApolloProvider>

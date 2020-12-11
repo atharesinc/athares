@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#282A38"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,6 +21,13 @@
     },
     "web": {
       "name": "Athares"
+    },
+    "android": {
+      "useNextNotificationsApi": true
+    },
+    "notification": {
+      "icon": "./assets/images/Athares-owl-logo-large-white-thin.png",
+      "color": "#282A38"
     }
   }
 }

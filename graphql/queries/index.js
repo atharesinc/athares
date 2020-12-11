@@ -797,7 +797,12 @@ export const GET_USER_EXPO_TOKEN = gql`
   query($id: ID!) {
     user(id: $id) {
       id
-      pushToken
+      pushTokens {
+        items {
+          id
+          token
+        }
+      }
     }
   }
 `;

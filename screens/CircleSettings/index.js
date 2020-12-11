@@ -110,7 +110,6 @@ function CircleSettings(props) {
     );
   }
 
-  console.log(permissions);
   return (
     <ScrollView contentContainerStyle={styles.wrapper}>
       <Title text={"Notification Preferences"} />
@@ -141,6 +140,7 @@ function CircleSettings(props) {
           />
         </View>
       )}
+      <View style={styles.break} />
       <SwitchLineWithQuery
         label={"Notify on New Amendment"}
         value={permissions.onAmendments}
@@ -183,6 +183,9 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   marginTop: { marginTop: 20 },
+  break: {
+    height: 20,
+  },
 });
 
 export default CircleSettings;
