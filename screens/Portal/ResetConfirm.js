@@ -47,7 +47,7 @@ export default function ResetConfirm() {
       return false;
     }
     try {
-      let hashedCode = sha(code.toUpperCase());
+      let hashedCode = await sha(code.toUpperCase());
 
       await checkResetRequest({
         token: hashedCode,
@@ -56,7 +56,7 @@ export default function ResetConfirm() {
       _isMounted.current && setLoading(false);
 
       RootNavigation.navigate("reset", {
-        hashedCode: sha(code),
+        hashedCode: await sha(code),
       });
     } catch (err) {
       MeshAlert({ title: "Error", text: err.message, icon: "error" });

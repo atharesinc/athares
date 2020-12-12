@@ -156,7 +156,7 @@ export default function EditAmendment(props) {
 
   const createRevision = async (newRevision) => {
     try {
-      let hash = sha(
+      let hash = await sha(
         JSON.stringify({
           title: newRevision.title,
           text: newRevision.newText,

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "athares",
+    "name": "Athares",
     "slug": "athares",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/Athares-icon-mask.png",
     "scheme": "myapp",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -16,11 +16,11 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true
-    },
     "web": {
       "name": "Athares"
+    },
+    "ios": {
+      "supportsTablet": true
     },
     "android": {
       "useNextNotificationsApi": true

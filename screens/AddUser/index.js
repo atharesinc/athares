@@ -109,13 +109,13 @@ export default function AddUser({ navigation, route }) {
     }
 
     try {
-      let invites = tags.map((u) => {
+      let invites = tags.map(async (u) => {
         return inviteUser({
           variables: {
             me: user,
             other: u.id,
             circle: activeCircle,
-            hash: sha(
+            hash: await sha(
               JSON.stringify({
                 inviter: user,
                 invitee: u.id,

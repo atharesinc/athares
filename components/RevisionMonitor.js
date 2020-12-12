@@ -145,7 +145,7 @@ export default function RevisionMonitor() {
         } else {
           // create a separate unique identifier to make sure our new amendment doesn't get created twice
 
-          let hash = sha(
+          let hash = await sha(
             JSON.stringify({
               id: revision.id,
               title: revision.title,
