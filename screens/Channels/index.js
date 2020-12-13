@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     minWidth: 300,
     backgroundColor: "#282a38",
+    zIndex: 2,
   },
   mobileSidebar: {
     alignItems: "stretch",
@@ -160,5 +161,6 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     backgroundColor: "#282a38",
+    zIndex: 2,
   },
 });

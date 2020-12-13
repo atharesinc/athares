@@ -46,8 +46,7 @@ function SideMenu() {
     // remove this device/apps push token from user's list
     try {
       if (token) {
-        let res = await removeToken({ variables: { user, token } });
-        console.log(res);
+        await removeToken({ variables: { user, token } });
       }
     } catch (err) {
       console.error(Error(err));
@@ -87,11 +86,11 @@ function SideMenu() {
   };
 
   const goToAbout = () => {
-    RootNavigation.navigate("about");
+    navigateToScreen("about");
   };
 
   const goToPolicy = () => {
-    RootNavigation.navigate("privacy");
+    navigateToScreen("privacy");
   };
 
   const { data } = useQuery(GET_USER_BY_ID, {
