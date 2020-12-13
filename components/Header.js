@@ -252,12 +252,8 @@ function Header({
   if (["splash", "privacy", "about"].indexOf(name) !== -1) {
     return (
       <View style={styles.transparentHeader}>
-        {/* <Image
-          source={require("../assets/images/Athares-owl-logo-large-white.png")}
-          style={styles.userIcon}
-        /> */}
         <Image
-          source={require("../assets/images/Athares-type-large-white.png")}
+          source={require("../assets/images/Athares-type-small-white.png")}
           style={styles.logoType}
         />
         {user ? (

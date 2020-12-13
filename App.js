@@ -1,4 +1,11 @@
-import React, { useState, useGlobal, useEffect, setGlobal } from "reactn";
+import React, {
+  useState,
+  useGlobal,
+  useEffect,
+  setGlobal,
+  lazy,
+  Suspense,
+} from "reactn";
 
 import {
   StatusBar,
@@ -17,11 +24,14 @@ import { navigationRef } from "./navigation/RootNavigation";
 import RootStack from "./screens";
 import defaultState from "./constants/defaultState";
 import { linkingConfig } from "./navigation/useLinking";
-import AutoLoginHandler from "./components/AutoLoginHandler";
-import OnlineMonitor from "./components/OnlineMonitor";
-import RevisionMonitor from "./components/RevisionMonitor";
-import ChannelUpdateMonitor from "./components/ChannelUpdateMonitor";
-import InviteMonitor from "./components/InviteMonitor";
+
+const AutoLoginHandler = lazy(() => import("./components/AutoLoginHandler"));
+const OnlineMonitor = lazy(() => import("./components/OnlineMonitor"));
+const RevisionMonitor = lazy(() => import("./components/RevisionMonitor"));
+const ChannelUpdateMonitor = lazy(() =>
+  import("./components/ChannelUpdateMonitor")
+);
+const InviteMonitor = lazy(() => import("./components/InviteMonitor"));
 
 import MeshStore from "./utils/meshStore";
 // theming
@@ -39,6 +49,8 @@ import { link, cache } from "./graphql";
 
 // Expo notifications
 import NotificationListener from "./components/NotificationListener";
+
+import CenteredErrorLoader from "./components/CenteredErrorLoader";
 
 // initialize storage
 MeshStore.init();
@@ -140,44 +152,56 @@ export default function App(props) {
     return null;
   } else {
     return (
-      <ApolloProvider client={client}>
-        <SafeAreaProvider>
-          <SafeAreaView style={[styles.container, styles.safeAreaContainer]}>
-            <ImageBackground
-              source={require("./assets/images/iss-master.jpg")}
-              style={[
-                styles.container,
-                { width: dimensions.width, overflow: "hidden" },
-              ]}
-              progressiveRenderingEnabled
-              onLayout={onRotate}
-            >
-              <StatusBar barStyle="light-content" />
-              <NavigationContainer
-                ref={navigationRef}
-                initialState={initialNavigationState}
-                linking={linkingConfig}
+      <Suspense fallback={<CenteredErrorLoader />}>
+        <ApolloProvider client={client}>
+          <SafeAreaProvider>
+            <SafeAreaView style={[styles.container, styles.safeAreaContainer]}>
+              <ImageBackground
+                source={require("./assets/images/iss-master.jpg")}
+                style={[
+                  styles.container,
+                  { width: dimensions.width, overflow: "hidden" },
+                ]}
+                progressiveRenderingEnabled
+                onLayout={onRotate}
               >
-                <Drawer>
-                  <View style={styles.container} onLayout={onRotate}>
-                    {shouldRenderSideBar}
-                    <RootStack />
-                  </View>
-                </Drawer>
-              </NavigationContainer>
-            </ImageBackground>
-            {/* Put non-rendering components here so they mount after other components*/}
-            <AutoLoginHandler />
-            <OnlineMonitor />
-            <RevisionMonitor />
-            <ChannelUpdateMonitor />
-            <InviteMonitor />
-            {user && Platform.OS !== "web" && (
-              <NotificationListener user={user} />
-            )}
-          </SafeAreaView>
-        </SafeAreaProvider>
-      </ApolloProvider>
+                <StatusBar barStyle="light-content" />
+                <NavigationContainer
+                  ref={navigationRef}
+                  initialState={initialNavigationState}
+                  linking={linkingConfig}
+                >
+                  <Drawer>
+                    <View style={styles.container} onLayout={onRotate}>
+                      {shouldRenderSideBar}
+                      <RootStack />
+                    </View>
+                  </Drawer>
+                </NavigationContainer>
+              </ImageBackground>
+              {/* Put non-rendering components here so they mount after other components*/}
+              <Suspense fallback={null}>
+                <AutoLoginHandler />
+              </Suspense>
+              <Suspense fallback={null}>
+                <OnlineMonitor />
+              </Suspense>
+              <Suspense fallback={null}>
+                <RevisionMonitor />
+              </Suspense>
+              <Suspense fallback={null}>
+                <ChannelUpdateMonitor />
+              </Suspense>
+              <Suspense fallback={null}>
+                <InviteMonitor />
+              </Suspense>
+              {user && Platform.OS !== "web" && (
+                <NotificationListener user={user} />
+              )}
+            </SafeAreaView>
+          </SafeAreaProvider>
+        </ApolloProvider>
+      </Suspense>
     );
   }
 }
@@ -209,5 +233,12 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
+  },
+  bgImage: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 16,
+    bottom: 0,
   },
 });
