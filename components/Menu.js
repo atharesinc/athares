@@ -10,6 +10,7 @@ import Title from "./Title";
 import DisclaimerText from "./DisclaimerText";
 import { GET_USER_BY_ID } from "../graphql/queries";
 import { REMOVE_USER_EXPO_TOKEN } from "../graphql/mutations";
+import { persistor } from "../graphql";
 
 import packageJSON from "../package.json";
 
@@ -64,6 +65,7 @@ function SideMenu() {
 
     try {
       await MeshStore.clear();
+      await persistor.purge();
     } catch (e) {
       console.error(Error(e));
     }

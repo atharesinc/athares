@@ -1,13 +1,14 @@
 import { Platform } from "react-native";
 
-import * as SecureStore from "expo-secure-store";
+import createSecureStore from "@neverdull-agency/expo-unlimited-secure-store";
 import localforage from "localforage";
 
 const useLocalForage = Platform.OS === "web";
 
 const MeshStore = {
-  init: () => {
-    // we only need to do this on the web, but we can call it in App.js and it won't hurt anything
+  secureStore: null,
+  init: function () {
+    // initialize different storage drivers based on platform
     if (useLocalForage) {
       localforage.config({
         driver: localforage.INDEXEDDB,
@@ -15,27 +16,29 @@ const MeshStore = {
         storeName: "ath_store",
         description: "athares secure store",
       });
+    } else {
+      this.secureStore = createSecureStore();
     }
   },
-  getItem: (key) => {
+  getItem: function (key) {
     if (useLocalForage) {
       return localforage.getItem(key);
     }
-    return SecureStore.getItemAsync(key);
+    return this.secureStore.getItem(key);
   },
-  setItem: (key, value) => {
+  setItem: function (key, value) {
     if (useLocalForage) {
       return localforage.setItem(key, value);
     }
-    return SecureStore.setItemAsync(key, value);
+    return this.secureStore.setItem(key, value);
   },
-  removeItem: (key) => {
+  removeItem: function (key) {
     if (useLocalForage) {
       return localforage.removeItem(key);
     }
-    return SecureStore.deleteItemAsync(key);
+    return this.secureStore.removeItem(key);
   },
-  clear: () => {
+  clear: function () {
     if (useLocalForage) {
       return Promise.all([
         localforage.removeItem("ATHARES_ALIAS"),
@@ -45,10 +48,10 @@ const MeshStore = {
       ]);
     }
     return Promise.all([
-      SecureStore.deleteItemAsync("ATHARES_ALIAS"),
-      SecureStore.deleteItemAsync("ATHARES_PASSWORD"),
-      SecureStore.deleteItemAsync("ATHARES_TOKEN"),
-      SecureStore.deleteItemAsync("theme"),
+      this.secureStore.removeItem("ATHARES_ALIAS"),
+      this.secureStore.removeItem("ATHARES_PASSWORD"),
+      this.secureStore.removeItem("ATHARES_TOKEN"),
+      this.secureStore.removeItem("theme"),
     ]);
   },
 };

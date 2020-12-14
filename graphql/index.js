@@ -7,12 +7,29 @@ import { setContext } from "@apollo/client/link/context";
 import getEnvVars from "../env";
 const { GQL_HTTP_URL, EIGHT_BASE_WORKSPACE_ID } = getEnvVars();
 import MeshStore from "../utils/meshStore";
-
+import { BatchHttpLink } from "@apollo/client/link/batch-http";
 import { SubscriptionLink } from "@8base/apollo-links";
+import { CachePersistor, AsyncStorageWrapper } from "apollo3-cache-persist";
+
+// initialize storage
+MeshStore.init();
+
+// create cache
+const cache = new InMemoryCache();
+
+const persistor = new CachePersistor({
+  cache,
+  storage: new AsyncStorageWrapper(MeshStore),
+});
 
 // Create an http link:
 const httpLink = new HttpLink({
   uri: GQL_HTTP_URL,
+});
+
+const batchHttp = new BatchHttpLink({
+  uri: GQL_HTTP_URL,
+  // batchInterval: 50,
 });
 
 const wsLink = new SubscriptionLink({
@@ -28,9 +45,6 @@ const wsLink = new SubscriptionLink({
     console.error("log", "[Subscription error]:", error);
   },
 });
-
-// create cache
-const cache = new InMemoryCache();
 
 const withToken = setContext(async () => {
   const token = await MeshStore.getItem("ATHARES_TOKEN");
@@ -61,9 +75,9 @@ const withToken = setContext(async () => {
 
 // const authFlowLink = withToken.concat(resetToken);
 
-// using the ability to split links, you can send data to each link
-// depending on what kind of operation is being sent
-
+// Three-way split to determine if this is a websocket request,
+// a request to be batched with others,
+// or a high-priority one-off request
 const link = split(
   // split based on operation type
   ({ query }) => {
@@ -74,9 +88,18 @@ const link = split(
     );
   },
   wsLink,
-  withToken.concat(httpLink)
+  split(
+    // split based on operation importance
+    // If we need the operation to run by itself
+    // otherwise, batch requests for efficiency
+    (operation) => {
+      return operation.getContext().important;
+    },
+    withToken.concat(httpLink),
+    withToken.concat(batchHttp)
+  )
 );
 
 // const link = ApolloLink.from([errorLink, splitLink]);
 
-export { link, cache };
+export { link, cache, persistor };

@@ -45,7 +45,6 @@ export default function RootStack() {
       headerMode="screen"
       // props =  { scene, previous, navigation }
       screenOptions={{
-        animationEnabled: true,
         header: (props) => <Header {...props} />,
         ...pushTransition(activeTheme),
       }}

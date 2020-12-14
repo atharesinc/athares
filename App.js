@@ -45,15 +45,10 @@ import Drawer from "./components/Drawer";
 
 // apollo graphql
 import { ApolloProvider, ApolloClient } from "@apollo/client";
-import { link, cache } from "./graphql";
+import { link, cache, persistor } from "./graphql";
 
 // Expo notifications
 import NotificationListener from "./components/NotificationListener";
-
-import CenteredErrorLoader from "./components/CenteredErrorLoader";
-
-// initialize storage
-MeshStore.init();
 
 const client = new ApolloClient({
   link,
@@ -86,6 +81,9 @@ export default function App(props) {
 
     async function loadResourcesAndDataAsync() {
       try {
+        // start persisting apollo stuff
+        await persistor.restore();
+
         SplashScreen.preventAutoHideAsync();
 
         // Load fonts
@@ -152,56 +150,54 @@ export default function App(props) {
     return null;
   } else {
     return (
-      <Suspense fallback={<CenteredErrorLoader />}>
-        <ApolloProvider client={client}>
-          <SafeAreaProvider>
-            <SafeAreaView style={[styles.container, styles.safeAreaContainer]}>
-              <ImageBackground
-                source={require("./assets/images/iss-master.jpg")}
-                style={[
-                  styles.container,
-                  { width: dimensions.width, overflow: "hidden" },
-                ]}
-                progressiveRenderingEnabled
-                onLayout={onRotate}
+      <ApolloProvider client={client}>
+        <SafeAreaProvider>
+          <SafeAreaView style={[styles.container, styles.safeAreaContainer]}>
+            <ImageBackground
+              source={require("./assets/images/iss-master.jpg")}
+              style={[
+                styles.container,
+                { width: dimensions.width, overflow: "hidden" },
+              ]}
+              progressiveRenderingEnabled
+              onLayout={onRotate}
+            >
+              <StatusBar barStyle="light-content" />
+              <NavigationContainer
+                ref={navigationRef}
+                initialState={initialNavigationState}
+                linking={linkingConfig}
               >
-                <StatusBar barStyle="light-content" />
-                <NavigationContainer
-                  ref={navigationRef}
-                  initialState={initialNavigationState}
-                  linking={linkingConfig}
-                >
-                  <Drawer>
-                    <View style={styles.container} onLayout={onRotate}>
-                      {shouldRenderSideBar}
-                      <RootStack />
-                    </View>
-                  </Drawer>
-                </NavigationContainer>
-              </ImageBackground>
-              {/* Put non-rendering components here so they mount after other components*/}
-              <Suspense fallback={null}>
-                <AutoLoginHandler />
-              </Suspense>
-              <Suspense fallback={null}>
-                <OnlineMonitor />
-              </Suspense>
-              <Suspense fallback={null}>
-                <RevisionMonitor />
-              </Suspense>
-              <Suspense fallback={null}>
-                <ChannelUpdateMonitor />
-              </Suspense>
-              <Suspense fallback={null}>
-                <InviteMonitor />
-              </Suspense>
-              {user && Platform.OS !== "web" && (
-                <NotificationListener user={user} />
-              )}
-            </SafeAreaView>
-          </SafeAreaProvider>
-        </ApolloProvider>
-      </Suspense>
+                <Drawer>
+                  <View style={styles.container} onLayout={onRotate}>
+                    {shouldRenderSideBar}
+                    <RootStack />
+                  </View>
+                </Drawer>
+              </NavigationContainer>
+            </ImageBackground>
+            {/* Put non-rendering components here so they mount after other components*/}
+            <Suspense fallback={null}>
+              <AutoLoginHandler />
+            </Suspense>
+            <Suspense fallback={null}>
+              <OnlineMonitor />
+            </Suspense>
+            <Suspense fallback={null}>
+              <RevisionMonitor />
+            </Suspense>
+            <Suspense fallback={null}>
+              <ChannelUpdateMonitor />
+            </Suspense>
+            <Suspense fallback={null}>
+              <InviteMonitor />
+            </Suspense>
+            {user && Platform.OS !== "web" && (
+              <NotificationListener user={user} />
+            )}
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </ApolloProvider>
     );
   }
 }
