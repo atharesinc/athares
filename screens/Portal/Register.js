@@ -134,13 +134,11 @@ export default function Register() {
       } = res1;
 
       //store locally
-      const prom1 = MeshStore.setItem("ATHARES_ALIAS", email);
-      const prom2 = MeshStore.setItem("ATHARES_TOKEN", idToken);
+      MeshStore.setItemSync("ATHARES_ALIAS", email);
+      MeshStore.setItemSync("ATHARES_TOKEN", idToken);
 
       // store password because 8base doesn't have a way to login via token
-      const prom3 = MeshStore.setItem("ATHARES_PASSWORD", password);
-
-      await Promise.all([prom1, prom2, prom3]);
+      MeshStore.setItemSync("ATHARES_PASSWORD", password);
 
       setUser(id);
 

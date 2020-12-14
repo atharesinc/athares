@@ -7,7 +7,19 @@ const useLocalForage = Platform.OS === "web";
 
 const MeshStore = {
   secureStore: null,
+  _map: null,
+  keys: [
+    "ATHARES_ALIAS",
+    "ATHARES_PASSWORD",
+    "ATHARES_TOKEN",
+    "theme",
+    "searched_circles",
+  ],
+  loading: false,
   init: function () {
+    // initialize in-memory store for frequent access values that we need synchronously
+    this._map = new Map();
+    this.loading = true;
     // initialize different storage drivers based on platform
     if (useLocalForage) {
       localforage.config({
@@ -19,6 +31,27 @@ const MeshStore = {
     } else {
       this.secureStore = createSecureStore();
     }
+
+    const keyPromises = this.keys.map((key) => {
+      return this.getItem(key);
+    });
+
+    Promise.all(keyPromises).then((values) => {
+      values.forEach((v, i) => {
+        this._map.set(this.keys[i], v);
+      });
+    });
+  },
+  getItemSync: function (key) {
+    // immediately get the in-memory value
+    return this._map.get(key);
+  },
+  setItemSync: function (key, value) {
+    // set item with persistent storage so we can grab it on the next load
+    this.setItem(key, value);
+
+    // but return with the synchronous value immediately
+    return this._map.set(key, value);
   },
   getItem: function (key) {
     if (useLocalForage) {
@@ -39,6 +72,7 @@ const MeshStore = {
     return this.secureStore.removeItem(key);
   },
   clear: function () {
+    this._map.clear();
     if (useLocalForage) {
       return Promise.all([
         localforage.removeItem("ATHARES_ALIAS"),

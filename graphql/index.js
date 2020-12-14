@@ -34,8 +34,9 @@ const batchHttp = new BatchHttpLink({
 
 const wsLink = new SubscriptionLink({
   uri: "wss://ws.8base.com",
-  getAuthState: async () => {
-    const token = await MeshStore.getItem("ATHARES_TOKEN");
+  getAuthState: () => {
+    const token = MeshStore.getItemSync("ATHARES_TOKEN");
+
     return {
       token: token ? token : "",
       workspaceId: EIGHT_BASE_WORKSPACE_ID,
@@ -46,8 +47,8 @@ const wsLink = new SubscriptionLink({
   },
 });
 
-const withToken = setContext(async () => {
-  const token = await MeshStore.getItem("ATHARES_TOKEN");
+const withToken = setContext(() => {
+  const token = MeshStore.getItemSync("ATHARES_TOKEN");
 
   return {
     headers: {
@@ -73,11 +74,11 @@ const withToken = setContext(async () => {
 //     }
 // });
 
-// const authFlowLink = withToken.concat(resetToken);
-
-// Three-way split to determine if this is a websocket request,
-// a request to be batched with others,
-// or a high-priority one-off request
+/*
+  Three-way split to determine if this is a websocket request,
+  a request to be batched with others,
+  or a high-priority one-off request
+*/
 const link = split(
   // split based on operation type
   ({ query }) => {

@@ -12,7 +12,8 @@ export default function InviteMonitor() {
   const queryInvites = useImperativeQuery(GET_MY_INVITES);
 
   useSubscription(SUB_TO_INVITES, {
-    variables: { user: user || "" },
+    variables: { user: user },
+    skip: !user,
     onSubscriptionData,
   });
 
@@ -25,7 +26,7 @@ export default function InviteMonitor() {
 
   const getInvites = () => {
     const vars = {
-      id: user || "",
+      id: user,
       minDate:
         subDays(new Date(), 1).toJSON().substring(0, 10) + "T00:00:00.000Z",
     };

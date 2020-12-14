@@ -39,8 +39,8 @@ export default function CreateRevision(props) {
   );
 
   let belongsToCircle = useBelongsInCircle({
-    circle: activeCircle || "",
-    user: user || "",
+    circle: activeCircle,
+    user: user,
   });
 
   useEffect(() => {

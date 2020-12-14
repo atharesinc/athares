@@ -28,7 +28,7 @@ export default function Revisions(props) {
   }, []);
 
   const belongsToCircle = useBelongsInCircle({
-    user: user || "",
+    user: user,
     circle: props.route.params.circle,
   });
 

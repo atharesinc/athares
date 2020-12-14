@@ -51,7 +51,7 @@ export default function AddUser({ navigation, route }) {
   const [inviteUser] = useMutation(CREATE_INVITE);
 
   const belongsToCircle = useBelongsInCircle({
-    user: user || "",
+    user: user,
     circle: route.params.circle,
   });
 
@@ -78,7 +78,7 @@ export default function AddUser({ navigation, route }) {
     if (input.trim() !== "" && input.trim().length > 2) {
       search({
         variables: {
-          text: input || "",
+          text: input,
           circle: activeCircle,
           user,
         },

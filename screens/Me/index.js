@@ -43,8 +43,9 @@ export default function Me() {
   const [errorMessage, setErrorMessage] = useState(null);
   const { data, loading, error } = useQuery(GET_USER_WITH_PREF_BY_ID, {
     variables: {
-      id: user || "",
+      id: user,
     },
+    skip: !user,
   });
 
   const [updateMarketingEmail] = useMutation(UPDATE_ALLOW_MARKETING_EMAIL);

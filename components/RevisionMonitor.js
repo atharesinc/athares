@@ -32,7 +32,8 @@ export default function RevisionMonitor() {
   const [denyRevision] = useMutation(DENY_REVISION);
 
   useSubscription(SUB_TO_USERS_REVISIONS, {
-    variables: { id: user || "" },
+    variables: { id: user },
+    skip: !user,
     onSubscriptionData,
   });
 
