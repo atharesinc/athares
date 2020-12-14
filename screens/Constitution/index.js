@@ -82,7 +82,7 @@ export default function Constitution({ route, navigation }) {
   }, [data]);
 
   const belongsToCircle = useBelongsInCircle({
-    user: user || "",
+    user: user,
     circle: route.params.circle,
   });
 
