@@ -35,7 +35,8 @@ const batchHttp = new BatchHttpLink({
 const wsLink = new SubscriptionLink({
   uri: "wss://ws.8base.com",
   getAuthState: async () => {
-    const token = await MeshStore.getItem("ATHARES_TOKEN");
+    const token = await MeshStore.getItemSync("ATHARES_TOKEN");
+
     return {
       token: token ? token : "",
       workspaceId: EIGHT_BASE_WORKSPACE_ID,
@@ -47,7 +48,7 @@ const wsLink = new SubscriptionLink({
 });
 
 const withToken = setContext(async () => {
-  const token = await MeshStore.getItem("ATHARES_TOKEN");
+  const token = MeshStore.getItemSync("ATHARES_TOKEN");
 
   return {
     headers: {

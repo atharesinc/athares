@@ -26,7 +26,7 @@ const SingleSearchItem = ({ item, category, ...props }) => {
   // useEffect(() => {
   // if (activeCircle) {
   //   console.log("adding this circle", activeCircle);
-  //   // let searchedCircles = await MeshStore.getItem("searched_circles")
+  //   // let searchedCircles = await MeshStore.getItemSync("searched_circles")
   //   // if our list of searches doesnt include the one we just searched for add it
   //   if (!searchedCircles.includes(activeCircle)) {
   //     const newArr = [activeCircle, ...searchedCircles];

@@ -20,9 +20,8 @@ export default function AutoLoginHandler() {
     async function () {
       try {
         // also see if we can login
-        const prom1 = MeshStore.getItem("ATHARES_PASSWORD");
-        const prom2 = MeshStore.getItem("ATHARES_ALIAS");
-        const [password, email] = await Promise.all([prom1, prom2]);
+        const password = MeshStore.getItemSync("ATHARES_PASSWORD");
+        const email = MeshStore.getItemSync("ATHARES_ALIAS");
 
         if (email && password) {
           // login so we can get the token for auth
@@ -56,7 +55,7 @@ export default function AutoLoginHandler() {
           } = res2;
 
           //store locally
-          await MeshStore.setItem("ATHARES_TOKEN", idToken);
+          MeshStore.setItemSync("ATHARES_TOKEN", idToken);
           setUser(id);
         }
       } catch (err) {

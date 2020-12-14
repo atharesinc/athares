@@ -92,10 +92,8 @@ export default function App(props) {
         });
 
         // get preferred theme, and recent searches from storage
-        let prom1 = MeshStore.getItem("theme");
-        let prom2 = MeshStore.getItem("searched_circles");
-
-        let [res, searches] = await Promise.all([prom1, prom2]);
+        let res = MeshStore.getItemSync("theme");
+        let searches = MeshStore.getItemSync("searched_circles");
 
         // if we have a preferred theme in storage, set it before we load the app
         if (res !== null) {
