@@ -35,7 +35,7 @@ export default function ViewRevision(props) {
   const [, setActiveViewUser] = useGlobal("activeViewUser");
 
   const belongsToCircle = useBelongsInCircle({
-    user: user || "",
+    user: user,
     circle: props.route.params.circle,
   });
 

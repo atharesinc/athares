@@ -37,17 +37,19 @@ export default function ViewInvites() {
 
   const { loading: loadingQuery, error, data } = useQuery(GET_MY_INVITES, {
     variables: {
-      id: user || "",
+      id: user,
       minDate:
         subDays(new Date(), 1).toJSON().substring(0, 10) + "T00:00:00.000Z",
     },
+    skip: !user,
   });
 
   const refetchQueries = [
     {
       query: GET_MY_INVITES,
+      skip: !user,
       variables: {
-        id: user || "",
+        id: user,
         minDate:
           subDays(new Date(), 1).toJSON().substring(0, 10) + "T00:00:00.000Z",
       },

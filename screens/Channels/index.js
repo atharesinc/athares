@@ -26,8 +26,8 @@ function Dashboard({ renderAsSidebar = false }) {
   let channels = [];
 
   const belongsToCircle = useBelongsInCircle({
-    user: user || "",
-    circle: activeCircle || "",
+    user: user,
+    circle: activeCircle,
   });
 
   // get channel data, if any
@@ -38,12 +38,14 @@ function Dashboard({ renderAsSidebar = false }) {
     refetch,
   } = useQuery(GET_CHANNELS_BY_CIRCLE_ID, {
     variables: {
-      id: activeCircle || "",
+      id: activeCircle,
     },
+    skip: !activeCircle,
   });
 
   useSubscription(SUB_TO_CIRCLES_CHANNELS, {
-    variables: { id: activeCircle || "" },
+    variables: { id: activeCircle },
+    skip: !activeCircle,
     onSubscriptionData,
   });
 

@@ -29,8 +29,9 @@ function CircleSettings(props) {
       {
         query: GET_CIRCLES_BY_USER_ID,
         variables: {
-          id: user || "",
+          id: user,
         },
+        skip: !user,
       },
     ],
   });
@@ -40,8 +41,9 @@ function CircleSettings(props) {
     {
       variables: {
         circle: props.route?.params?.circle,
-        user: user || "",
+        user: user,
       },
+      skip: !user,
     }
   );
 

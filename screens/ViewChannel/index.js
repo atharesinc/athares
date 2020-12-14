@@ -43,7 +43,7 @@ export default memo(function ViewChannel(props) {
   });
 
   const belongsToCircle = useBelongsInCircle({
-    user: user || "",
+    user: user,
     circle: props.route.params.circle,
   });
 

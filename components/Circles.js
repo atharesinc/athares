@@ -45,20 +45,26 @@ const Circles = ({ loggedIn = false }) => {
 
   const { loading, data, refetch } = useQuery(GET_CIRCLES_BY_USER_ID, {
     variables: {
-      id: user || "",
+      id: user,
     },
+    skip: !user,
   });
 
   useSubscription(SUB_TO_USERS_CIRCLES, {
-    variables: { id: user || "" },
+    variables: { id: user },
+    skip: !user,
     onSubscriptionData,
   });
 
   function onSubscriptionData({ subscriptionData }) {
+    if (!user) {
+      return;
+    }
+
     if (subscriptionData.data) {
       // fire off query again  vs. just add the new value to candidates
       refetch({
-        id: user || "",
+        id: user,
       });
     }
   }

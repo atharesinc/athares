@@ -12,6 +12,7 @@ export default function ({ user, circle }) {
       circle,
       user,
     },
+    skip: !user || !circle,
   });
 
   if (

@@ -96,7 +96,8 @@ function SideMenu() {
   };
 
   const { data } = useQuery(GET_USER_BY_ID, {
-    variables: { id: user || "" },
+    variables: { id: user },
+    skip: !user,
   });
 
   let userObj = null;

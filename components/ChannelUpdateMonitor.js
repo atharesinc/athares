@@ -12,8 +12,9 @@ export default memo(function ChannelUpdateMonitor() {
 
   const { data } = useQuery(GET_ALL_USERS_CIRCLES_CHANNELS, {
     variables: {
-      id: user || "",
+      id: user,
     },
+    skip: !user,
   });
 
   // set the user's current channels
