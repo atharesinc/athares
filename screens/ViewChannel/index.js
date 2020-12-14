@@ -53,7 +53,8 @@ export default memo(function ViewChannel(props) {
   const [getSignedUrl] = useMutation(CREATE_SIGNED_UPLOAD_LINK);
 
   useSubscription(SUB_TO_MESSAGES_BY_CHANNEL_ID, {
-    variables: { id: activeChannel || "" },
+    variables: { id: activeChannel },
+    skip: !activeChannel,
     onSubscriptionData,
   });
 

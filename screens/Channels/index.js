@@ -59,7 +59,7 @@ function Dashboard({ renderAsSidebar = false }) {
     if (subscriptionData.data) {
       // fire off query again  vs. just add the new value to candidates
       refetch({
-        id: activeCircle || "",
+        id: activeCircle,
       });
     }
   }

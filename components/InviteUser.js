@@ -118,10 +118,3 @@ const s = StyleSheet.create({
     width: "100%",
   },
 });
-
-// export default compose(
-//     graphql(GET_USERS_BY_CIRCLE_ID, {
-//         name: "getUsers",
-//         options: ({ circle }) => ({ variables: { id: circle || "" } }),
-//     })
-// )(InviteUser);

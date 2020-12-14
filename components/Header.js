@@ -174,7 +174,8 @@ function Header({
   // render revision name and back
   if (name === "viewRevision") {
     const { data: revisionData } = useQuery(GET_REVISION_BY_ID, {
-      variables: { id: activeRevision || "" },
+      variables: { id: activeRevision },
+      skip: !activeRevision,
     });
 
     return (

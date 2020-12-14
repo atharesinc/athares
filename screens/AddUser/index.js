@@ -78,7 +78,7 @@ export default function AddUser({ navigation, route }) {
     if (input.trim() !== "" && input.trim().length > 2) {
       search({
         variables: {
-          text: input || "",
+          text: input,
           circle: activeCircle,
           user,
         },
