@@ -15,6 +15,7 @@ import {
   Platform,
   ImageBackground,
 } from "react-native";
+import { Asset } from "expo-asset";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import * as Notifications from "expo-notifications";
@@ -90,7 +91,7 @@ export default function App(props) {
         await Font.loadAsync({
           SpaceGrotesk: require("./assets/fonts/SpaceGrotesk_SemiBold.otf"),
         });
-
+        await Asset.loadAsync([require("./assets/images/iss-master.jpg")]);
         // get preferred theme, and recent searches from storage
         let res = MeshStore.getItemSync("theme");
         let searches = MeshStore.getItemSync("searched_circles");
@@ -213,15 +214,6 @@ const styles = StyleSheet.create({
   safeAreaContainer: {
     backgroundColor: "#282a38",
   },
-  // imageContainer: {
-  //   flex: 1,
-  //   width: Dimensions.get("window").width,
-  //   height: Dimensions.get("window").height,
-  //   backgroundColor: "transparent",
-  //   flexDirection: "row",
-  //   justifyContent: "flex-start",
-  //   alignItems: "stretch",
-  // },
   image: {
     flex: 1,
     backgroundColor: "transparent",
