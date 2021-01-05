@@ -1,7 +1,6 @@
 import React, { memo, useGlobal, useState } from "reactn";
 import SwitchLine from "../../components/SwitchLine";
 
-import MeshAlert from "../../utils/meshAlert";
 import { GET_USER_ALLOW_PUSH } from "../../graphql/queries";
 
 import { UPDATE_CIRCLE_PREF } from "../../graphql/mutations";
@@ -29,28 +28,16 @@ export default memo(function SwitchLineWithQuery({ label, value, pref, id }) {
 
     if (value && pref.toLowerCase().includes("push")) {
       try {
-        MeshAlert({
-          title: "Enable Notifications?",
-          text: `Select "Allow" to enable push notifications for this device`,
-          onSubmit: async () => {
-            // await getPushNotificationPermissions();
-            await _updateCirclePref({
-              variables: {
-                data: {
-                  id: id,
-                  [pref]: value,
-                },
-              },
-            });
-            setValueTemp(true);
+        await _updateCirclePref({
+          variables: {
+            data: {
+              id: id,
+              [pref]: value,
+            },
           },
-          submitText: "Allow",
-          icon: "info",
         });
+        setValueTemp(true);
       } catch (err) {
-        if (err.includes("User denied permission to notifications")) {
-          console.error("User denied permission to notifications");
-        }
         setValueTemp(false);
       }
       return;

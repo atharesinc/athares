@@ -95,9 +95,12 @@ export const CREATE_CIRCLE = gql`
         users: { connect: { id: $user } }
         circlePermissions: {
           create: {
-            useEmail: false
-            useSMS: false
-            usePush: false
+            revisionsPush: false
+            amendmentsPush: false
+            onAmendments: false
+            onRevisions: false
+            revisionsEmail: false
+            amendmentsEmail: false
             user: { connect: { id: $user } }
           }
         }
@@ -120,11 +123,12 @@ export const ADD_USER_TO_CIRCLE = gql`
     }
     circlePermissionCreate(
       data: {
-        amendments: false
-        revisions: false
-        useEmail: false
-        usePush: true
-        useSMS: false
+        revisionsPush: false
+        amendmentsPush: false
+        onAmendments: false
+        onRevisions: false
+        revisionsEmail: false
+        amendmentsEmail: false
         circle: { connect: { id: $circle } }
         user: { connect: { id: $user } }
       }
@@ -575,14 +579,7 @@ export const UPDATE_PUSH_PERMISSION_FOR_CIRCLE = gql`
     }
   }
 `;
-export const UPDATE_SMS_PERMISSION_FOR_CIRCLE = gql`
-  mutation($flag: Boolean!, $id: ID!) {
-    circlePermissionUpdate(data: { id: $id, useSMS: $flag }) {
-      id
-      useSMS
-    }
-  }
-`;
+
 export const UPDATE_ALLOW_MARKETING_EMAIL = gql`
   mutation($id: ID!, $flag: Boolean!) {
     userPrefUpdate(data: { id: $id, maySendMarketingEmail: $flag }) {
@@ -624,47 +621,6 @@ export const UPDATE_USER_GENERIC = gql`
   }
 `;
 
-/* 
-  DEPRECATED MUTATIONS
-
-  These will not work since the switch to 8base, but they aren't necessary since 8base Auth0 handles auth management
-*/
-
-export const CREATE_USER = gql`
-  mutation CREATE_USER(
-    $firstName: String!
-    $lastName: String!
-    $email: String!
-    $password: String!
-    $icon: String!
-    $pub: String!
-    $priv: String!
-  ) {
-    createUser(
-      firstName: $firstName
-      lastName: $lastName
-      email: $email
-      password: $password
-      icon: $icon
-      pub: $pub
-      priv: $priv
-    ) {
-      id
-      firstName
-      lastName
-      email
-      icon
-    }
-  }
-`;
-// DEPRECATED - not in use since GraphCool
-// export const CREATE_RESET_REQUEST = gql`
-//   mutation($token: String!, $email: String!) {
-//     createResetRequest(token: $token, email: $email) {
-//       id
-//     }
-//   }
-// `;
 export const CREATE_RESET_REQUEST = gql`
   mutation($email: String!) {
     forgotPassword(email: $email) {
@@ -736,23 +692,6 @@ export const DELETE_WEB_SUB = gql`
     }
   }
 `;
-
-/* not used directly, but occurrs when adding a user to a circle */
-// export const CREATE_CIRCLE_PERMISSION = gql`
-//   mutation($circle: ID!, $user: ID!) {
-//     createCirclePermission(
-//       amendments: false
-//       revisions: false
-//       useEmail: false
-//       usePush: true
-//       useSMS: false
-//       circleId: $circle
-//       userId: $user
-//     ) {
-//       id
-//     }
-//   }
-// `;
 
 export const DELETE_RESET_REQUEST = gql`
   mutation($id: ID!) {

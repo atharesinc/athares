@@ -8,6 +8,7 @@ import { GET_USER_EXPO_TOKEN, GET_USER_ALLOW_PUSH } from "../graphql/queries";
 import { UPDATE_USER_EXPO_TOKEN } from "../graphql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
 import * as RootNavigation from "../navigation/RootNavigation";
+import MeshAlert from "../utils/meshAlert";
 
 export default memo(function NotificationListener({ user = "" }) {
   const [, setToken] = useGlobal("token");
@@ -90,6 +91,20 @@ export default memo(function NotificationListener({ user = "" }) {
   return null;
 });
 
+function meshCheckForNotifications() {
+  return new Promise((resolve) => {
+    MeshAlert({
+      title: "Enable Notifications?",
+      text: `Select "Allow" to enable push notifications for this device`,
+      onSubmit: async () => {
+        resolve(Permissions.askAsync(Permissions.NOTIFICATIONS));
+      },
+      submitText: "Allow",
+      icon: "info",
+    });
+  });
+}
+
 async function registerForPushNotificationsAsync() {
   let token;
   if (Constants.isDevice) {
@@ -98,7 +113,7 @@ async function registerForPushNotificationsAsync() {
     );
     let finalStatus = existingStatus;
     if (existingStatus !== "granted") {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      const { status } = await meshCheckForNotifications;
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
