@@ -199,14 +199,15 @@ export default function App(props) {
             <Suspense fallback={null}>
               <InviteMonitor />
             </Suspense>
-            {user && <NotificationListener user={user} />}
+            {user && Platform.OS !== "web" && (
+              <NotificationListener user={user} />
+            )}
           </SafeAreaView>
         </SafeAreaProvider>
       </ApolloProvider>
     );
   }
 }
-// && Platform.OS !== "web"
 
 const styles = StyleSheet.create({
   container: {
