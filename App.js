@@ -98,18 +98,14 @@ export default function App(props) {
           SpaceGrotesk: require("./assets/fonts/SpaceGrotesk_SemiBold.otf"),
         });
 
-        await Asset.loadAsync([
-          require(`./assets/images/iss-${getImageSize(
-            Dimensions.get("window").width
-          )}.jpg`),
-        ]);
+        await Asset.loadAsync([getImageSize(Dimensions.get("window").width)]);
 
         // get preferred theme, and recent searches from storage
         let res = MeshStore.getItemSync("theme");
         let searches = MeshStore.getItemSync("searched_circles");
 
         // if we have a preferred theme in storage, set it before we load the app
-        if (res !== null) {
+        if (res) {
           setActiveTheme(themes[res]);
         }
 
@@ -165,9 +161,7 @@ export default function App(props) {
         <SafeAreaProvider>
           <SafeAreaView style={[styles.container, styles.safeAreaContainer]}>
             <ImageBackground
-              source={require(`./assets/images/iss-${getImageSize(
-                dimensions.width
-              )}.jpg`)}
+              source={getImageSize(dimensions.width)}
               style={[
                 styles.container,
                 { width: dimensions.width, overflow: "hidden" },
@@ -205,15 +199,14 @@ export default function App(props) {
             <Suspense fallback={null}>
               <InviteMonitor />
             </Suspense>
-            {user && Platform.OS !== "web" && (
-              <NotificationListener user={user} />
-            )}
+            {user && <NotificationListener user={user} />}
           </SafeAreaView>
         </SafeAreaProvider>
       </ApolloProvider>
     );
   }
 }
+// && Platform.OS !== "web"
 
 const styles = StyleSheet.create({
   container: {

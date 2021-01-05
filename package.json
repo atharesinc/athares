@@ -58,7 +58,6 @@
     "react-native-screens": "~2.10.1",
     "react-native-side-menu-updated": "^1.2.1",
     "react-native-svg": "12.1.0",
-    "react-native-switch-pro": "git+https://github.com/actuallydan/react-native-switch-pro.git",
     "react-native-web": "~0.13.7",
     "reactn": "^2.2.7",
     "subscriptions-transport-ws": "^0.9.16",

@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { Platform } from "react-native";
-import { GET_USER_EXPO_TOKEN } from "../graphql/queries";
+import { GET_USER_EXPO_TOKEN, GET_USER_ALLOW_PUSH } from "../graphql/queries";
 import { UPDATE_USER_EXPO_TOKEN } from "../graphql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
 import * as RootNavigation from "../navigation/RootNavigation";
@@ -20,24 +20,32 @@ export default memo(function NotificationListener({ user = "" }) {
     },
   });
 
+  const { data: allowPush } = useQuery(GET_USER_ALLOW_PUSH, {
+    variables: {
+      id: user,
+    },
+  });
+
   const [updateToken] = useMutation(UPDATE_USER_EXPO_TOKEN);
-
   useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then(async (thisToken) => {
-        // if the token already exists in the user's pushToken array, set it and forget it,
-        //  otherwise add it to our cadre
-        if (
-          data?.user?.pushTokens?.items.findIndex(
-            ({ token }) => token === thisToken
-          ) === -1
-        ) {
-          await updateToken({ variables: { id: user, token: thisToken } });
-        }
+    // only request permissions and register token if they've ever enabled notifications for any circle
+    if (allowPush?.user?.circlePermissions?.count > 0) {
+      registerForPushNotificationsAsync()
+        .then(async (thisToken) => {
+          // if the token already exists in the user's pushToken array, set it and forget it,
+          //  otherwise add it to our cadre
+          if (
+            data?.user?.pushTokens?.items.findIndex(
+              ({ token }) => token === thisToken
+            ) === -1
+          ) {
+            await updateToken({ variables: { id: user, token: thisToken } });
+          }
 
-        setToken(thisToken);
-      })
-      .catch(console.error);
+          setToken(thisToken);
+        })
+        .catch(console.error);
+    }
 
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
@@ -77,7 +85,7 @@ export default memo(function NotificationListener({ user = "" }) {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
     };
-  }, [data]);
+  }, [data, allowPush]);
 
   return null;
 });
@@ -106,7 +114,7 @@ async function registerForPushNotificationsAsync() {
     Notifications.setNotificationChannelAsync("default", {
       name: "default",
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
+      lightColor: "#00DFFC",
     });
   }
 
