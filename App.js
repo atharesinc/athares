@@ -48,7 +48,6 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 // screens that can appear outside of the stack
 import Channels from "./screens/Channels";
-import Drawer from "./components/Drawer";
 
 // apollo graphql
 import { ApolloProvider, ApolloClient } from "@apollo/client";
@@ -89,7 +88,6 @@ export default function App(props) {
     async function loadResourcesAndDataAsync() {
       try {
         // start persisting apollo cache
-        await persistor.restore();
 
         preventAutoHideAsync();
 
@@ -98,6 +96,7 @@ export default function App(props) {
           SpaceGrotesk: require("./assets/fonts/SpaceGrotesk_SemiBold.otf"),
         });
 
+        await persistor.restore();
         await Asset.loadAsync([getImageSize(Dimensions.get("window").width)]);
 
         // get preferred theme, and recent searches from storage
@@ -175,12 +174,10 @@ export default function App(props) {
                 initialState={initialNavigationState}
                 linking={linkingConfig}
               >
-                <Drawer>
-                  <View style={styles.container} onLayout={onRotate}>
-                    {shouldRenderSideBar}
-                    <RootStack />
-                  </View>
-                </Drawer>
+                <View style={styles.container} onLayout={onRotate}>
+                  {shouldRenderSideBar}
+                  <RootStack />
+                </View>
               </NavigationContainer>
             </ImageBackground>
             {/* Put non-rendering components here so they mount after other components*/}
