@@ -12,6 +12,7 @@ import { SubscriptionLink } from "@8base/apollo-links";
 import { CachePersistor, AsyncStorageWrapper } from "apollo3-cache-persist";
 
 // initialize storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 MeshStore.init();
 
 // create cache
@@ -19,7 +20,7 @@ const cache = new InMemoryCache();
 
 const persistor = new CachePersistor({
   cache,
-  storage: new AsyncStorageWrapper(MeshStore),
+  storage: new AsyncStorageWrapper(AsyncStorage),
 });
 
 // Create an http link:

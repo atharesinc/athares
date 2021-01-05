@@ -1,12 +1,13 @@
 import { Platform } from "react-native";
 
-import createSecureStore from "@neverdull-agency/expo-unlimited-secure-store";
+// import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import localforage from "localforage";
 
 const useLocalForage = Platform.OS === "web";
 
 const MeshStore = {
-  secureStore: null,
   _map: null,
   keys: [
     "ATHARES_ALIAS",
@@ -20,7 +21,8 @@ const MeshStore = {
     // initialize in-memory store for frequent access values that we need synchronously
     this._map = new Map();
     this.loading = true;
-    // initialize different storage drivers based on platform
+
+    // we only need to do this on the web, but we can call it in App.js and it won't hurt anything
     if (useLocalForage) {
       localforage.config({
         driver: localforage.INDEXEDDB,
@@ -28,10 +30,7 @@ const MeshStore = {
         storeName: "ath_store",
         description: "athares secure store",
       });
-    } else {
-      this.secureStore = createSecureStore();
     }
-
     const keyPromises = this.keys.map((key) => {
       return this.getItem(key);
     });
@@ -53,26 +52,27 @@ const MeshStore = {
     // but return with the synchronous value immediately
     return this._map.set(key, value);
   },
-  getItem: function (key) {
+  getItem: (key) => {
     if (useLocalForage) {
       return localforage.getItem(key);
     }
-    return this.secureStore.getItem(key);
+    return AsyncStorage.getItem(key);
   },
-  setItem: function (key, value) {
+  setItem: (key, value) => {
     if (useLocalForage) {
       return localforage.setItem(key, value);
     }
-    return this.secureStore.setItem(key, value);
+    return AsyncStorage.setItem(key, value);
   },
-  removeItem: function (key) {
+  removeItem: (key) => {
     if (useLocalForage) {
       return localforage.removeItem(key);
     }
-    return this.secureStore.removeItem(key);
+    return AsyncStorage.removeItem(key);
   },
   clear: function () {
     this._map.clear();
+
     if (useLocalForage) {
       return Promise.all([
         localforage.removeItem("ATHARES_ALIAS"),
@@ -81,12 +81,7 @@ const MeshStore = {
         localforage.removeItem("theme"),
       ]);
     }
-    return Promise.all([
-      this.secureStore.removeItem("ATHARES_ALIAS"),
-      this.secureStore.removeItem("ATHARES_PASSWORD"),
-      this.secureStore.removeItem("ATHARES_TOKEN"),
-      this.secureStore.removeItem("theme"),
-    ]);
+    return Promise.all([AsyncStorage.clear()]);
   },
 };
 

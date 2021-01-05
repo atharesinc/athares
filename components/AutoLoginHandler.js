@@ -59,7 +59,10 @@ export default function AutoLoginHandler() {
           setUser(id);
         }
       } catch (err) {
-        if (err.message.includes("expired")) {
+        if (
+          err.message.includes("expired") ||
+          err.message.toLowerCase().includes("token")
+        ) {
           MeshStore.clear();
           return;
         }
