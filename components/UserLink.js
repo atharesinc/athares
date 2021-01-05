@@ -42,12 +42,14 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     marginRight: 15,
-    borderRadius: 9999,
-    height: 60,
-    width: 60,
+    height: 55,
+    width: 55,
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 9999,
+    borderWidth: 3,
+    borderColor: "#FFF",
   },
   header: {
     fontSize: 18,

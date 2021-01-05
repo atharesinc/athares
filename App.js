@@ -7,6 +7,10 @@ import React, {
   Suspense,
 } from "reactn";
 
+// something react-navigation recommends
+import { enableScreens } from "react-native-screens";
+enableScreens();
+
 import {
   StatusBar,
   StyleSheet,
@@ -15,7 +19,8 @@ import {
   Platform,
   ImageBackground,
 } from "react-native";
-import * as SplashScreen from "expo-splash-screen";
+import { Asset } from "expo-asset";
+import { preventAutoHideAsync, hideAsync } from "expo-splash-screen";
 import * as Font from "expo-font";
 import * as Notifications from "expo-notifications";
 import { NavigationContainer } from "@react-navigation/native";
@@ -34,6 +39,8 @@ const ChannelUpdateMonitor = lazy(() =>
 const InviteMonitor = lazy(() => import("./components/InviteMonitor"));
 
 import MeshStore from "./utils/meshStore";
+import getImageSize from "./utils/getImageSize";
+
 // theming
 import { themes } from "./constants/themes";
 
@@ -81,22 +88,24 @@ export default function App(props) {
 
     async function loadResourcesAndDataAsync() {
       try {
-        // start persisting apollo stuff
+        // start persisting apollo cache
         await persistor.restore();
 
-        SplashScreen.preventAutoHideAsync();
+        preventAutoHideAsync();
 
         // Load fonts
         await Font.loadAsync({
           SpaceGrotesk: require("./assets/fonts/SpaceGrotesk_SemiBold.otf"),
         });
 
+        await Asset.loadAsync([getImageSize(Dimensions.get("window").width)]);
+
         // get preferred theme, and recent searches from storage
         let res = MeshStore.getItemSync("theme");
         let searches = MeshStore.getItemSync("searched_circles");
 
         // if we have a preferred theme in storage, set it before we load the app
-        if (res !== null) {
+        if (res) {
           setActiveTheme(themes[res]);
         }
 
@@ -109,7 +118,7 @@ export default function App(props) {
         console.warn(e);
       } finally {
         setLoadingComplete(true);
-        SplashScreen.hideAsync();
+        hideAsync();
       }
     }
 
@@ -152,7 +161,7 @@ export default function App(props) {
         <SafeAreaProvider>
           <SafeAreaView style={[styles.container, styles.safeAreaContainer]}>
             <ImageBackground
-              source={require("./assets/images/iss-master.jpg")}
+              source={getImageSize(dimensions.width)}
               style={[
                 styles.container,
                 { width: dimensions.width, overflow: "hidden" },
@@ -213,15 +222,6 @@ const styles = StyleSheet.create({
   safeAreaContainer: {
     backgroundColor: "#282a38",
   },
-  // imageContainer: {
-  //   flex: 1,
-  //   width: Dimensions.get("window").width,
-  //   height: Dimensions.get("window").height,
-  //   backgroundColor: "transparent",
-  //   flexDirection: "row",
-  //   justifyContent: "flex-start",
-  //   alignItems: "stretch",
-  // },
   image: {
     flex: 1,
     backgroundColor: "transparent",

@@ -806,3 +806,26 @@ export const GET_USER_EXPO_TOKEN = gql`
     }
   }
 `;
+
+export const GET_USER_ALLOW_PUSH = gql`
+  query($id: ID!) {
+    user(id: $id) {
+      id
+      circlePermissions(
+        filter: {
+          OR: [
+            { revisionsPush: { equals: true } }
+            { amendmentsPush: { equals: true } }
+          ]
+        }
+      ) {
+        count
+        items {
+          id
+          revisionsPush
+          amendmentsPush
+        }
+      }
+    }
+  }
+`;

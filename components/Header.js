@@ -16,7 +16,7 @@ import LinkButton from "./LinkButton";
 import AsyncImage from "./AsyncImage";
 import Pill from "./Pill";
 
-function Header({
+export default function Header({
   // loggedIn = false,
   // belongsToCircle = false,
   scene,
@@ -366,5 +366,3 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
 });
-
-export default Header;

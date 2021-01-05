@@ -3,7 +3,7 @@
     "name": "Athares",
     "slug": "athares",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.0",
+    "version": "0.1.1",
     "orientation": "portrait",
     "icon": "./assets/images/Athares-icon-mask.png",
     "scheme": "myapp",
@@ -17,7 +17,14 @@
     },
     "assetBundlePatterns": ["**/*"],
     "web": {
-      "name": "Athares"
+      "backgroundColor": "#282A38",
+      "description": "Build better organizations with democracy",
+      "themeColor": "#282A38",
+      "splash": {
+        "image": "./assets/images/splash.png",
+        "resizeMode": "cover",
+        "backgroundColor": "#282A38"
+      }
     },
     "ios": {
       "supportsTablet": true

@@ -1,22 +1,59 @@
-import React, { memo } from "react";
+import React, { memo, useGlobal, useState } from "reactn";
 import SwitchLine from "../../components/SwitchLine";
+
+import { GET_USER_ALLOW_PUSH } from "../../graphql/queries";
 
 import { UPDATE_CIRCLE_PREF } from "../../graphql/mutations";
 import { useMutation } from "@apollo/client";
 
 export default memo(function SwitchLineWithQuery({ label, value, pref, id }) {
-  const [_updateCirclePref] = useMutation(UPDATE_CIRCLE_PREF);
+  const [user] = useGlobal("user");
+  const [valueTemp, setValueTemp] = useState(value);
 
-  const updatePref = async (flag) => {
+  const [_updateCirclePref] = useMutation(UPDATE_CIRCLE_PREF, {
+    refetchQueries: [
+      {
+        query: GET_USER_ALLOW_PUSH,
+        variables: {
+          id: user,
+        },
+        skip: !user,
+      },
+    ],
+  });
+
+  const updatePref = async (value) => {
+    // optimisitically set value
+    setValueTemp(value);
+
+    if (value && pref.toLowerCase().includes("push")) {
+      try {
+        await _updateCirclePref({
+          variables: {
+            data: {
+              id: id,
+              [pref]: value,
+            },
+          },
+        });
+        setValueTemp(true);
+      } catch (err) {
+        setValueTemp(false);
+      }
+      return;
+    }
+
+    // Otherwise just let them update the permission
     await _updateCirclePref({
       variables: {
         data: {
           id: id,
-          [pref]: flag,
+          [pref]: value,
         },
       },
     });
+    setValueTemp(value);
   };
 
-  return <SwitchLine label={label} value={value} onPress={updatePref} />;
+  return <SwitchLine label={label} value={valueTemp} onPress={updatePref} />;
 });

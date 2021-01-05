@@ -1,19 +1,17 @@
 import React, { useGlobal } from "reactn";
-import { View, StyleSheet, Text } from "react-native";
-import Switch from "react-native-switch-pro";
+import { View, StyleSheet, Text, Switch } from "react-native";
 
 const SwitchLine = ({ label, value = false, onPress = () => {} }) => {
   const [activeTheme] = useGlobal("activeTheme");
 
+  const trackColor = {
+    false: activeTheme.COLORS.LIGHT,
+    true: activeTheme.COLORS["BLUE1"],
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <Switch
-        onSyncPress={onPress}
-        backgroundActive={activeTheme.COLORS["BLUE1"]}
-        backgroundInactive={activeTheme.COLORS.LIGHT}
-        value={value}
-      />
+      <Switch onValueChange={onPress} trackColor={trackColor} value={value} />
     </View>
   );
 };

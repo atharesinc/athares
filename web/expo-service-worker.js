@@ -1,0 +1,190 @@
+/* eslint-env serviceworker */
+
+/**
+ * Store notification icon string in service worker.
+ * Ref: https://stackoverflow.com/a/35729334/2603230
+ */
+self.addEventListener("message", (event) => {
+  let data;
+  if (typeof event.data === "string") {
+    try {
+      data = JSON.parse(event.data);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  if (data && data.fromExpoWebClient) {
+    self.notificationIcon = data.fromExpoWebClient.notificationIcon;
+  }
+});
+
+/**
+ * Add support for push notification.
+ */
+self.addEventListener("push", (event) => {
+  let payload = {};
+  try {
+    payload = event.data.json();
+  } catch (e) {
+    // If `event.data.text()` is not a JSON object, we just treat it
+    // as a plain string and display it as the body.
+    payload = { title: "", body: event.data.text() };
+  }
+
+  const title = payload.title;
+  const data = payload.data || payload.custom || {};
+  const options = {
+    body: payload.body,
+    data,
+  };
+  options.icon = data._icon || payload.icon || self.notificationIcon || null;
+  options.image =
+    data._richContent && data._richContent.image
+      ? options.data._richContent.image
+      : payload.image;
+  options.tag = data._tag || payload.collapseKey;
+  if (options.tag) {
+    options.renotify = data._renotify;
+  }
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Clients
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  event.waitUntil(
+    (async () => {
+      const allClients = await self.clients.matchAll({
+        includeUncontrolled: true,
+      });
+
+      let appClient;
+
+      const path = event.notification.data._webPath || "/";
+
+      // If we already have a window open, use it.
+      for (const client of allClients) {
+        const url = new URL(client.url);
+
+        if (url.pathname === path) {
+          client.focus();
+          appClient = client;
+          break;
+        }
+      }
+
+      // If there is no existing window, open a new one.
+      if (!appClient) {
+        appClient = await self.clients.openWindow(path);
+      }
+
+      // Message the client:
+      // `origin` will always be `'selected'` in this case.
+      // https://docs.expo.io/versions/latest/sdk/notifications/#notification
+      appClient.postMessage({
+        origin: "selected",
+        data: event.notification.data,
+        remote: !event.notification._isLocal,
+      });
+    })()
+  );
+});
+
+const FILES_TO_CACHE = [];
+
+const STATIC_CACHE = "static-cache-v0";
+const AWS_IMAGE_CACHE = "aws-cache-v0";
+
+// install
+self.addEventListener("install", function (evt) {
+  evt.waitUntil(
+    caches.open(STATIC_CACHE).then((cache) => {
+      console.log("Your files were pre-cached successfully!");
+      return cache.addAll(FILES_TO_CACHE);
+    })
+  );
+
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", function (evt) {
+  evt.waitUntil(
+    caches.keys().then((keyList) => {
+      return Promise.all(
+        keyList.map((key) => {
+          if (key !== STATIC_CACHE && key !== AWS_IMAGE_CACHE) {
+            console.log("Removing old cache data", key);
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+
+  self.clients.claim();
+});
+
+// fetch
+self.addEventListener("fetch", function (evt) {
+  // cache image requests from AWS
+  if (evt.request.url.includes("athares-images.s3")) {
+    evt.respondWith(
+      caches.match(evt.request).then((resp) => {
+        return (
+          resp ||
+          fetch(evt.request)
+            .then((response) => {
+              let responseClone = response.clone();
+              caches.open(AWS_IMAGE_CACHE).then((cache) => {
+                cache.put(evt.request, responseClone);
+              });
+
+              return response;
+            })
+            .catch(() => {
+              return fetch(evt.request);
+            })
+        );
+      })
+    );
+    return;
+  }
+  // cache JS chunks
+  if (evt.request.url.includes("/static/js")) {
+    evt.respondWith(
+      caches.match(evt.request).then((resp) => {
+        return (
+          resp ||
+          fetch(evt.request)
+            .then((response) => {
+              let responseClone = response.clone();
+              caches.open(STATIC_CACHE).then((cache) => {
+                cache.put(evt.request, responseClone);
+              });
+
+              return response;
+            })
+            .catch(() => {
+              return fetch(evt.request);
+            })
+        );
+      })
+    );
+    return;
+  }
+
+  // serve everything else from cache if we have it, otherwise get from network
+  // this would be everything we cache ahead of time like static assets in FILES_TO_CACHE
+  evt.respondWith(
+    caches.match(evt.request).then(function (response) {
+      return response || fetch(evt.request);
+    })
+  );
+  return;
+});
+
+// Import the script generated by workbox.
+self.importScripts("service-worker.js");
