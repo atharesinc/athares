@@ -1,4 +1,4 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, memo } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import DisclaimerText from "./DisclaimerText";
@@ -7,7 +7,7 @@ import GlowButton from "./GlowButton";
 import Title from "./Title";
 import Card from "./Card";
 
-export default function Amendment({
+export default memo(function Amendment({
   amendment,
   isSelected,
   onPress,
@@ -50,6 +50,7 @@ export default function Amendment({
     <TouchableOpacity
       disabled={hasOutstandingRevision || !belongsToCircle}
       onPress={selectThisAmendment}
+      delayPressIn={0}
     >
       <Card light>
         <View style={styles.amendmentWrapper}>
@@ -86,7 +87,7 @@ export default function Amendment({
       </Card>
     </TouchableOpacity>
   );
-}
+});
 
 const styles = StyleSheet.create({
   amendmentWrapper: {

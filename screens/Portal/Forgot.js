@@ -15,7 +15,7 @@ import GlowButton from "../../components/GlowButton";
 import DisclaimerText from "../../components/DisclaimerText";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";
 
-export default function Login() {
+export default function Forgot() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
