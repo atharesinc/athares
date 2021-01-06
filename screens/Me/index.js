@@ -247,7 +247,7 @@ export default function Me() {
             {userObj.firstName + " " + userObj.lastName}
           </Text>
           <AvatarPicker
-            uri={userObj.uri}
+            uri={userObj.icon}
             onImageChange={updateURI}
             rounded={true}
           />

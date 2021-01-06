@@ -19,11 +19,8 @@ export default memo(function AvatarPicker({
     : require("../assets/images/Athares-logo-small-white.png");
 
   return (
-    <TouchableOpacity
-      style={[styles.previewTouch, rounded ? styles.rounded : {}]}
-      onPress={changeImage}
-    >
-      <View style={[styles.previewView]}>
+    <TouchableOpacity style={[styles.previewTouch]} onPress={changeImage}>
+      <View style={[styles.previewView, rounded ? styles.rounded : {}]}>
         <Image
           source={source}
           style={[styles.preview, rounded ? styles.noBorder : {}]}
