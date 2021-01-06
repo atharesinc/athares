@@ -15,6 +15,7 @@ import { SUB_TO_CIRCLES_CHANNELS } from "../../graphql/subscriptions";
 import useBelongsInCircle from "../../utils/useBelongsInCircle";
 import { useQuery, useSubscription } from "@apollo/client";
 import * as RootNavigation from "../../navigation/RootNavigation";
+import OfflineBanner from "../../components/offline/OfflineBanner";
 
 function Dashboard({ renderAsSidebar = false }) {
   const [activeCircle] = useGlobal("activeCircle");
@@ -22,6 +23,8 @@ function Dashboard({ renderAsSidebar = false }) {
   const [unreadChannels] = useGlobal("unreadChannels");
   const [showSearch] = useGlobal("showSearch");
   const [, setActiveChannel] = useGlobal("activeChannel");
+  const [isOnline] = useGlobal("isOnline");
+
   let circle = null;
   let channels = [];
 
@@ -82,6 +85,7 @@ function Dashboard({ renderAsSidebar = false }) {
     <View style={wrapperStyles}>
       <Header scene={{ route: { name: "" } }} />
       {showSearch ? <Search /> : null}
+      {!isOnline && <OfflineBanner />}
       <Circles loggedIn={user} />
       <ScrollView
         contentContainerStyle={{

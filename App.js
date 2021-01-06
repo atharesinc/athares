@@ -24,7 +24,7 @@ import defaultState from "./constants/defaultState";
 import { linkingConfig } from "./navigation/useLinking";
 
 import AutoLoginHandler from "./components/AutoLoginHandler";
-import OnlineMonitor from "./components/OnlineMonitor";
+import OnlineMonitor from "./components/offline/OnlineMonitor";
 import RevisionMonitor from "./components/RevisionMonitor";
 import ChannelUpdateMonitor from "./components/ChannelUpdateMonitor";
 import InviteMonitor from "./components/InviteMonitor";
@@ -104,8 +104,7 @@ export default function App(props) {
           setSearchedCircles(JSON.parse(searches));
         }
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
-        console.warn(e);
+        console.warn("what the fuck", e);
       } finally {
         setLoadingComplete(true);
         hideAsync();
