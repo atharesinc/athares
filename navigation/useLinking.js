@@ -60,6 +60,7 @@ export const linkingConfig = {
           name: () => "",
         },
       },
+      settings: "settings",
       // GOOD
       viewRevision: {
         path: ":circle/revisions/:revision/:name?",

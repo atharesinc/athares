@@ -174,12 +174,21 @@ export default function Register() {
           value={firstName}
         />
         <Input label="Last Name" onChangeText={setLastName} value={lastName} />
-        <Input label="Email" onChangeText={updateEmail} value={email} />
+        <Input
+          label="Email"
+          onChangeText={updateEmail}
+          value={email}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="email"
+        />
         <Input
           label="Password"
           secureTextEntry
           onChangeText={setPassword}
           value={password}
+          blurOnSubmit={true}
         />
         {error !== "" && <Text style={{ color: "#FF0000" }}>{error}</Text>}
 

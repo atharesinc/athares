@@ -162,12 +162,23 @@ export default function Login() {
   return (
     <View style={styles.justifyBetween}>
       <KeyboardAwareScrollView>
-        <Input onChangeText={updateEmail} value={email} label={"Email"} />
+        <Input
+          onChangeText={updateEmail}
+          value={email}
+          label={"Email"}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoCompleteType="email"
+          textContentType={"username"}
+        />
         <Input
           secureTextEntry
           onChangeText={updatePassword}
           value={password}
           label={"Password"}
+          blurOnSubmit={true}
+          textContentType={"password"}
           nextSibling={
             <TouchableOpacity onPress={goToForgot}>
               <DisclaimerText blue text={"Forgot Password?"} />
@@ -177,28 +188,10 @@ export default function Login() {
         <GlowButton text={"Login"} onPress={tryLogin} />
       </KeyboardAwareScrollView>
 
-      <TouchableOpacity
-        onPress={goToPolicy}
-        style={styles.center}
-        // style={
-        //   {
-        //     // justifyContent: "flex-end",
-        //     // alignItems: "flex-end",
-        //     // height: 5,
-        //     // margin: 0,
-        //     // padding: 0,
-        //   }
-        // }
-      >
+      <TouchableOpacity onPress={goToPolicy} style={styles.center}>
         <DisclaimerText style={styles.center}>
           By logging in you acknowledge that you agree to the{" "}
-          <DisclaimerText
-            blue
-            // noMargin
-            // style={{ marginBottom: -5 }}
-          >
-            Terms of Use and Privacy Policy.
-          </DisclaimerText>
+          <DisclaimerText blue>Terms of Use and Privacy Policy.</DisclaimerText>
         </DisclaimerText>
       </TouchableOpacity>
     </View>

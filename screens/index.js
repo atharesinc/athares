@@ -1,6 +1,9 @@
 import React, { useGlobal, lazy, Suspense } from "reactn";
 import { Platform } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from "@react-navigation/stack";
 
 import Header from "../components/Header";
 import { pushTransition } from "../navigation/transitionConfigs";
@@ -10,6 +13,7 @@ import NotFound from "./NotFound";
 import Channels from "./Channels";
 import CenteredLoaderWithText from "../components/CenteredLoaderWithText";
 import News from "./News";
+import Menu from "../components/Menu";
 
 const CreateCircle = lazy(() => import("./CreateCircle"));
 const CreateChannel = lazy(() => import("./CreateChannel"));
@@ -66,6 +70,24 @@ export default function RootStack() {
         name="app"
         component={shouldDisplayNewsAsApp}
         options={{ ...appOptions, title: "Athares" }}
+      />
+      <Stack.Screen
+        name="settings"
+        component={Menu}
+        options={({ route, navigation }) => ({
+          title: "Settings",
+          animationEnabled: true,
+          headerShown: isMobile,
+          gestureEnabled: true,
+          cardOverlayEnabled: true,
+          headerStatusBarHeight:
+            navigation
+              .dangerouslyGetState()
+              .routes.findIndex((r) => r.key === route.key) > 0
+              ? 0
+              : undefined,
+          ...TransitionPresets.ModalPresentationIOS,
+        })}
       />
 
       <Stack.Screen name="portal">

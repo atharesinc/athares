@@ -28,7 +28,6 @@ export default function Header({
   const [activeChannel] = useGlobal("activeChannel");
   const [activeRevision] = useGlobal("activeRevision");
   const [activeViewUser] = useGlobal("activeViewUser");
-  const [, setIsMenuOpen] = useGlobal("isMenuOpen");
   const [showConstSearch, setShowConstSearch] = useGlobal("showConstSearch");
   const [invites] = useGlobal("invites");
 
@@ -36,7 +35,7 @@ export default function Header({
   const data = null;
 
   const toggleDrawer = () => {
-    setIsMenuOpen(true);
+    RootNavigation.navigate("settings");
   };
 
   const toggleSearch = () => {
@@ -237,7 +236,6 @@ export default function Header({
   }
 
   // Render Portal
-  // render channelName and back
   if (["portal"].indexOf(name) !== -1) {
     return (
       <View style={[styles.header, styles.bgTransparent]}>
@@ -266,6 +264,20 @@ export default function Header({
             style={{ margin: 0 }}
           />
         )}
+      </View>
+    );
+  }
+
+  // Render Portal
+  // render channelName and back
+  if (name === "settings") {
+    return (
+      <View style={[styles.header, styles.bgTransparent]}>
+        <TouchableOpacity onPress={back}>
+          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
+        </TouchableOpacity>
+
+        <Feather name="more-vertical" size={30} color={"transparent"} />
       </View>
     );
   }

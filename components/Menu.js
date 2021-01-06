@@ -25,8 +25,7 @@ function SideMenu() {
   const [, setUnreadChannels] = useGlobal("setUnreadChannels");
   const [, setDMs] = useGlobal("setDMs");
   const [, setUnreadDMs] = useGlobal("setUnreadDMs");
-  const [isMobile] = useGlobal("isMobile");
-  const [isMenuOpen, setIsMenuOpen] = useGlobal("isMenuOpen");
+
   const [invites] = useGlobal("invites");
   const [token] = useGlobal("token");
 
@@ -38,7 +37,6 @@ function SideMenu() {
     } else {
       RootNavigation.navigate(route, params);
     }
-    setIsMenuOpen(false);
   };
 
   const apolloClient = useApolloClient();
@@ -105,16 +103,8 @@ function SideMenu() {
     userObj = data.user;
   }
 
-  const responsiveWidth = {
-    width: isMobile ? "100%" : 300,
-  };
-
-  if (!isMenuOpen) {
-    return null;
-  }
-
   return (
-    <View style={[styles.wrapper, responsiveWidth]}>
+    <View style={[styles.wrapper]}>
       <View>
         {/* User */}
         {userObj ? (

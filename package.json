@@ -18,8 +18,10 @@
   "dependencies": {
     "@8base/apollo-links": "^1.2.8",
     "@apollo/client": "^3.3.0-rc.0",
+    "@aveq-research/localforage-asyncstorage-driver": "^3.0.1",
     "@expo/vector-icons": "^10.0.0",
     "@neverdull-agency/expo-unlimited-secure-store": "^1.0.10",
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.0.0",
@@ -56,7 +58,6 @@
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
-    "react-native-side-menu-updated": "^1.2.1",
     "react-native-svg": "12.1.0",
     "react-native-web": "~0.13.7",
     "reactn": "^2.2.7",
