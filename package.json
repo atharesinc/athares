@@ -63,7 +63,8 @@
     "reactn": "^2.2.7",
     "subscriptions-transport-ws": "^0.9.16",
     "sweetalert": "^2.1.2",
-    "validate.js": "^0.13.1"
+    "validate.js": "^0.13.1",
+    "@react-native-community/netinfo": "5.9.6"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
