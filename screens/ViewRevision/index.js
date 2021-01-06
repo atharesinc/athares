@@ -18,6 +18,7 @@ import DisclaimerText from "../../components/DisclaimerText";
 import Card from "../../components/Card";
 import VotesCounter from "../../components/VotesCounter";
 import GlowButton from "../../components/GlowButton";
+import Countdown from "./Countdown";
 
 import { CREATE_VOTE, UPDATE_VOTE } from "../../graphql/mutations";
 import { GET_REVISION_BY_ID } from "../../graphql/queries";
@@ -167,87 +168,94 @@ export default function ViewRevision(props) {
   const hasVoted = votes.items.find(({ user: { id } }) => id === user);
   const hasExpired = unixTime() >= unixTime(revision.expires);
   return (
-    <ScrollView contentContainerStyle={styles.wrapper}>
-      <View>
-        <Title text={revision.title} />
-        <View style={styles.cardStats}>
-          <DisclaimerText
-            upper
-            grey
-            text={"REVIEW PROPOSED AMENDMENT"}
-            style={styles.marginBottomZero}
-          />
-          <VotesCounter support={support} reject={reject} />
-        </View>
-        {hasVoted && renderHasVoted(hasVoted)}
-        {/* card */}
-        {revision.amendment && !revision.repeal ? (
-          <DiffSection {...revision} />
-        ) : (
-          <Card style={{ minHeight: "20%" }}>
+    <>
+      {!hasExpired && (
+        <Countdown expires={revision.expires} createdAt={revision.createdAt} />
+      )}
+      <ScrollView contentContainerStyle={styles.wrapper}>
+        <View>
+          <Title text={revision.title} />
+          <View style={styles.cardStats}>
             <DisclaimerText
-              text={revision.newText}
-              style={[styles.marginBottomZero, styles.fontSize14]}
+              upper
+              grey
+              text={"REVIEW PROPOSED AMENDMENT"}
+              style={styles.marginBottomZero}
             />
-          </Card>
-        )}
-        <Statistic
-          header="Proposed"
-          text={new Date(revision.createdAt).toLocaleString()}
-        />
-        <Statistic
-          header="Expires"
-          text={new Date(revision.expires).toLocaleString()}
-        />
-        <View style={styles.cardStats}>
-          <Statistic
-            header="Votes to Support"
-            text={support}
-            style={styles.half}
-          />
-          <Statistic
-            header="Votes to Reject"
-            text={reject}
-            style={styles.half}
-          />
-        </View>
-        {hasExpired && (
-          <Statistic header="Passed" text={revision.passed ? "Yes" : "No"} />
-        )}
-        <TouchableOpacity onPress={goToUser}>
-          <View style={styles.backerWrapper}>
-            <View style={styles.backerImgWrapper}>
-              <Image
-                style={styles.backerImg}
-                source={{ uri: revision.backer.icon }}
+            <VotesCounter support={support} reject={reject} />
+          </View>
+          {hasVoted && renderHasVoted(hasVoted)}
+          {/* card */}
+          {revision.amendment && !revision.repeal ? (
+            <DiffSection {...revision} />
+          ) : (
+            <Card style={{ minHeight: "20%" }}>
+              <DisclaimerText
+                text={revision.newText}
+                style={[styles.marginBottomZero, styles.fontSize14]}
               />
-            </View>
-            <Title
-              text={revision.backer.firstName + " " + revision.backer.lastName}
-              style={[styles.marginBottomZero, styles.marginLeft]}
+            </Card>
+          )}
+          <Statistic
+            header="Proposed"
+            text={new Date(revision.createdAt).toLocaleString()}
+          />
+          <Statistic
+            header="Expires"
+            text={new Date(revision.expires).toLocaleString()}
+          />
+          <View style={styles.cardStats}>
+            <Statistic
+              header="Votes to Support"
+              text={support}
+              style={styles.half}
+            />
+            <Statistic
+              header="Votes to Reject"
+              text={reject}
+              style={styles.half}
             />
           </View>
-        </TouchableOpacity>
-      </View>
-      {user && !hasExpired && belongsToCircle && (
-        <View style={styles.voteSectionWrapper}>
-          <GlowButton
-            green
-            text={"SUPPORT"}
-            data-support={"true"}
-            style={styles.voteButtons}
-            onPress={voteToSupport}
-          />
-          <GlowButton
-            red
-            text={"REJECT"}
-            data-support={"false"}
-            style={styles.voteButtons}
-            onPress={voteToReject}
-          />
+          {hasExpired && (
+            <Statistic header="Passed" text={revision.passed ? "Yes" : "No"} />
+          )}
+          <TouchableOpacity onPress={goToUser}>
+            <View style={styles.backerWrapper}>
+              <View style={styles.backerImgWrapper}>
+                <Image
+                  style={styles.backerImg}
+                  source={{ uri: revision.backer.icon }}
+                />
+              </View>
+              <Title
+                text={
+                  revision.backer.firstName + " " + revision.backer.lastName
+                }
+                style={[styles.marginBottomZero, styles.marginLeft]}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
-      )}
-    </ScrollView>
+        {user && !hasExpired && belongsToCircle && (
+          <View style={styles.voteSectionWrapper}>
+            <GlowButton
+              green
+              text={"SUPPORT"}
+              data-support={"true"}
+              style={styles.voteButtons}
+              onPress={voteToSupport}
+            />
+            <GlowButton
+              red
+              text={"REJECT"}
+              data-support={"false"}
+              style={styles.voteButtons}
+              onPress={voteToReject}
+            />
+          </View>
+        )}
+      </ScrollView>
+    </>
   );
 }
 

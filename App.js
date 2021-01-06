@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useGlobal,
-  useEffect,
-  setGlobal,
-  lazy,
-  Suspense,
-} from "reactn";
+import React, { useState, useGlobal, useEffect, setGlobal } from "reactn";
 
 // something react-navigation recommends
 import { enableScreens } from "react-native-screens";
@@ -30,13 +23,11 @@ import RootStack from "./screens";
 import defaultState from "./constants/defaultState";
 import { linkingConfig } from "./navigation/useLinking";
 
-const AutoLoginHandler = lazy(() => import("./components/AutoLoginHandler"));
-const OnlineMonitor = lazy(() => import("./components/OnlineMonitor"));
-const RevisionMonitor = lazy(() => import("./components/RevisionMonitor"));
-const ChannelUpdateMonitor = lazy(() =>
-  import("./components/ChannelUpdateMonitor")
-);
-const InviteMonitor = lazy(() => import("./components/InviteMonitor"));
+import AutoLoginHandler from "./components/AutoLoginHandler";
+import OnlineMonitor from "./components/offline/OnlineMonitor";
+import RevisionMonitor from "./components/RevisionMonitor";
+import ChannelUpdateMonitor from "./components/ChannelUpdateMonitor";
+import InviteMonitor from "./components/InviteMonitor";
 
 import MeshStore from "./utils/meshStore";
 import getImageSize from "./utils/getImageSize";
@@ -113,8 +104,7 @@ export default function App(props) {
           setSearchedCircles(JSON.parse(searches));
         }
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
-        console.warn(e);
+        console.warn("what the fuck", e);
       } finally {
         setLoadingComplete(true);
         hideAsync();
@@ -181,21 +171,11 @@ export default function App(props) {
               </NavigationContainer>
             </ImageBackground>
             {/* Put non-rendering components here so they mount after other components*/}
-            <Suspense fallback={null}>
-              <AutoLoginHandler />
-            </Suspense>
-            <Suspense fallback={null}>
-              <OnlineMonitor />
-            </Suspense>
-            <Suspense fallback={null}>
-              <RevisionMonitor />
-            </Suspense>
-            <Suspense fallback={null}>
-              <ChannelUpdateMonitor />
-            </Suspense>
-            <Suspense fallback={null}>
-              <InviteMonitor />
-            </Suspense>
+            <AutoLoginHandler />
+            <OnlineMonitor />
+            <RevisionMonitor />
+            <ChannelUpdateMonitor />
+            <InviteMonitor />
             {user && Platform.OS !== "web" && (
               <NotificationListener user={user} />
             )}

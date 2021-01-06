@@ -208,6 +208,7 @@ export const GET_REVISION_BY_ID = gql`
       votes {
         items {
           id
+          updatedAt
           support
           user {
             id
