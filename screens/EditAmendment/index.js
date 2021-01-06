@@ -205,7 +205,7 @@ export default function EditAmendment(props) {
           value={text}
           onChangeText={setText}
           label={data.amendment.title}
-          autoFocus={true}
+          autoFocus={false}
           description={
             "Here you can make changes to the existing amendment. If you'd instead like to remove the amendment altogether, select 'Repeal Amendment'."
           }
