@@ -192,23 +192,13 @@ export default function CreateRevision(props) {
           description={"Provide a name for your new amendment."}
           onChangeText={setTitle}
           value={title}
+          autoFocus={true}
         />
-        {/* <Input
-          value={text}
-          onChangeText={setText}
-          label={"Amendment Body"}
-          description={
-            "Draft your amendment. What do you want to add to this organization?"
-          }
-          multiline={true}
-        /> */}
+
         <CrossAutoGrow
           value={text}
           onChangeText={setText}
           label={"Amendment Body"}
-          // onBlur={focusOff}
-          autoFocus={true}
-          // isFocused={isFocused}
           description={
             "Draft your amendment. What do you want to add to this organization?"
           }
