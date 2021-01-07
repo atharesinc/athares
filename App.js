@@ -174,7 +174,7 @@ export default function App(props) {
             <AutoLoginHandler />
             <OnlineMonitor />
             <RevisionMonitor />
-            <ChannelUpdateMonitor />
+            <ChannelUpdateMonitor navigation={navigationRef} />
             <InviteMonitor />
             {user && Platform.OS !== "web" && (
               <NotificationListener user={user} />

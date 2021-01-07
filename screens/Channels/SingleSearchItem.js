@@ -85,6 +85,8 @@ const SingleSearchItem = ({ item, category, ...props }) => {
     }
   };
 
+  console.log(item);
+
   return (
     <TouchableOpacity
       style={styles.suggestionItem}
@@ -94,11 +96,13 @@ const SingleSearchItem = ({ item, category, ...props }) => {
     >
       {category === "users" ? (
         <View style={styles.suggestionItemUser}>
-          <AsyncImage
-            source={{ uri: item.icon }}
-            style={styles.userIcon}
-            placeholderColor={"#3a3e52"}
-          />
+          <View style={styles.userIcon}>
+            <AsyncImage
+              source={{ uri: item.icon }}
+              style={styles.userIcon}
+              placeholderColor={"#3a3e52"}
+            />
+          </View>
           <Text style={styles.suggestionText}>
             {item.firstName + " " + item.lastName}
           </Text>
@@ -108,7 +112,9 @@ const SingleSearchItem = ({ item, category, ...props }) => {
         <View>
           <Text style={styles.suggestionText}>
             {item[props.searchOn] +
-              (category !== "circles" ? " - " + item.circle.name : "")}
+              (category !== "circles" && item.circle
+                ? " - " + item.circle.name
+                : "")}
           </Text>
           {category !== "circles" && (
             <Text style={[styles.suggestionText, styles.smaller]}>
@@ -137,6 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     fontFamily: "SpaceGrotesk",
+    marginLeft: 15,
   },
   smaller: {
     fontSize: 12,
@@ -144,6 +151,5 @@ const styles = StyleSheet.create({
   userIcon: {
     height: 30,
     width: 30,
-    marginRight: 15,
   },
 });

@@ -30,6 +30,8 @@ import {
 import { sha } from "../../utils/crypto";
 import CenteredErrorLoader from "../../components/CenteredErrorLoader";
 
+import allSettled from "promise.allsettled";
+
 export default function AddUser({ navigation, route }) {
   const [tags, setTags] = useState([]);
   const [input, setInput] = useState("");
@@ -37,9 +39,13 @@ export default function AddUser({ navigation, route }) {
   const inputRef = useRef();
   const [loadingInvites, setLoadingInvites] = useState(false);
   const [user] = useGlobal("user");
+  const [isOnline] = useGlobal("isOnline");
 
   const [search, { loading, data }] = useLazyQuery(
-    SEARCH_FOR_USER_NOT_IN_CIRCLE
+    SEARCH_FOR_USER_NOT_IN_CIRCLE,
+    {
+      fetchPolicy: "cache-first",
+    }
   );
 
   const { data: circleData } = useQuery(GET_CIRCLE_NAME_BY_ID, {
@@ -76,13 +82,14 @@ export default function AddUser({ navigation, route }) {
   useEffect(() => {
     // don't re-search if they've only just started typing
     if (input.trim() !== "" && input.trim().length > 2) {
-      search({
-        variables: {
-          text: input,
-          circle: activeCircle,
-          user,
-        },
-      });
+      isOnline &&
+        search({
+          variables: {
+            text: input,
+            circle: activeCircle,
+            user,
+          },
+        });
     }
   }, [input]);
 
@@ -126,7 +133,7 @@ export default function AddUser({ navigation, route }) {
         });
       });
 
-      let responses = await Promise.allSettled(invites);
+      let responses = await allSettled(invites);
 
       let failedInvites = responses.filter((r) => r.status === "rejected");
 
@@ -242,11 +249,15 @@ export default function AddUser({ navigation, route }) {
             circleData?.circle?.name || "this circle"
           }.\nInvitations are not subject to democratic process.`}
         />
-        <GlowButton
-          text="Invite Users"
-          style={styles.marginTop}
-          onPress={submit}
-        />
+        {isOnline ? (
+          <GlowButton
+            text="Invite Users"
+            style={styles.marginTop}
+            onPress={submit}
+          />
+        ) : (
+          <DisclaimerText text={`You are offline`} />
+        )}
       </View>
     </ScrollView>
   );

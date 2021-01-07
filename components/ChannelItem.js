@@ -1,6 +1,5 @@
 import React, { useGlobal } from "reactn";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Feather from "@expo/vector-icons/Feather";
 import * as RootNavigation from "../navigation/RootNavigation";
 
 export default function ChannelItem({
@@ -37,12 +36,14 @@ export default function ChannelItem({
         )}
       </View>
       {showUnread && (
-        <Feather
-          styleName="disclosure"
-          name="alert-circle"
-          size={25}
-          color={"#00dffc"}
-        />
+        <View
+          style={{
+            backgroundColor: "#00DFFC",
+            height: 12,
+            width: 12,
+            borderRadius: 9999,
+          }}
+        ></View>
       )}
     </TouchableOpacity>
   );
@@ -69,6 +70,6 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceGrotesk",
   },
   unread: {
-    color: "#FFF",
+    color: "#00DFFC",
   },
 });

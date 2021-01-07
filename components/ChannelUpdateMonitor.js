@@ -4,7 +4,7 @@ import { useSubscription, useQuery } from "@apollo/client";
 import { GET_ALL_USERS_CIRCLES_CHANNELS } from "../graphql/queries";
 import { SUB_TO_ALL_CIRCLES_CHANNELS } from "../graphql/subscriptions";
 
-export default memo(function ChannelUpdateMonitor() {
+export default memo(function ChannelUpdateMonitor({ navigation }) {
   const [channels, setChannels] = useGlobal("channels");
   const [unreadChannels, setUnreadChannels] = useGlobal("unreadChannels");
   const [activeChannel] = useGlobal("activeChannel");
@@ -38,7 +38,10 @@ export default memo(function ChannelUpdateMonitor() {
     if (subscriptionData.data) {
       let updatedChannel = subscriptionData.data.Messages.node.channel.id;
 
-      if (activeChannel !== updatedChannel) {
+      if (
+        navigation.current.getCurrentRoute().name !== "channel" ||
+        activeChannel !== updatedChannel
+      ) {
         if (channels.findIndex((ch) => ch === updatedChannel) !== -1) {
           setUnreadChannels([...unreadChannels, updatedChannel]);
         }
