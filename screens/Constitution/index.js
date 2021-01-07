@@ -28,6 +28,7 @@ export default function Constitution({ route, navigation }) {
   const [showConstSearch] = useGlobal("showConstSearch");
   const [, setActiveRevision] = useGlobal("activeRevision");
   const [user] = useGlobal("user");
+  const [isOnline] = useGlobal("isOnline");
 
   const [searchParams, setSearchParams] = useState("");
 
@@ -39,7 +40,7 @@ export default function Constitution({ route, navigation }) {
       variables: {
         id: route.params.circle,
       },
-      fetchPolicy: "cache-and-network",
+      fetchPolicy: isOnline ? "cache-and-network" : "cache-first",
     }
   );
 

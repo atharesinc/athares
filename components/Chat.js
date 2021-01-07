@@ -131,7 +131,7 @@ export default memo(function Chat({
       getItemLayout={getItemLayout}
       scrollEventThrottle={1000}
       // This is deprecated so it'll have to be fixed
-      // (the issue of not all elements being visible when keybaord is up and message view is more than 3 lines)
+      // (the issue of not all elements being visible when keyboard is up and message view is more than 3 lines)
       // https://github.com/atharesinc/athares/pull/13
       disableVirtualization={isKeyboardVisible}
       // initialScrollIndex={messages.length > 1 ? messages.length - 1 : 0}

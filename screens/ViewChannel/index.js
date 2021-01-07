@@ -24,6 +24,8 @@ export default memo(function ViewChannel(props) {
   const [uploadInProgress, setUploadInProgress] = useState(false);
   const [activeChannel, setActiveChannel] = useGlobal("activeChannel");
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
+  const [unreadChannels, setUnreadChannels] = useGlobal("unreadChannels");
+  const [isOnline] = useGlobal("isOnline");
 
   const [user] = useGlobal("user");
   const [messages, setMessages] = useState([]);
@@ -36,6 +38,7 @@ export default memo(function ViewChannel(props) {
 
   // remove this channel from unread channels list on mount
   const { loading, error, data } = useQuery(GET_MESSAGES_FROM_CHANNEL_ID, {
+    fetchPolicy: isOnline ? "network-only" : "cache-and-network",
     variables: {
       id: props.route.params.channel,
       skip: 0,
@@ -72,6 +75,9 @@ export default memo(function ViewChannel(props) {
     if (!activeChannel) {
       setActiveChannel(props.route.params.channel);
     }
+    if (unreadChannels.length > 0) {
+      removeUnreadChannel(props.route.params.channel);
+    }
   }, []);
 
   // Update Title after loading data if we don't already have it
@@ -82,29 +88,21 @@ export default memo(function ViewChannel(props) {
       } = data;
       props.navigation.setParams({ name });
     }
+    if (unreadChannels.length > 0) {
+      removeUnreadChannel(props.route.params.channel);
+    }
   }, [data]);
 
-  //   removeUnreadChannel(chan) {
-  //     let { unreadChannels } = this.global;
-  //     if (unreadChannels.includes(chan)) {
-  //       let index = unreadChannels.findIndex((d) => d === chan);
-  //       if (index !== -1) {
-  //         unreadChannels.splice(index, 1);
-  //         unreadChannels = [...unreadChannels];
-  //         this.setGlobal({
-  //           unreadChannels,
-  //         });
-  //       }
-  //     }
-  //   }
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     this.global.activeChannel &&
-  //     this.global.activeChannel !== prevProps.activeChannel
-  //   ) {
-  //     this.removeUnreadChannel(this.global.activeChannel);
-  //   }
-  // }
+  // remove this channel from list of unread channels
+  const removeUnreadChannel = (chan) => {
+    if (unreadChannels.includes(chan)) {
+      let index = unreadChannels.findIndex((u) => u === chan);
+      if (index !== -1) {
+        unreadChannels.splice(index, 1);
+        setUnreadChannels([...unreadChannels]);
+      }
+    }
+  };
 
   const submit = async (text = "", file = null) => {
     let url = null;

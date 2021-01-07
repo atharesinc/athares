@@ -95,11 +95,11 @@ export default function ViewInvites() {
       });
 
       await Promise.all([p1, p2]);
+      removeInvite(id);
     } catch (e) {
       console.error(e);
     } finally {
       setLoadingState({ loading: false, id: null });
-      removeInvite(id);
     }
   };
 

@@ -36,7 +36,7 @@ export default function InviteMonitor() {
         setInvites(data.invitesList.items.map((i) => i.id));
       })
       .catch((error) => {
-        console.error(Error(error));
+        console.error(new Error(error));
       });
   };
 

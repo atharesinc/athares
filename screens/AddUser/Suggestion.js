@@ -7,6 +7,7 @@ export default function Suggestion({ item, addTag }) {
   const _addTag = () => {
     addTag(item);
   };
+  console.log(item.uname);
   return (
     <TouchableOpacity
       style={styles.suggestionItem}
@@ -14,17 +15,20 @@ export default function Suggestion({ item, addTag }) {
       onPress={_addTag}
     >
       <View style={styles.suggestionItemUser}>
-        <AsyncImage
-          source={{ uri: item.icon }}
-          style={styles.userIcon}
-          placeholderColor={"#3a3e52"}
-        />
+        <View style={styles.userIcon}>
+          <AsyncImage
+            source={{ uri: item.icon }}
+            style={styles.userIcon}
+            placeholderColor={"#3a3e52"}
+          />
+        </View>
         <Text style={styles.suggestionText}>
           {item.firstName + " " + item.lastName}
         </Text>
-        {item.uname && (
+        <Text></Text>
+        {item.uname ? (
           <Text style={styles.suggestionText}>- {item.uname}</Text>
-        )}
+        ) : null}
       </View>
     </TouchableOpacity>
   );
@@ -47,10 +51,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#FFFFFF",
     fontFamily: "SpaceGrotesk",
+    marginLeft: 15,
   },
   userIcon: {
     height: 30,
     width: 30,
-    marginRight: 15,
   },
 });
