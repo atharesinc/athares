@@ -33,6 +33,9 @@ export default function Input({
     <TouchableOpacity
       style={[inputStyles.wrapper, style]}
       onPress={handlePress}
+      onFocus={focusUp}
+      onBlur={focusOff}
+      accessible={false}
     >
       {label && <Title text={label} />}
       <TextInput
@@ -76,14 +79,8 @@ const inputStyles = StyleSheet.create({
     fontSize: 15,
     width: "100%",
     backgroundColor: "#2f3242",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    borderWidth: 2,
+    borderColor: "#00DFFC",
     padding: 10,
     marginBottom: 10,
     justifyContent: "flex-start",
@@ -97,6 +94,7 @@ const inputStyles = StyleSheet.create({
     }),
   },
   focus: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#00DFFC",
+    color: "#282a38",
   },
 });

@@ -108,30 +108,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#00DFFC",
-        shadowOffset: {
-          width: 0,
-          height: 0,
-        },
-        shadowOpacity: 0.55,
-        shadowRadius: 12,
-      },
-      web: {
-        shadowColor: "#00DFFC",
-        shadowOffset: {
-          width: 0,
-          height: 0,
-        },
-        shadowOpacity: 0.55,
-        shadowRadius: 12,
-      },
-    }),
   },
   text: {
     fontSize: 15,
-    color: "#FFFFFF",
+    color: "#282A38",
     marginVertical: 10,
     fontFamily: "SpaceGrotesk",
   },

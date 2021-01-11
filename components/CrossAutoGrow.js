@@ -44,38 +44,33 @@ export default function CrossAutoGrow({
 
   if (Platform.OS === "web") {
     const webStyles = {
-      // padding: 10,
-      // color: "#FFFFFF",
-      // fontFamily: "SpaceGrotesk",
-      // // flex: 1,
-      // backgroundColor: isFocused ? "#3a3e52" : "transparent",
-      // border: "none",
-      // outlineStyle: "none",
-      // fontSize: "inherit",
-      // maxHeight: "300px",
-      // boxSizing: "border-box",
+      borderColor: "#00DFFC",
       resize: "none",
       overflowWrap: "break-word",
-      backgroundColor: isFocused ? "#3a3e52" : "#2f3242",
+      backgroundColor: isFocused ? "#00dffc" : "#2f3242",
       borderWidth: 0,
-      width: "calc(100% - 20px)",
+      width: "calc(100% - 24px)",
       padding: 10,
       fontSize: 15,
       borderRadius: 3,
       marginBottom: 10,
-      color: "#FFFFFF",
+      color: isFocused ? "#282a38" : "#FFF",
       fontFamily: "SpaceGrotesk",
       textAlignVertical: "top",
+      border: "2px solid #00dffc",
       ...Platform.select({
         web: {
           outlineStyle: "none",
         },
       }),
-      boxShadow: "rgba(0, 0, 0, 0.29) 0px 3px 4.65px",
     };
 
     return (
-      <TouchableOpacity style={[styles.wrapper]} onPress={handlePress}>
+      <TouchableOpacity
+        style={[styles.wrapper]}
+        onPress={handlePress}
+        accessible={false}
+      >
         {label && <Title text={label} />}
         <TextareaAutosize
           {...props}
@@ -84,6 +79,8 @@ export default function CrossAutoGrow({
           onChange={_updateTextForWeb}
           maxRows={3}
           ref={inputEl}
+          onFocus={focusUp}
+          onBlur={focusOff}
         />
         {description && (
           <HelperText text={description} style={{ marginBottom: 0 }} />
@@ -93,7 +90,11 @@ export default function CrossAutoGrow({
   }
 
   return (
-    <TouchableOpacity style={[styles.wrapper, style]} onPress={handlePress}>
+    <TouchableOpacity
+      style={[styles.wrapper, style]}
+      onPress={handlePress}
+      accessible={false}
+    >
       {label && <Title text={label} />}
       <TextInput
         nativeID="chat-input"
@@ -137,19 +138,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     width: "100%",
     backgroundColor: "#2f3242",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
     padding: 10,
     marginBottom: 10,
     justifyContent: "flex-start",
     textAlignVertical: "top",
     borderRadius: 3,
+    borderColor: "#00DFFC",
     fontFamily: "SpaceGrotesk",
     ...Platform.select({
       web: {
@@ -158,6 +152,7 @@ const styles = StyleSheet.create({
     }),
   },
   focus: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#00DFFC",
+    color: "#282a38",
   },
 });

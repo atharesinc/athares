@@ -38,7 +38,10 @@ const RevisionCard = ({
   return (
     <TouchableOpacity style={styles.cardWrapper} onPress={goToRevision}>
       <View style={styles.cardHeader}>
-        <DisclaimerText text={title} style={styles.marginBottomZero} />
+        <DisclaimerText
+          text={title}
+          style={[styles.marginBottomZero, styles.darkText]}
+        />
       </View>
       <Card>
         <View style={styles.cardStats}>
@@ -75,10 +78,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   cardHeader: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#00DFFC",
     padding: 10,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+  },
+  darkText: {
+    color: "#282a38",
   },
   marginBottomZero: { marginBottom: 0 },
   cardBody: {

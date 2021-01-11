@@ -21,13 +21,19 @@ export default function MiniInput({ style = {}, onChangeText, ...props }) {
   };
 
   return (
-    <TouchableOpacity style={[styles.wrapper, style]} onPress={handlePress}>
+    <TouchableOpacity
+      style={[styles.wrapper, style]}
+      onPress={handlePress}
+      accessible={false}
+      onFocus={focusUp}
+      onBlur={focusOff}
+    >
       <TextInput
         {...props}
         style={[styles.input, isFocused ? styles.focus : {}]}
         ref={inputEl}
         numberOfLines={1}
-        placeholderTextColor={"#FFFFFFb7"}
+        placeholderTextColor={isFocused ? "transparent" : "#FFFFFFb7"}
         onFocus={focusUp}
         onBlur={focusOff}
         onChangeText={onChangeText}
@@ -55,14 +61,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     width: "100%",
     backgroundColor: "#2f3242",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    borderColor: "#00DFFC",
+    borderWidth: 2,
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginBottom: 5,
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     }),
   },
   focus: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#00DFFC",
+    color: "#282a38",
   },
 });
