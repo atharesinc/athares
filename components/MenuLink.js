@@ -24,11 +24,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    paddingBottom: 20,
-    paddingTop: 10,
+    paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#FFFFFFb7",
-    marginVertical: 10,
+    borderBottomColor: "#2f3242",
   },
   icon: {
     marginRight: 20,

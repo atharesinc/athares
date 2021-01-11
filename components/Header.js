@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   userIconWrapper: {
     borderRadius: 9999,
     borderColor: "#FFFFFF",
-    borderWidth: 3,
+    borderWidth: 2,
     height: 40,
     width: 40,
     overflow: "hidden",

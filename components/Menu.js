@@ -6,7 +6,7 @@ import UserLink from "./UserLink";
 import NoUserLink from "./NoUserLink";
 import MenuLink from "./MenuLink";
 import MeshStore from "../utils/meshStore";
-import Title from "./Title";
+import ContrastTitle from "./ContrastTitle";
 import DisclaimerText from "./DisclaimerText";
 import { GET_USER_BY_ID } from "../graphql/queries";
 import { REMOVE_USER_EXPO_TOKEN } from "../graphql/mutations";
@@ -112,7 +112,7 @@ function SideMenu() {
         ) : (
           <NoUserLink onPress={goToLogin} />
         )}
-        <Title text={"Settings"} indent underline />
+        <ContrastTitle text={"Settings"} indent underline />
         <ScrollView>
           {/* Links */}
           {userObj && (
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flex: 1,
     paddingTop: 15,
-    backgroundColor: "#2f3242",
+    backgroundColor: "#282a38",
   },
   userLink: {
     flexDirection: "row",
