@@ -85,8 +85,6 @@ const SingleSearchItem = ({ item, category, ...props }) => {
     }
   };
 
-  console.log(item);
-
   return (
     <TouchableOpacity
       style={styles.suggestionItem}
