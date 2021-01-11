@@ -14,7 +14,7 @@ export default memo(function AvatarPicker({
   uri = null,
   ...props
 }) {
-  const { inputEl, isFocused, handlePress, focusUp, focusOff } = useFocus();
+  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
 
   const changeImage = async () => {
     handlePress();
@@ -34,7 +34,7 @@ export default memo(function AvatarPicker({
       onPress={changeImage}
       onFocus={focusUp}
       onBlur={focusOff}
-      ref={inputEl}
+      ref={ref}
     >
       <View
         style={[
