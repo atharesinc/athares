@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "reactn";
+import React from "reactn";
 import {
   StyleSheet,
   Platform,
@@ -9,6 +9,7 @@ import {
 import TextareaAutosize from "react-autosize-textarea";
 import Title from "./Title";
 import HelperText from "./HelperText";
+import useFocus from "../utils/useFocus";
 
 export default function CrossAutoGrow({
   onChangeText,
@@ -18,29 +19,11 @@ export default function CrossAutoGrow({
   style,
   ...props
 }) {
-  const inputEl = useRef();
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handlePress = () => {
-    inputEl.current.focus();
-  };
-  const focusUp = () => {
-    setIsFocused(true);
-  };
-  const focusOff = () => {
-    setIsFocused(false);
-  };
+  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
 
   const _updateTextForWeb = (e) => {
     onChangeText(e.currentTarget.value);
   };
-
-  // useEffect(() => {
-  //   // override weird unsetting of max height on web
-  //   if (Platform.OS === "web") {
-  //     inputEl.current.style.maxHeight = "300px !important";
-  //   }
-  // }, []);
 
   if (Platform.OS === "web") {
     const webStyles = {
@@ -78,7 +61,7 @@ export default function CrossAutoGrow({
           style={webStyles}
           onChange={_updateTextForWeb}
           maxRows={3}
-          ref={inputEl}
+          ref={ref}
           onFocus={focusUp}
           onBlur={focusOff}
         />
@@ -97,6 +80,7 @@ export default function CrossAutoGrow({
     >
       {label && <Title text={label} />}
       <TextInput
+        ref={ref}
         nativeID="chat-input"
         multiline={true}
         value={value}

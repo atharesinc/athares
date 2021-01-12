@@ -1,24 +1,14 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
   Platform,
 } from "react-native";
+import useFocus from "../utils/useFocus";
 
 export default function MiniInput({ style = {}, onChangeText, ...props }) {
-  const inputEl = useRef();
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handlePress = () => {
-    inputEl.current.focus();
-  };
-  const focusUp = () => {
-    setIsFocused(true);
-  };
-  const focusOff = () => {
-    setIsFocused(false);
-  };
+  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
 
   return (
     <TouchableOpacity
@@ -31,7 +21,7 @@ export default function MiniInput({ style = {}, onChangeText, ...props }) {
       <TextInput
         {...props}
         style={[styles.input, isFocused ? styles.focus : {}]}
-        ref={inputEl}
+        ref={ref}
         numberOfLines={1}
         placeholderTextColor={isFocused ? "transparent" : "#FFFFFFb7"}
         onFocus={focusUp}

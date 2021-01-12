@@ -16,17 +16,9 @@ export default function Card({ style = {}, light = false, ...props }) {
 const styles = StyleSheet.create({
   card: {
     width: "100%",
-    backgroundColor: "#282A38",
+    backgroundColor: "#2F3242",
     borderColor: "#00DFFC",
     borderWidth: 2,
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 3,
-    // },
-    // shadowOpacity: 0.29,
-    // shadowRadius: 4.65,
-    // elevation: 7,
     padding: 10,
     marginBottom: 10,
     borderRadius: 3,

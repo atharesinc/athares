@@ -74,25 +74,18 @@ export default RevisionCard;
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    width: 300,
+    width: 285,
     marginBottom: 15,
   },
   cardHeader: {
     backgroundColor: "#00DFFC",
     padding: 10,
+    marginBottom: -3,
   },
   darkText: {
     color: "#282a38",
   },
   marginBottomZero: { marginBottom: 0 },
-  cardBody: {
-    width: "100%",
-    padding: 10,
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    backgroundColor: "#282a38",
-  },
   cardStats: {
     flexDirection: "row",
     justifyContent: "space-between",

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "reactn";
+import React from "reactn";
 import {
   TouchableOpacity,
   TextInput,
@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import Title from "./Title";
 import HelperText from "./HelperText";
+import useFocus from "../utils/useFocus";
 
 export default function Input({
   style = {},
@@ -16,18 +17,7 @@ export default function Input({
   nextSibling = null,
   ...props
 }) {
-  const inputEl = useRef();
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handlePress = () => {
-    inputEl.current.focus();
-  };
-  const focusUp = () => {
-    setIsFocused(true);
-  };
-  const focusOff = () => {
-    setIsFocused(false);
-  };
+  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
 
   return (
     <TouchableOpacity
@@ -45,7 +35,7 @@ export default function Input({
           isFocused ? inputStyles.focus : {},
           textStyle,
         ]}
-        ref={inputEl}
+        ref={ref}
         numberOfLines={props.multiline ? 2 : 1}
         placeholderTextColor={"#FFFFFFb7"}
         onFocus={focusUp}

@@ -112,7 +112,7 @@ function SideMenu() {
         ) : (
           <NoUserLink onPress={goToLogin} />
         )}
-        <ContrastTitle text={"Settings"} indent underline />
+        <ContrastTitle text={"Settings"} />
         <ScrollView>
           {/* Links */}
           {userObj && (

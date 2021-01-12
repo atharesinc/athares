@@ -32,8 +32,6 @@ export default function Constitution({ route, navigation }) {
 
   const [searchParams, setSearchParams] = useState("");
 
-  const [selectedAmendment, setSelectedAmendment] = useState(null);
-
   const { loading, error, data, refetch } = useQuery(
     GET_AMENDMENTS_FROM_CIRCLE_ID,
     {
@@ -95,10 +93,6 @@ export default function Constitution({ route, navigation }) {
     setActiveRevision(null);
   }, []);
 
-  const selectAmendment = (id) => {
-    setSelectedAmendment(id);
-  };
-
   let circle = null;
   let amendments = [];
 
@@ -146,8 +140,6 @@ export default function Constitution({ route, navigation }) {
                 <Amendment
                   key={amendment.id}
                   amendment={amendment}
-                  onPress={selectAmendment}
-                  isSelected={selectedAmendment === amendment.id}
                   belongsToCircle={belongsToCircle}
                 />
               ))}

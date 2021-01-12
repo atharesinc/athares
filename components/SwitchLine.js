@@ -1,20 +1,11 @@
-import React, { useGlobal, useRef, useState } from "reactn";
+import React, { useGlobal } from "reactn";
 import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
+import useFocus from "../utils/useFocus";
 
 const SwitchLine = ({ label, value = false, onPress = () => {} }) => {
   const [activeTheme] = useGlobal("activeTheme");
-  const [isFocused, setIsFocused] = useState(false);
-  const inputEl = useRef();
+  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
 
-  const handlePress = () => {
-    inputEl.current.focus();
-  };
-  const focusUp = () => {
-    setIsFocused(true);
-  };
-  const focusOff = () => {
-    setIsFocused(false);
-  };
   const trackColor = {
     false: activeTheme.COLORS.LIGHT,
     true: activeTheme.COLORS["BLUE1"],
@@ -34,7 +25,7 @@ const SwitchLine = ({ label, value = false, onPress = () => {} }) => {
         ]}
       >
         <Switch
-          ref={inputEl}
+          ref={ref}
           onValueChange={onPress}
           trackColor={trackColor}
           value={value}

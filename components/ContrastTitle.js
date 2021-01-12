@@ -3,10 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 
 export default function ContrastTitle({
   text,
-  underline = false,
   spaced = false,
   red = false,
-  indent = false,
   center = false,
   style = {},
   textStyle = {},
@@ -17,16 +15,10 @@ export default function ContrastTitle({
     styles.title,
     spaced ? styles.spaced : {},
     red ? { color: activeTheme.COLORS.RED } : {},
-    indent ? styles.indent : {},
     textStyle,
   ];
 
-  const viewStyle = [
-    styles.row,
-    underline ? styles.underline : {},
-    center ? styles.center : {},
-    style,
-  ];
+  const viewStyle = [styles.row, center ? styles.center : {}, style];
 
   return (
     <View style={viewStyle}>
@@ -42,22 +34,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     backgroundColor: "#00dffc",
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   title: {
     fontSize: 18,
     color: "#282a38",
     fontFamily: "SpaceGrotesk",
-  },
-  underline: {
-    borderColor: "#2f3242",
-    borderBottomWidth: 1,
+    paddingLeft: 15,
   },
   spaced: {
     letterSpacing: 2,
-  },
-  indent: {
-    paddingLeft: 15,
   },
   center: {
     justifyContent: "center",

@@ -13,7 +13,7 @@ const ChannelGroupHeader = ({
       <Text style={styles.channelTitle}>{title}</Text>
       {displayPlus ? (
         <TouchableOpacity onPress={onPressPlus}>
-          <Feather name="plus" size={20} color={"#FFFFFF"} />
+          <Feather name="plus" size={20} color={"#282a38"} />
         </TouchableOpacity>
       ) : (
         <Feather name="circle" size={20} color={"transparent"} />
@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     width: "100%",
-    backgroundColor: "#2f3242",
+    backgroundColor: "#00DFFC",
   },
   channelTitle: {
-    color: "#FFFFFF",
+    color: "#282a38",
     fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: 2,
