@@ -2,7 +2,7 @@ import React, { useGlobal } from "reactn";
 import { View, StyleSheet, ScrollView } from "react-native";
 import RevisionCard from "./RevisionCard";
 import GlowButton from "../../components/GlowButton";
-import Title from "../../components/Title";
+import ContrastTitle from "../../components/ContrastTitle";
 
 import * as RootNavigation from "../../navigation/RootNavigation";
 
@@ -21,7 +21,7 @@ const RevisionBoard = ({
 
   return (
     <View style={styles.revisionBoard}>
-      <Title text={boardName} underline style={styles.boardHeader} />
+      <ContrastTitle text={boardName} style={styles.boardHeader} />
       {boardName === "New Revisions" && user && belongsToCircle && (
         <GlowButton text={"+ Create Revision"} onPress={goToCreateRevision} />
       )}

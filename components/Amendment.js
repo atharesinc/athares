@@ -1,21 +1,18 @@
 import React, { useGlobal, memo } from "reactn";
 import * as RootNavigation from "../navigation/RootNavigation";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import DisclaimerText from "./DisclaimerText";
-import GhostButton from "./GhostButton";
 import GlowButton from "./GlowButton";
 import Title from "./Title";
 import Card from "./Card";
+import Feather from "@expo/vector-icons/Feather";
+import useFocus from "../utils/useFocus";
 
-export default memo(function Amendment({
-  amendment,
-  isSelected,
-  onPress,
-  belongsToCircle = false,
-}) {
+export default memo(function Amendment({ amendment, belongsToCircle = false }) {
   const [, setActiveAmendment] = useGlobal("activeAmendment");
   const [, setActiveRevision] = useGlobal("activeRevision");
   const [activeCircle] = useGlobal("activeCircle");
+  const { ref, isFocused, focusUp, focusOff } = useFocus();
 
   const goToRevision = () => {
     setActiveRevision(amendment.revision.id, () => {
@@ -24,10 +21,6 @@ export default memo(function Amendment({
         circle: activeCircle,
       });
     });
-  };
-
-  const selectThisAmendment = () => {
-    onPress(amendment.id);
   };
 
   const editAmendment = () => {
@@ -47,45 +40,57 @@ export default memo(function Amendment({
     amendment.revision !== null && amendment.revision.passed === null;
 
   return (
-    <TouchableOpacity
-      disabled={hasOutstandingRevision || !belongsToCircle}
-      onPress={selectThisAmendment}
-      delayPressIn={0}
-    >
-      <Card light>
-        <View style={styles.amendmentWrapper}>
-          <Title text={amendment.title} />
-          <View style={styles.timeDataWrapper}>
-            <DisclaimerText
-              grey
-              text={`Created - ${new Date(
-                amendment.createdAt
-              ).toLocaleDateString()}`}
-            />
-            <DisclaimerText
-              grey
-              text={`Updated - ${new Date(
-                amendment.updatedAt
-              ).toLocaleDateString()}`}
-            />
-          </View>
-          <DisclaimerText text={amendment.text} />
-          {hasOutstandingRevision && (
-            <GlowButton onPress={goToRevision} text={"Current Revision"} />
+    // <TouchableOpacity
+    //   disabled={hasOutstandingRevision || !belongsToCircle}
+    //   onPress={selectThisAmendment}
+    //   delayPressIn={0}
+    //   accessible={false}
+    // >
+    <Card light>
+      <View style={styles.amendmentWrapper}>
+        <View style={styles.row}>
+          <Title text={amendment.title} style={styles.title} />
+          {belongsToCircle && !hasOutstandingRevision && (
+            <TouchableOpacity
+              onPress={editAmendment}
+              style={[styles.centeredRow, styles.removeOutline]}
+              onFocus={focusUp}
+              onBlur={focusOff}
+            >
+              <View
+                style={[styles.button, isFocused ? styles.focusButton : {}]}
+              >
+                <Feather
+                  ref={ref}
+                  name={"git-branch"}
+                  size={22}
+                  color={isFocused ? "#282a38" : "#00DFFC"}
+                />
+              </View>
+              {/* <Text style={styles.buttonText}>REVISE</Text> */}
+            </TouchableOpacity>
           )}
         </View>
-        {isSelected && belongsToCircle && !hasOutstandingRevision && (
-          <View style={styles.row}>
-            <GhostButton
-              onPress={editAmendment}
-              text={"Edit or Repeal"}
-              textStyle={styles.buttonText}
-              style={styles.row}
-            />
-          </View>
+        <View style={styles.timeDataWrapper}>
+          <DisclaimerText
+            grey
+            text={`Created - ${new Date(
+              amendment.createdAt
+            ).toLocaleDateString()}`}
+          />
+          <DisclaimerText
+            grey
+            text={`Updated - ${new Date(
+              amendment.updatedAt
+            ).toLocaleDateString()}`}
+          />
+        </View>
+        <DisclaimerText text={amendment.text} />
+        {hasOutstandingRevision && (
+          <GlowButton onPress={goToRevision} text={"Current Revision"} />
         )}
-      </Card>
-    </TouchableOpacity>
+      </View>
+    </Card>
   );
 });
 
@@ -96,6 +101,9 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     width: "100%",
     marginBottom: 20,
+  },
+  title: {
+    width: "90%",
   },
   moreButton: {
     width: 30,
@@ -124,10 +132,32 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginBottom: 15,
   },
-  buttonText: {
-    fontSize: 12,
+  focusButton: {
+    backgroundColor: "#00DFFC",
+  },
+  button: {
+    padding: 5,
+    height: 35,
+    width: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#00dffc",
+    borderRadius: "100%",
+  },
+  removeOutline: {
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
   row: {
     flexDirection: "row",
+    marginBottom: 10,
+    justifyContent: "space-between",
+  },
+  centeredRow: {
+    alignItems: "center",
   },
 });

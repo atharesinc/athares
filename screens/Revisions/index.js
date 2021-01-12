@@ -36,6 +36,7 @@ export default function Revisions(props) {
     variables: {
       id: props.route.params.circle,
     },
+    fetchPolicy: "cache-and-network",
   });
 
   // Update Title after loading data if we don't already have it

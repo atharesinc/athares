@@ -7,7 +7,7 @@ export default function Suggestion({ item, addTag }) {
   const _addTag = () => {
     addTag(item);
   };
-  console.log(item.uname);
+
   return (
     <TouchableOpacity
       style={styles.suggestionItem}

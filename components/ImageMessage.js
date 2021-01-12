@@ -101,17 +101,8 @@ const styles = StyleSheet.create({
   image: {
     height: 120,
     width: 120,
-    // resizeMode: "cover",
     marginBottom: 10,
     backgroundColor: "#2f3242",
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 3,
-    // },
-    // shadowOpacity: 0.29,
-    // shadowRadius: 4.65,
-    // elevation: 7,
   },
   labelTextWrapper: {
     backgroundColor: "#2f3242",

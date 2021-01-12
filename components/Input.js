@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "reactn";
+import React from "reactn";
 import {
   TouchableOpacity,
   TextInput,
@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import Title from "./Title";
 import HelperText from "./HelperText";
+import useFocus from "../utils/useFocus";
 
 export default function Input({
   style = {},
@@ -16,23 +17,15 @@ export default function Input({
   nextSibling = null,
   ...props
 }) {
-  const inputEl = useRef();
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handlePress = () => {
-    inputEl.current.focus();
-  };
-  const focusUp = () => {
-    setIsFocused(true);
-  };
-  const focusOff = () => {
-    setIsFocused(false);
-  };
+  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
 
   return (
     <TouchableOpacity
       style={[inputStyles.wrapper, style]}
       onPress={handlePress}
+      onFocus={focusUp}
+      onBlur={focusOff}
+      accessible={false}
     >
       {label && <Title text={label} />}
       <TextInput
@@ -42,7 +35,7 @@ export default function Input({
           isFocused ? inputStyles.focus : {},
           textStyle,
         ]}
-        ref={inputEl}
+        ref={ref}
         numberOfLines={props.multiline ? 2 : 1}
         placeholderTextColor={"#FFFFFFb7"}
         onFocus={focusUp}
@@ -76,14 +69,8 @@ const inputStyles = StyleSheet.create({
     fontSize: 15,
     width: "100%",
     backgroundColor: "#2f3242",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    borderWidth: 2,
+    borderColor: "#00DFFC",
     padding: 10,
     marginBottom: 10,
     justifyContent: "flex-start",
@@ -97,6 +84,7 @@ const inputStyles = StyleSheet.create({
     }),
   },
   focus: {
-    backgroundColor: "#3a3e52",
+    backgroundColor: "#00DFFC",
+    color: "#282a38",
   },
 });

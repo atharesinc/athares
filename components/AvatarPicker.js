@@ -1,13 +1,23 @@
 import React, { memo } from "reactn";
-import { Image, TouchableOpacity, StyleSheet, View } from "react-native";
+import {
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Platform,
+} from "react-native";
 import { pickImageURIAsync } from "../utils/mediaUtils";
+import useFocus from "../utils/useFocus";
 
 export default memo(function AvatarPicker({
   rounded = false,
   uri = null,
   ...props
 }) {
+  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
+
   const changeImage = async () => {
+    handlePress();
     let res = await pickImageURIAsync();
     if (props.onImageChange) {
       props.onImageChange(res);
@@ -19,8 +29,20 @@ export default memo(function AvatarPicker({
     : require("../assets/images/Athares-logo-small-white.png");
 
   return (
-    <TouchableOpacity style={[styles.previewTouch]} onPress={changeImage}>
-      <View style={[styles.previewView, rounded ? styles.rounded : {}]}>
+    <TouchableOpacity
+      style={[styles.previewTouch]}
+      onPress={changeImage}
+      onFocus={focusUp}
+      onBlur={focusOff}
+      ref={ref}
+    >
+      <View
+        style={[
+          styles.previewView,
+          rounded ? styles.rounded : {},
+          isFocused ? { borderColor: "#00DFFC" } : {},
+        ]}
+      >
         <Image
           source={source}
           style={[styles.preview, rounded ? styles.noBorder : {}]}
@@ -54,6 +76,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     justifyContent: "center",
     alignItems: "center",
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
   previewView: {
     height: 150,
@@ -63,14 +90,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
     backgroundColor: "#2F3242",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
     borderRadius: 3,
   },
 });
