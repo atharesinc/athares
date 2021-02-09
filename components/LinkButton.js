@@ -1,7 +1,7 @@
-import React, { useGlobal, useState } from "reactn";
+import React, { useGlobal, useState, memo } from "reactn";
 import { TouchableOpacity, Text, StyleSheet, Platform } from "react-native";
 
-export default function LinkButton({
+export default memo(function LinkButton({
   style = {},
   textStyle = {},
   text = "",
@@ -35,7 +35,7 @@ export default function LinkButton({
       <Text style={finalTextStyle}>{text.toUpperCase()}</Text>
     </TouchableOpacity>
   );
-}
+});
 
 const styles = StyleSheet.create({
   wrapper: {

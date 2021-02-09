@@ -14,6 +14,7 @@ export default function GlowButton({
   red = false,
   green = false,
   ghost = false,
+  disabled = false,
   ...props
 }) {
   const [activeTheme] = useGlobal("activeTheme");
@@ -58,6 +59,7 @@ export default function GlowButton({
     ghost ? ghostButton : {},
     isFocused ? focusedButton : {},
     isFocused && red ? focusedRedButton : {},
+    disabled ? styles.translucent : {},
   ];
 
   const finalTextStyle = [
@@ -82,6 +84,7 @@ export default function GlowButton({
       {...props}
       onFocus={focusUp}
       onBlur={focusOff}
+      disabled={disabled}
     >
       <View style={buttonStyles}>
         <Text style={finalTextStyle}>{text.toUpperCase()}</Text>
@@ -114,5 +117,8 @@ const styles = StyleSheet.create({
     color: "#282A38",
     marginVertical: 10,
     fontFamily: "SpaceGrotesk",
+  },
+  translucent: {
+    opacity: 0.5,
   },
 });

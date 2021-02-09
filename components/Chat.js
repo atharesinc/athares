@@ -86,13 +86,7 @@ export default memo(function Chat({
   const _keyExtractor = (item) => item.id;
 
   const shouldDisplayLoadingOlderMessages = props.isLoadingOlderMessages ? (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <View style={styles.center}>
       <Loader size={25} />
       <DisclaimerText
         grey
@@ -101,17 +95,11 @@ export default memo(function Chat({
       />
     </View>
   ) : (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <View style={styles.center}>
       <DisclaimerText
         grey
         text={"This is the beginning of history for " + channelName}
-        style={{ marginBottom: 0 }}
+        style={styles.marginBottomZero}
       />
     </View>
   );
@@ -144,6 +132,12 @@ const styles = StyleSheet.create({
   contentContainerStyle: {
     paddingBottom: 40,
     flexDirection: "column-reverse",
+  },
+  marginBottomZero: { marginBottom: 0 },
+  center: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

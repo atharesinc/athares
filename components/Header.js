@@ -1,4 +1,4 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, memo, useCallback } from "reactn";
 
 import { Text, TouchableOpacity, StyleSheet, View, Image } from "react-native";
 import * as RootNavigation from "../navigation/RootNavigation";
@@ -15,8 +15,9 @@ import LinkButton from "./LinkButton";
 
 import AsyncImage from "./AsyncImage";
 import Pill from "./Pill";
+import IconButton from "./IconButton";
 
-export default function Header({
+export default memo(function Header({
   // loggedIn = false,
   // belongsToCircle = false,
   scene,
@@ -34,44 +35,44 @@ export default function Header({
   // replace this with a query hook
   const data = null;
 
-  const toggleDrawer = () => {
+  const toggleDrawer = useCallback(() => {
     RootNavigation.navigate("settings");
-  };
+  }, [RootNavigation]);
 
-  const toggleSearch = () => {
+  const toggleSearch = useCallback(() => {
     setShowSearch(!showSearch);
-  };
+  }, [setShowSearch]);
 
-  const goToLogin = () => {
+  const goToLogin = useCallback(() => {
     RootNavigation.navigate("portal", { screen: "login" });
-  };
+  }, [RootNavigation]);
 
-  const goToApp = () => {
+  const goToApp = useCallback(() => {
     RootNavigation.navigate("app");
-  };
+  }, [RootNavigation]);
 
-  const back = () => {
+  const back = useCallback(() => {
     // if (!props.previous) {
     RootNavigation.navigate("app");
     //   return;
     // }
     // props.navigation.goBack(null);
-  };
+  }, [RootNavigation]);
 
-  const more = () => {
+  const more = useCallback(() => {
     let { name } = scene.route;
     if (name === "DMChannel") {
       setDMSettings(!dmSettings);
     }
-  };
+  }, [setDMSettings]);
 
   // const createRevision = () => {
   //     props.navigation.navigate("createRevision");
   // };
 
-  const toggleSearchConst = () => {
+  const toggleSearchConst = useCallback(() => {
     setShowConstSearch(!showConstSearch);
-  };
+  }, [setShowConstSearch]);
 
   const { name } = scene.route;
 
@@ -110,9 +111,12 @@ export default function Header({
           name === "Revisions" ? styles.headerTheme : {},
         ]}
       >
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
         <Text style={styles.headerText} numberOfLines={1}>
           {simpleChannelsObj[name]}
         </Text>
@@ -123,21 +127,26 @@ export default function Header({
   }
 
   if (name === "constitution") {
+    const searchIcon = showConstSearch ? "x" : "search";
     return (
       <View style={[styles.header, styles.headerThemeDark, styles.headerTheme]}>
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
+
         <Text style={styles.headerText} numberOfLines={1}>
           CONSTITUTION
         </Text>
-        <TouchableOpacity onPress={toggleSearchConst}>
-          <Feather
-            name={showConstSearch ? "x" : "search"}
-            size={30}
-            color={"#FFFFFF"}
-          />
-        </TouchableOpacity>
+
+        <IconButton
+          onPress={toggleSearchConst}
+          name={searchIcon}
+          size={30}
+          color={"#FFFFFF"}
+        />
       </View>
     );
   }
@@ -152,18 +161,24 @@ export default function Header({
 
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
         {data && data.channel && (
           <Text style={styles.headerText} numberOfLines={1}>
             {loading ? "" : data.channel.name}
           </Text>
         )}
         {name === "DMChannel" ? (
-          <TouchableOpacity onPress={more}>
-            <Feather name="more-vertical" size={30} color={"#FFFFFF"} />
-          </TouchableOpacity>
+          <IconButton
+            onPress={more}
+            name="more-vertical"
+            size={30}
+            color={"#FFFFFF"}
+          />
         ) : (
           <Feather name="more-vertical" size={30} color={"transparent"} />
         )}
@@ -179,9 +194,12 @@ export default function Header({
 
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
 
         {revisionData && revisionData.revision ? (
           <RevisionCategory
@@ -202,9 +220,12 @@ export default function Header({
 
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
 
         <Text style={styles.headerText} numberOfLines={1}>
           Profile
@@ -222,9 +243,12 @@ export default function Header({
     });
     return (
       <View style={[styles.header, styles.headerThemeDark]}>
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
         {data && data.user && (
           <Text style={styles.headerText} numberOfLines={1}>
             {data.user.firstName + " " + data.user.lastName}
@@ -239,9 +263,12 @@ export default function Header({
   if (["portal"].indexOf(name) !== -1) {
     return (
       <View style={[styles.header, styles.bgTransparent]}>
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
 
         <Feather name="more-vertical" size={30} color={"transparent"} />
       </View>
@@ -256,12 +283,16 @@ export default function Header({
           style={styles.logoType}
         />
         {user ? (
-          <LinkButton onPress={goToApp} text={"App"} style={{ margin: 0 }} />
+          <LinkButton
+            onPress={goToApp}
+            text={"App"}
+            style={styles.marginZero}
+          />
         ) : (
           <LinkButton
             onPress={goToLogin}
             text={"Login"}
-            style={{ margin: 0 }}
+            style={styles.marginZero}
           />
         )}
       </View>
@@ -273,9 +304,12 @@ export default function Header({
   if (name === "settings") {
     return (
       <View style={[styles.header, styles.bgTransparent]}>
-        <TouchableOpacity onPress={back}>
-          <Feather name="chevron-left" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={back}
+          name="chevron-left"
+          size={30}
+          color={"#FFFFFF"}
+        />
 
         <Feather name="more-vertical" size={30} color={"transparent"} />
       </View>
@@ -293,10 +327,11 @@ export default function Header({
   if (data && data.user) {
     img = { uri: data.user.icon };
   }
+  const shouldShowBadge = invites.length !== 0;
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleDrawer}>
-        <WithBadge showBadge={invites.length !== 0} top={25} left={25}>
+        <WithBadge showBadge={shouldShowBadge} top={25} left={25}>
           <View style={styles.userIconWrapper}>
             <AsyncImage
               source={img}
@@ -308,17 +343,25 @@ export default function Header({
       </TouchableOpacity>
       <Pill text={"DEV"} />
       {!showSearch ? (
-        <TouchableOpacity onPress={toggleSearch}>
-          <Feather name="search" size={30} color={"#FFFFFF"} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={toggleSearch}
+          name="search"
+          size={30}
+          color={"#FFFFFF"}
+          numberOfLines={1}
+        />
       ) : (
-        <TouchableOpacity onPress={toggleSearch}>
-          <Feather name="x" size={30} color={"#FFFFFF"} numberOfLines={1} />
-        </TouchableOpacity>
+        <IconButton
+          onPress={toggleSearch}
+          name="x"
+          size={30}
+          color={"#FFFFFF"}
+          numberOfLines={1}
+        />
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   header: {
@@ -377,4 +420,5 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 0,
   },
+  marginZero: { margin: 0 },
 });

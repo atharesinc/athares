@@ -1,6 +1,6 @@
 import React, { lazy, useEffect, useState, useGlobal, Suspense } from "reactn";
 import { View, Image, StyleSheet } from "react-native";
-import TitleTabs from "./TitleTabs";
+import TitleTabs from "../../components/TitleTabs";
 import { noTransition } from "../../navigation/transitionConfigs";
 import { createStackNavigator } from "@react-navigation/stack";
 import CenteredLoaderWithText from "../../components/CenteredLoaderWithText";

@@ -4,6 +4,7 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 import TextareaAutosize from "react-autosize-textarea";
@@ -17,9 +18,12 @@ export default function CrossAutoGrow({
   label = null,
   description = null,
   style,
+  numberOfLines,
   ...props
 }) {
-  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
+  const { ref, isFocused, handlePress, focusUp, focusOff } = ref
+    ? props
+    : useFocus();
 
   const _updateTextForWeb = (e) => {
     onChangeText(e.currentTarget.value);
@@ -79,22 +83,25 @@ export default function CrossAutoGrow({
       accessible={false}
     >
       {label && <Title text={label} />}
-      <TextInput
-        ref={ref}
-        nativeID="chat-input"
-        multiline={true}
-        value={value}
-        onChangeText={onChangeText}
-        style={[
-          styles.input,
-          isFocused ? styles.focus : {},
-          { maxHeight: 150, paddingHorizontal: 15 },
-        ]}
-        placeholderTextColor={"#FFFFFFb7"}
-        onFocus={focusUp}
-        onBlur={focusOff}
-        {...props}
-      />
+      <View style={styles.border}>
+        <TextInput
+          ref={ref}
+          nativeID="chat-input"
+          multiline={true}
+          value={value}
+          onChangeText={onChangeText}
+          style={[
+            styles.input,
+            isFocused ? styles.focus : {},
+            { maxHeight: 150, paddingHorizontal: 15 },
+          ]}
+          placeholderTextColor={"#FFFFFFb7"}
+          onFocus={focusUp}
+          onBlur={focusOff}
+          numberOfLines={numberOfLines}
+          {...props}
+        />
+      </View>
       {description && (
         <HelperText text={description} style={{ marginBottom: 0 }} />
       )}
@@ -116,6 +123,9 @@ const styles = StyleSheet.create({
         outlineStyle: "none",
       },
     }),
+  },
+  border: {
+    borderColor: "#00DFFC",
   },
   input: {
     color: "#FFF",

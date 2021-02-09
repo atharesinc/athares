@@ -1,4 +1,4 @@
-import React, { useState, useGlobal, useEffect, setGlobal } from "reactn";
+import React, { useState, useGlobal, useEffect, setGlobal, memo } from "reactn";
 
 // something react-navigation recommends
 import { enableScreens } from "react-native-screens";
@@ -62,7 +62,7 @@ const client = new ApolloClient({
 // initialize global state
 setGlobal(defaultState);
 
-export default function App(props) {
+export default memo(function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const [initialNavigationState] = useState();
   const [dimensions, setDimensions] = useGlobal("dimensions");
@@ -104,7 +104,7 @@ export default function App(props) {
           setSearchedCircles(JSON.parse(searches));
         }
       } catch (e) {
-        console.warn("what the fuck", e);
+        console.warn("App mount error", e);
       } finally {
         setLoadingComplete(true);
         hideAsync();
@@ -184,7 +184,7 @@ export default function App(props) {
       </ApolloProvider>
     );
   }
-}
+});
 
 const styles = StyleSheet.create({
   container: {

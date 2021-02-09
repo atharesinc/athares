@@ -1,12 +1,13 @@
 import React, { useGlobal, memo } from "reactn";
-import * as RootNavigation from "../navigation/RootNavigation";
+import * as RootNavigation from "../../navigation/RootNavigation";
 import { View, TouchableOpacity, StyleSheet, Platform } from "react-native";
-import DisclaimerText from "./DisclaimerText";
-import GlowButton from "./GlowButton";
-import Title from "./Title";
-import Card from "./Card";
+import DisclaimerText from "../../components/DisclaimerText";
+import GlowButton from "../../components/GlowButton";
+import Title from "../../components/Title";
+import Card from "../../components/Card";
 import Feather from "@expo/vector-icons/Feather";
-import useFocus from "../utils/useFocus";
+import useFocus from "../../utils/useFocus";
+import MarkdownCard from "../../components/MarkdownCard";
 
 export default memo(function Amendment({ amendment, belongsToCircle = false }) {
   const [, setActiveAmendment] = useGlobal("activeAmendment");
@@ -85,7 +86,7 @@ export default memo(function Amendment({ amendment, belongsToCircle = false }) {
             ).toLocaleDateString()}`}
           />
         </View>
-        <DisclaimerText text={amendment.text} />
+        <MarkdownCard noStyle value={amendment.text} />
         {hasOutstandingRevision && (
           <GlowButton onPress={goToRevision} text={"Current Revision"} />
         )}
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#00dffc",
-    borderRadius: "100%",
+    borderRadius: 9999,
   },
   removeOutline: {
     ...Platform.select({

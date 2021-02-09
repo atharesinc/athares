@@ -8,13 +8,14 @@ const CircleIcon = ({ selected = false, circle = {}, ...props }) => {
     props.selectCircle(circle.id);
   };
 
+  const source = { uri: circle.icon };
   return (
     <TouchableOpacity style={styles.circleWrapper} onPress={selectCircle}>
       <View
         style={[styles.circleIconWrapper, { borderWidth: selected ? 4 : 0 }]}
       >
         <AsyncImage
-          source={{ uri: circle.icon }}
+          source={source}
           style={styles.circle}
           placeholderColor={"#3a3e52"}
         />

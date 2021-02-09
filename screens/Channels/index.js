@@ -1,4 +1,4 @@
-import React, { useGlobal, Fragment } from "reactn";
+import React, { useGlobal, Fragment, memo, useMemo } from "reactn";
 
 import { ScrollView, View, StyleSheet } from "react-native";
 import Footer from "./Footer";
@@ -81,9 +81,17 @@ function Dashboard({ renderAsSidebar = false }) {
     ? styles.desktopSidebar
     : styles.mobileSidebar;
 
+  const sceneForHeader = useMemo(
+    () => ({
+      route: {
+        name: "",
+      },
+    }),
+    []
+  );
   return (
     <View style={wrapperStyles}>
-      <Header scene={{ route: { name: "" } }} />
+      <Header scene={sceneForHeader} />
       {showSearch ? <Search /> : null}
       {!isOnline && <OfflineBanner />}
       <Circles loggedIn={user} />
@@ -150,7 +158,7 @@ function Dashboard({ renderAsSidebar = false }) {
   );
 }
 
-export default Dashboard;
+export default memo(Dashboard);
 
 const styles = StyleSheet.create({
   desktopSidebar: {

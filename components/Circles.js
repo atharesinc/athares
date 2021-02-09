@@ -1,4 +1,4 @@
-import React, { useGlobal, useEffect } from "reactn";
+import React, { useGlobal, useEffect, memo } from "reactn";
 
 import {
   Text,
@@ -16,7 +16,7 @@ import { SUB_TO_USERS_CIRCLES } from "../graphql/subscriptions";
 
 import { useQuery, useSubscription } from "@apollo/client";
 
-const Circles = ({ loggedIn = false }) => {
+const Circles = memo(({ loggedIn = false }) => {
   const [activeCircle, setActiveCircle] = useGlobal("activeCircle");
   const [user] = useGlobal("user");
   const [, setActiveRevision] = useGlobal("activeRevision");
@@ -102,11 +102,7 @@ const Circles = ({ loggedIn = false }) => {
         onPress={goToCreateCircle}
       >
         <View style={styles.iconWrapper}>
-          <Feather
-            name="plus-circle"
-            color={loggedIn ? "#FFFFFF" : "#FFFFFFb7"}
-            size={25}
-          />
+          <Feather name="plus-circle" color={"#FFFFFF"} size={25} />
         </View>
         <Text numberOfLines={1} style={styles.circleLabel}>
           New
@@ -135,7 +131,7 @@ const Circles = ({ loggedIn = false }) => {
       </ScrollView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   addCircleWrapper: {
