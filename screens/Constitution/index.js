@@ -1,5 +1,5 @@
 import React, { useGlobal, useEffect, useState } from "reactn";
-import Amendment from "../../components/Amendment";
+import Amendment from "./Amendment";
 import { GET_AMENDMENTS_FROM_CIRCLE_ID } from "../../graphql/queries";
 
 import {

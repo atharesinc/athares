@@ -1,10 +1,10 @@
-import React, { useGlobal } from "reactn";
+import React, { useGlobal, memo } from "reactn";
 
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import * as RootNavigation from "../../navigation/RootNavigation";
 import Feather from "@expo/vector-icons/Feather";
 
-const Footer = ({ loggedIn = false, belongsToCircle = false }) => {
+const Footer = memo(({ loggedIn = false, belongsToCircle = false }) => {
   const [activeCircle] = useGlobal("activeCircle");
 
   const goToAddUser = () => {
@@ -60,7 +60,7 @@ const Footer = ({ loggedIn = false, belongsToCircle = false }) => {
       <Text style={styles.footerText}>Add User to Circle</Text>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   footer: {

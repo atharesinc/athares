@@ -27,6 +27,9 @@ class FakeImage {
     }
     this._callbacks.push(callback);
   }
+  onerror(error) {
+    console.error("oops!", error);
+  }
 }
 
 const imgCache = {
@@ -45,14 +48,18 @@ const imgCache = {
         };
         img.src = src;
         setTimeout(() => resolve({}), 2000);
-      }).then(() => {
-        this.__cache[src] = true;
-      });
+      })
+        .then(() => {
+          this.__cache[src] = true;
+        })
+        .catch((err) => {
+          console.log("double oops", err);
+        });
     }
 
     if (this.__cache[src] instanceof Promise) {
       // bafflingly, we throw an error here so that some error boundary will catch it and trigger the fallback UI while the image loads
-      throw this.__cache[src];
+      return this.__cache[src];
     }
     return this.__cache[src];
   },

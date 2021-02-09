@@ -35,16 +35,7 @@ export default function ChannelItem({
           </Text>
         )}
       </View>
-      {showUnread && (
-        <View
-          style={{
-            backgroundColor: "#00DFFC",
-            height: 12,
-            width: 12,
-            borderRadius: 9999,
-          }}
-        ></View>
-      )}
+      {showUnread && <View style={styles.unreadIndicator}></View>}
     </TouchableOpacity>
   );
 }
@@ -71,5 +62,11 @@ const styles = StyleSheet.create({
   },
   unread: {
     color: "#00DFFC",
+  },
+  unreadIndicator: {
+    backgroundColor: "#00DFFC",
+    height: 12,
+    width: 12,
+    borderRadius: 9999,
   },
 });

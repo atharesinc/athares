@@ -1,4 +1,4 @@
-import React from "reactn";
+import React, { forwardRef } from "reactn";
 import {
   TouchableOpacity,
   TextInput,
@@ -9,15 +9,20 @@ import Title from "./Title";
 import HelperText from "./HelperText";
 import useFocus from "../utils/useFocus";
 
-export default function Input({
-  style = {},
-  label = null,
-  description = null,
-  textStyle = {},
-  nextSibling = null,
-  ...props
-}) {
-  const { ref, isFocused, handlePress, focusUp, focusOff } = useFocus();
+export default forwardRef(function Input(
+  {
+    style = {},
+    label = null,
+    description = null,
+    textStyle = {},
+    nextSibling = null,
+    ...props
+  },
+  ref
+) {
+  const { isFocused, handlePress, focusUp, focusOff } = ref
+    ? props
+    : useFocus();
 
   return (
     <TouchableOpacity
@@ -36,10 +41,12 @@ export default function Input({
           textStyle,
         ]}
         ref={ref}
-        numberOfLines={props.multiline ? 2 : 1}
+        numberOfLines={4}
         placeholderTextColor={"#FFFFFFb7"}
         onFocus={focusUp}
         onBlur={focusOff}
+        // this is stupid, one throws an error with a string and the other for boolean
+        multiline={Platform.OS === "web" ? "true" : true}
       />
       {description && (
         <HelperText text={description} style={inputStyles.marginBottomZero} />
@@ -47,7 +54,7 @@ export default function Input({
       {nextSibling || null}
     </TouchableOpacity>
   );
-}
+});
 
 const inputStyles = StyleSheet.create({
   wrapper: {

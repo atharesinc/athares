@@ -9,6 +9,7 @@ import {
 import Diff from "../../components/Diff";
 import Feather from "@expo/vector-icons/Feather";
 import Card from "../../components/Card";
+import MarkdownCard from "../../components/MarkdownCard";
 
 function DiffSection({ oldText = "", newText = "" }) {
   const [mode, setMode] = useState(0);
@@ -50,11 +51,7 @@ function DiffSection({ oldText = "", newText = "" }) {
           </ScrollView>
         );
       default:
-        return (
-          <ScrollView containerStyle={styles.textContainerStyle}>
-            <Text style={styles.unchangedText}>{newText}</Text>
-          </ScrollView>
-        );
+        return <MarkdownCard value={newText} noStyle />;
     }
   };
 
@@ -122,8 +119,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderTopWidth: 1,
-    borderTopColor: "#282a38",
     width: "100%",
     marginVertical: 15,
   },

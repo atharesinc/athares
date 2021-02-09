@@ -1,4 +1,4 @@
-import React, { useGlobal, lazy, Suspense } from "reactn";
+import React, { useGlobal, lazy, Suspense, useMemo } from "reactn";
 import { Platform } from "react-native";
 import {
   createStackNavigator,
@@ -44,14 +44,18 @@ export default function RootStack() {
   const shouldDisplayNewsAsApp = isMobile ? Channels : News;
   const newsOptions = isMobile ? {} : { headerShown: false };
   const appOptions = { headerShown: false };
+  const screenOptions = useMemo(
+    () => ({
+      header: (props) => <Header {...props} />,
+      ...pushTransition(activeTheme),
+    }),
+    []
+  );
   return (
     <Stack.Navigator
       headerMode="screen"
       // props =  { scene, previous, navigation }
-      screenOptions={{
-        header: (props) => <Header {...props} />,
-        ...pushTransition(activeTheme),
-      }}
+      screenOptions={screenOptions}
     >
       {/* This is where all the screens go */}
       {Platform.OS === "web" && (
